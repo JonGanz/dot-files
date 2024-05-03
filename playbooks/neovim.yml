@@ -1,0 +1,59 @@
+- hosts: localhost
+  tasks:
+
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+    tags:
+    - install
+    - config
+
+  - name: Remove old versions of neovim
+    ansible.builtin.file:
+       path: "{{ opensource }}/neovim"
+       state: absent
+    tags:
+    - install
+
+  - name: Clone neovim
+    ansible.builtin.git:
+       repo: https://github.com/neovim/neovim.git
+       dest: "{{ opensource }}/neovim"
+       depth: 1
+       version: stable
+    tags:
+    - install
+
+  - name: "Install neovim deps"
+    become: true
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - build-essential
+      - cmake
+      - curl
+      - gettext
+      - ninja-build
+      - unzip
+    tags:
+    - install
+
+  - name: Neovim Make Install
+    become: true
+    ansible.builtin.command: sudo make install
+    args:
+      chdir: "{{ opensource }}/neovim"
+    tags:
+    - install
+
+  - name: Neovim Configuration via stow
+    file:
+      src: "{{ setup_dir }}/dotfiles/nvim"
+      dest: "{{ home }}/.config/nvim"
+      state: link
+    tags:
+    - install
+    - config
+    

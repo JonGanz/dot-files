@@ -1,0 +1,14 @@
+- hosts: localhost
+  tasks:
+  - name: Basic libraries
+    become: true
+    apt:
+      update_cache: yes
+      pkg:
+      - curl
+      - docker
+      - git
+      - jq
+      - stow
+      - unzip
+      - zsh
