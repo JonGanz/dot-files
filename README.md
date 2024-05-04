@@ -1,8 +1,19 @@
 # dot-files
 My personal configuration files.
 
-## Usage
+## Linux
+
+### Usage
 
 ``` sh
-wget -0 setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/ubuntu-scripts/setup.sh && echo "503469b5fb179739ba272fce6294a051961cfa267af21ed93c49f6549d2095ba setup.sh" | sha256sum -c - && bash setup.sh
+wget -0 setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/ubuntu-scripts/setup.sh && echo "25ba10dcf22500973a62235bdd5900cc4dd3483a15ff810b69a2871a05e81688 setup.sh" | sha256sum -c - && bash setup.sh
 ```
+
+### TODO
+- nvm / node
+- ensure Neovim configuration working
+- terminal theme
+- Brave
+- SSH
+- git config
+- get my aliases back!
