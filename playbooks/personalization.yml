@@ -1,0 +1,27 @@
+- hosts: localhost
+
+  vars:
+    jet_brains_version: 3.2.1
+
+  tasks:
+
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+
+  - name: Ensure fonts directory exists
+    file:
+      path: "{{ home }}/.fonts"
+      state: directory
+
+  - name: Check if Jet Brains Mono Nerd Font installed
+    shell: "ls {{ home }}/.fonts/JetBrainsMonoNerdFont*.ttf"
+    register: jet_brains_installed
+    ignore_errors: true
+
+  - name: Install Jet Brains Mono Nerd Font
+    when: jet_brains_installed is failed
+    unarchive:
+      src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
+      dest: "{{ home }}/.fonts/"
+      remote_src: yes

@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+
+  tasks:
+
+  - name: Install via apt
+    become: true
+    apt:
+      update_cache: yes
+      pkg:
+      - gimp
+      - inkscape

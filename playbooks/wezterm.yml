@@ -1,0 +1,37 @@
+- hosts: localhost
+  tasks:
+
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+    tags:
+    - install
+    - config
+
+  - name: Include Flatpak role
+    include_role:
+      name: roles/flatpak.yml
+    tags:
+    - install
+
+  - name: Install Wezterm via Flatpak
+    ansible.builtin.command:
+      cmd: flatpak install flathub org.wezfurlong.wezterm
+    tags:
+    - install
+
+  - name: Link Wezterm Dotfiles
+    ansible.builtin.file:
+      src: "{{ setup_dir }}/dotfiles/wezterm"
+      dest: "{{ home }}/.config/wezterm"
+      state: link
+    tags:
+    - install
+    - config
+
+  - name: Include bash aliases role
+    include_role:
+      name: roles/bash_aliases.yml
+    tags:
+    - install
+    - config

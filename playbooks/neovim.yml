@@ -48,7 +48,20 @@
     tags:
     - install
 
-  - name: Neovim Configuration via stow
+  - name: Neovim Plugin Deps
+    become: true
+    apt:
+      name: "{{ packages }}"
+      state: present
+    vars:
+      packages:
+      - fd-find
+      - ripgrep
+    tags:
+    - install
+    - config
+
+  - name: Neovim Configuration
     file:
       src: "{{ setup_dir }}/dotfiles/nvim"
       dest: "{{ home }}/.config/nvim"

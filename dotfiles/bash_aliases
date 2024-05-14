@@ -1,0 +1,2 @@
+alias wez='flatpak run org.wezfurlong.wezterm'
+

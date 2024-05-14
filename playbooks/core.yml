@@ -1,14 +1,36 @@
 - hosts: localhost
+
+  vars:
+    node_version: 20.12.2
+
   tasks:
+
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+
   - name: Basic libraries
     become: true
     apt:
       update_cache: yes
       pkg:
       - curl
-      - docker
+      - docker.io
       - git
       - jq
       - stow
       - unzip
       - zsh
+
+  - name: NVM (Node Version Manager)
+    shell:
+      cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      chdir: "{{ home }}"
+      creates: "{{ home }}/.nvm/nvm.sh"
+
+  - name: NodeJS {{ node_version }} (via NVM)
+    shell:
+      cmd: ". {{ home }}/.nvm/nvm.sh && nvm install {{ node_version }}"
+      executable: /bin/bash
+      chdir: "{{ home }}"
+      creates: "{{ home }}/.nvm/versions/v{{ node_version }}"
