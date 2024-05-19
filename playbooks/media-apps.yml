@@ -3,10 +3,17 @@
 
   tasks:
 
-  - name: Install via apt
+  - name: Install (via apt)
     become: true
     apt:
       update_cache: yes
       pkg:
       - gimp
       - inkscape
+
+  - name: Spotify (via Snap)
+    become: true
+    community.general.snap:
+      channel: 'latest/stable'
+      name: spotify
+      state: present
