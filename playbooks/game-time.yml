@@ -1,0 +1,25 @@
+- hosts: localhost
+
+  tasks:
+
+  - name: Install Discord
+    include_role:
+      name: roles/install_from_deb
+    vars:
+      app_name: discord
+      app_url: "https://discord.com/api/download?platform=linux&format=deb"
+    tags:
+    - install
+    - discord
+    - gaming
+
+  - name: Install Steam
+    include_role:
+      name: roles/install_from_deb
+    vars:
+      app_name: steam-launcher
+      app_url: "https://cdn.cloudflare.steamstatic.com/client/installer/steam.deb"
+    tags:
+    - install
+    - steam
+    - gaming

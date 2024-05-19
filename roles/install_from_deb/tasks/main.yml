@@ -1,0 +1,26 @@
+---
+# vars: app_url, app_name
+
+- name: Check if {{ app_name }} present
+  ansible.builtin.command:
+    cmd: dpkg -l | grep {{ app_name }}
+  register: app_status
+  ignore_errors: true
+
+- name: Download {{ app_name }} .deb file
+  ansible.builtin.get_url:
+    url: "{{ app_url }}"
+    dest: "/tmp/{{ app_name }}.deb"
+  when: app_status.rc != 0
+
+- name: Install {{ app_name }}
+  ansible.builtin.apt:
+    deb: "/tmp/{{ app_name }}.deb"
+  become: true
+  when: app_status.rc != 0
+
+- name: Remove .deb file
+  ansible.builtin.file:
+    path: "/tmp/{{ app_name }}.deb"
+    state: absent
+  when: app_status.rc != 0

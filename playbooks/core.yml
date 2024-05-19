@@ -34,3 +34,13 @@
       executable: /bin/bash
       chdir: "{{ home }}"
       creates: "{{ home }}/.nvm/versions/v{{ node_version }}"
+
+  - name: Include Flatpak role
+    include_role:
+      name: roles/flatpak.yml
+    tags:
+    - install
+
+  - name: Install Helvum (PipeWire UI for mapping audio)
+    ansible.builtin.command:
+      cmd: flatpak install org.pipewire.Helvum
