@@ -30,6 +30,13 @@ ansible-playbook playbooks/wezterm.yml -K --tags config
 ```
 
 ### TODO
+- ansible vault
+- brave sync key & extensions
 - SSH
 - git config
 - get my aliases back!
+- tags and collapse into single playbook
+- update playbook to do all updating (apt, flatpak, snap)
+- noise suppression for mic (investigate RNNoise)
+- sexy wallpaper
+- tiled window manager
