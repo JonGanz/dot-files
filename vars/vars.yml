@@ -1,0 +1,7 @@
+ssh_key_filename: "github"
+config: "{{ lookup('ansible.builtin.env', 'XDG_CONFIG') }}"
+home: "{{ lookup('ansible.builtin.env', 'HOME') }}"
+git_dir: "{{ home }}/git"
+opensource: "{{ git_dir }}/_opensource"
+setup_dir: "{{ home }}/setup"
+

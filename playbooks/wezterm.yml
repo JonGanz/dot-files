@@ -3,7 +3,7 @@
 
   - name: Include main vars
     ansible.builtin.include_vars:
-      file: vars.yml
+      dir: ../vars
     tags:
     - install
     - config
