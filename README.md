@@ -34,6 +34,7 @@ ansible-playbook playbooks/wezterm.yml -K --tags config
 ### TODO
 - ansible vault
 - SSH
+    - once the SSH key has been added, we could replace `origin` with the proper SSH protocol so that we can push changes back up
 - Syncthings
 - Obsidian
 - git config
