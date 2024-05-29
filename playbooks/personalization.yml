@@ -10,18 +10,24 @@
       file: vars.yml
 
   - name: Ensure fonts directory exists
-    file:
+    ansible.builtin.file:
       path: "{{ home }}/.fonts"
       state: directory
 
   - name: Check if Jet Brains Mono Nerd Font installed
-    shell: "ls {{ home }}/.fonts/JetBrainsMonoNerdFont*.ttf"
+    ansible.builtin.shell: "ls {{ home }}/.fonts/JetBrainsMonoNerdFont*.ttf"
     register: jet_brains_installed
     ignore_errors: true
 
   - name: Install Jet Brains Mono Nerd Font
     when: jet_brains_installed is failed
-    unarchive:
+    ansible.builtin.unarchive:
       src: https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip
       dest: "{{ home }}/.fonts/"
       remote_src: yes
+
+  - name: Set wallpaper
+    ansible.builtin.shell: |
+      gsettings set org.gnome.desktop.background picture-uri-dark file://{{ setup_dir }}/wallpapers/cherry-blossom-32x9.jpg
+      gsettings set org.gnome.desktop.background picture-uri file://{{ setup_dir }}/wallpapers/sunset-32x9.jpg
+      gsettings set org.gnome.desktop.background picture-options spanned
