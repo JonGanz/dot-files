@@ -44,3 +44,10 @@
   - name: Install Helvum (PipeWire UI for mapping audio)
     ansible.builtin.command:
       cmd: flatpak install org.pipewire.Helvum
+
+  - name: Include bash aliases
+    include_role:
+      name: roles/bash_aliases.yml
+    tags:
+    - install
+    - config

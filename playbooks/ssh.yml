@@ -11,7 +11,7 @@
       mode: 0700
       state: directory
     tags:
-      - ssh
+    - ssh
 
   - name: Install ssh key
     ansible.builtin.copy:
@@ -19,5 +19,5 @@
       dest: "{{ home }}/.ssh"
       mode: 0600
     tags:
-      - ssh
+    - ssh
 
