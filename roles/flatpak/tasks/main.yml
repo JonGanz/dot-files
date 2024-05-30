@@ -7,5 +7,5 @@
 
 - name: Add Flathub repository
   ansible.builtin.command:
-    command: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    cmd: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
   become: yes

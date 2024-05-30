@@ -10,7 +10,7 @@
 
   - name: Include Flatpak role
     include_role:
-      name: roles/flatpak.yml
+      name: roles/flatpak
     tags:
     - install
 
@@ -31,7 +31,7 @@
 
   - name: Include bash aliases role
     include_role:
-      name: roles/bash_aliases.yml
+      name: roles/bash_aliases
     tags:
     - install
     - config
