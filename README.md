@@ -23,6 +23,7 @@ ansible-playbook playbooks/brave.yml -K
 ansible-playbook playbooks/media-apps.yml -K
 ansible-playbook playbooks/wezterm.yml -K
 ansible-playbook playbooks/personalization.yml
+ansible-playbook playbooks/syncthing.yml -K
 ```
 
 Some playbooks have tags. This can be used, for example, to install dependencies for Neovim plugins without wiping and rebuilding Neovim from scratch.

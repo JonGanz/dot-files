@@ -1,0 +1,26 @@
+- hosts: localhost
+  tasks:
+
+  - name: Add PGP keys for Syncthing
+    get_url:
+      url: https://syncthing.net/release-key.gpg
+      dest: /usr/share/keyrings/syncthing.gpg
+    become: true
+    tags:
+    - syncthing
+
+  - name: Syncthing Stable PPA setting
+    become: true
+    shell:
+      cmd: "echo \"deb [signed-by=/usr/share/keyrings/syncthing.gpg] https://apt.syncthing.net/ syncthing stable\" | sudo tee /etc/apt/sources.list.d/syncthing.list"
+    tags:
+    - syncthing
+
+  - name: Install Syncthing
+    become: true
+    apt:
+      update_cache: true
+      pkg:
+      - syncthing
+    tags:
+    - syncthing
