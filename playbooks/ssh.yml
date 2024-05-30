@@ -1,0 +1,23 @@
+- hosts: localhost
+  tasks:
+
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      dir: ../vars
+
+  - name: Ensure .ssh directory exists
+    ansible.builtin.file:
+      dest: "{{ home }}/.ssh"
+      mode: 0700
+      state: directory
+    tags:
+      - ssh
+
+  - name: Install ssh key
+    ansible.builtin.copy:
+      src: "{{ setup_dir }}/dotfiles/ssh/"
+      dest: "{{ home }}/.ssh"
+      mode: 0600
+    tags:
+      - ssh
+
