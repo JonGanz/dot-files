@@ -31,3 +31,23 @@
       gsettings set org.gnome.desktop.background picture-uri-dark file://{{ setup_dir }}/wallpapers/cherry-blossom-32x9.jpg
       gsettings set org.gnome.desktop.background picture-uri file://{{ setup_dir }}/wallpapers/sunset-32x9.jpg
       gsettings set org.gnome.desktop.background picture-options spanned
+
+  - name: Oh-my-posh
+    block:
+      - name: Download install script
+        ansible.builtin.get_url:
+          url: https://ohmyposh.dev/install.sh
+          dest: /tmp/ohmyposh.sh
+          mode: '0777'
+
+      - name: Run script
+        ansible.builtin.command:
+          cmd: /tmp/ohmyposh.sh
+
+      - name: Setup bash to use oh-my-posh
+        ansible.builtin.blockinfile:
+          marker: "# {mark} ANSIBLE MANAGED BLOCK - personalization - oh-my-posh"
+          path: ~/.bashrc
+          block: |
+            eval "$(oh-my-posh init bash --config ~/setup/dotfiles/ohmyposh/gruvbox.omp.json)"
+          

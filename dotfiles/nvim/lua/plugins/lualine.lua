@@ -6,8 +6,8 @@ return {
     config = function()
         require('lualine').setup({
             options = {
-                theme = 'wombat'
-            }
+                theme = 'gruvbox-flat',
+            },
         })
-    end
+    end,
 }
