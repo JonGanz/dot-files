@@ -15,7 +15,6 @@
       update_cache: yes
       pkg:
       - curl
-      - docker.io
       - git
       - jq
       - stow
@@ -51,3 +50,53 @@
     tags:
     - install
     - config
+
+  - name: Docker Setup - Install apt-transport-https
+    ansible.builtin.apt:
+      update_cache: yes
+      name:
+        - apt-transport-https
+        - ca-certificates
+        - lsb-release
+        - gnupg
+      state:
+        latest
+    become: true
+
+  # TODO: This module is deprecated.
+  - name: Docker Setup - Add signing key
+    ansible.builtin.apt_key:
+      url: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+      state: present
+    become: true
+
+  - name: Docker Setup - Add Docker source list
+    ansible.builtin.apt_repository:
+      repo: "deb https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
+      state: present
+      filename: docker
+    become: true
+
+  - name: Docker Setup - Install Docker packages
+    ansible.builtin.apt:
+      pkg:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-compose
+        - docker-compose-plugin
+      state: present
+    become: true
+
+  - name: Docker Setup - Create 'docker' group
+    ansible.builtin.group:
+      name: docker
+      state: present
+    become: true
+
+  - name: Docker Setup - Add '{{ ansible_user_id }}' to 'docker' group
+    ansible.builtin.user:
+      name: "{{ ansible_user_id }}"
+      groups: docker
+      append: yes
+    become: true
