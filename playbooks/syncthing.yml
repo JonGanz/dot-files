@@ -2,25 +2,39 @@
   tasks:
 
   - name: Add PGP keys for Syncthing
-    get_url:
+    become: true
+    ansible.builtin.get_url:
       url: https://syncthing.net/release-key.gpg
       dest: /usr/share/keyrings/syncthing.gpg
-    become: true
     tags:
     - syncthing
 
   - name: Syncthing Stable PPA setting
     become: true
-    shell:
+    ansible.builtin.shell:
       cmd: "echo \"deb [signed-by=/usr/share/keyrings/syncthing.gpg] https://apt.syncthing.net/ syncthing stable\" | sudo tee /etc/apt/sources.list.d/syncthing.list"
     tags:
     - syncthing
 
   - name: Install Syncthing
     become: true
-    apt:
+    ansible.builtin.apt:
       update_cache: true
       pkg:
       - syncthing
     tags:
     - syncthing
+
+  - name: Download user service file
+    ansible.builtin.get_url:
+      url: https://raw.githubusercontent.com/syncthing/syncthing/main/etc/linux-systemd/user/syncthing.service
+      dest: ~/.config/systemd/user/syncthing.service
+      mode: '0666'
+
+  - name: Enable syncthing service
+    ansible.builtin.systemd_service:
+      enabled: true
+      name: syncthing.service
+      scope: user
+      state: started
+

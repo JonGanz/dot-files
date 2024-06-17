@@ -34,13 +34,11 @@ ansible-playbook playbooks/wezterm.yml -K --tags config
 ```
 
 ### TODO
-- Syncthings
 - Obsidian
 - git config
 - get my aliases back!
 - replace the docker.io package with the real one
 - once the SSH key has been added, we could replace `origin` with the proper SSH protocol so that we can push changes back up
-- brave sync key & extensions
 - tiled window manager
 - tags and collapse into single playbook
 - update playbook to do all updating (apt, flatpak, snap)
