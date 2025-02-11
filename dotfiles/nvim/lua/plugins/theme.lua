@@ -18,7 +18,15 @@ return {
         enabled = true,
         config = function()
             vim.g.gruvbox_transparent = true
-            vim.cmd([[colorscheme gruvbox-flat]])
+            -- vim.cmd([[colorscheme gruvbox-flat]])
         end,
+    },
+    {
+        'sainnhe/everforest',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            vim.cmd.colorscheme 'everforest'
+        end
     },
 }

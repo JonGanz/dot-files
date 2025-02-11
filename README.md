@@ -8,7 +8,7 @@ My personal configuration files.
 Install Ansible and clone the repo with the following script:
 
 ```sh
-wget -0 setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/ubuntu-scripts/setup.sh && echo "25ba10dcf22500973a62235bdd5900cc4dd3483a15ff810b69a2871a05e81688 setup.sh" | sha256sum -c - && bash setup.sh
+wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/ubuntu-scripts/setup.sh && echo "25ba10dcf22500973a62235bdd5900cc4dd3483a15ff810b69a2871a05e81688 setup.sh" | sha256sum -c - && bash setup.sh
 ```
 
 Secrets are encrypted with Ansible Vault. You can either opt to enter the credentials at the command prompt, or choose to add the password to a file. Enter the password as a single line in the file `vault.cred`. You could manually provide `--vault-password-file vault.cred` whenever calling `ansible-playbook`, but instead this has been configured in `ansible.cfg`.

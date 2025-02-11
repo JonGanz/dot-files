@@ -12,10 +12,11 @@ return {
                 ensure_installed = {
                     'ansiblels',
                     'clangd',
+                    'eslint',
                     'lua_ls',
                     'marksman',
                     'intelephense',
-                    'tsserver',
+                    'ts_ls',
                     'powershell_es',
                     'sqlls',
                     'volar',
@@ -30,10 +31,11 @@ return {
             local lspconfig = require("lspconfig")
             lspconfig.ansiblels.setup({})
             lspconfig.clangd.setup({})
+            lspconfig.eslint.setup({})
             lspconfig.lua_ls.setup({})
             lspconfig.marksman.setup({})
             lspconfig.intelephense.setup({})
-            lspconfig.tsserver.setup({})
+            lspconfig.ts_ls.setup({})
             lspconfig.powershell_es.setup({})
             lspconfig.sqlls.setup({})
             lspconfig.volar.setup({})

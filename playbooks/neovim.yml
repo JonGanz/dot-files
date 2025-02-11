@@ -62,7 +62,7 @@
     - config
 
   - name: Neovim Configuration
-    file:
+    ansible.builtin.file:
       src: "{{ setup_dir }}/dotfiles/nvim"
       dest: "{{ home }}/.config/nvim"
       state: link

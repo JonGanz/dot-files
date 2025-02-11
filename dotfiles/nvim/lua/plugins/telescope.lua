@@ -7,7 +7,7 @@ return {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.5',
         dependencies = {
-            'nvim-lua/plenary.nvim'
+            'nvim-lua/plenary.nvim',
         },
         config = function()
             local builtin = require('telescope.builtin')
@@ -24,7 +24,12 @@ return {
                         require('telescope.themes').get_dropdown {
                         }
                     }
-                }
+                },
+                defaults = {
+                    file_ignore_patterns = {
+                        "node_modules",
+                    },
+                },
             })
             require('telescope').load_extension('ui-select')
         end
