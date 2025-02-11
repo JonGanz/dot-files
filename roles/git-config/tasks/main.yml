@@ -1,0 +1,13 @@
+---
+- name: Ensure global Git config is in place
+  ansible.builtin.template:
+    src: gitconfig.j2
+    dest: "{{ home }}/.gitconfig"
+    mode: '0644'
+
+- name: Ensure work-specific Git config is in place
+  ansible.builtin.template:
+    src: gitconfig-work.j2
+    dest: "{{ git_dir }}/work/.gitconfig"
+    mode: '0644'
+

@@ -20,8 +20,8 @@
     block: |
       Host github.com
         IdentityFile ~/.ssh/id_rsa_personal
-        User git
+        User {{ github_username }}
 
       Host bitbucket.org
         IdentityFile ~/.ssh/id_rsa_work
-        User git 
+        User {{ bitbucket_username }}

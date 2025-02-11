@@ -9,3 +9,5 @@
     - core-apps
     - neovim
     - ssh
+    - git-config
+
