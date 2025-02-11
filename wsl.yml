@@ -1,0 +1,11 @@
+---
+- name: WSL Setup
+  hosts: localhost
+  connection: local
+  become: false
+  vars_files:
+    - group_vars/secret-vars.yml
+  roles:
+    - core-apps
+    - neovim
+    - ssh

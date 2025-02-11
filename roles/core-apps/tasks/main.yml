@@ -1,0 +1,16 @@
+---
+- name: Install Standard Utility Apps
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    pkg:
+    - curl
+    - git
+    - jq
+    - unzip
+
+- name: Install NVM (Node Version Manager)
+  ansible.builtin.shell:
+    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    chdir: "{{ home }}"
+    creates: "{{ home }}/.nvm/nvm.sh"

@@ -1,0 +1,27 @@
+---
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    dest: "{{ home }}/.ssh"
+    mode: 0700
+    state: directory
+  tags:
+  - ssh
+
+- name: Install SSH Keys
+  include_tasks: install_key.yml
+  loop: "{{ ssh_keys }}"
+  no_log: yes
+
+- name: Configure SSH Config for GitHub and Bitbucket
+  ansible.builtin.blockinfile:
+    path: "{{ home }}/.ssh/config"
+    create: yes
+    mode: '0644'
+    block: |
+      Host github.com
+        IdentityFile ~/.ssh/id_rsa_personal
+        User git
+
+      Host bitbucket.org
+        IdentityFile ~/.ssh/id_rsa_work
+        User git 

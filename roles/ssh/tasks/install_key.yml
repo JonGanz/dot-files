@@ -1,0 +1,20 @@
+---
+- name: Install SSH Private Key for {{ item.name }}
+  ansible.builtin.copy:
+    content: "{{ item.private_key }}"
+    dest: "{{ home }}/.ssh/id_rsa_{{ item.name }}"
+    mode: '0600'
+  no_log: yes
+
+- name: Install SSH Public Key for {{ item.name }}
+  ansible.builtin.copy:
+    content: "{{ item.public_key }}"
+    dest: "{{ home }}/.ssh/id_rsa_{{ item.name }}.pub"
+    mode: '0644'
+
+- name: Set correct ownership
+  ansible.builtin.file:
+    path: "{{ home }}/.ssh/id_rsa_{{ item.name }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_gid }}"
+    mode: '0600'
