@@ -4,7 +4,7 @@
     content: "{{ item.private_key }}"
     dest: "{{ home }}/.ssh/id_rsa_{{ item.name }}"
     mode: '0600'
-  no_log: yes
+  no_log: true
 
 - name: Install SSH Public Key for {{ item.name }}
   ansible.builtin.copy:

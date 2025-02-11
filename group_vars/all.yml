@@ -3,3 +3,5 @@ home: "{{ lookup('ansible.builtin.env', 'HOME') }}"
 git_dir: "{{ home }}/git"
 opensource: "{{ git_dir }}/_opensource"
 setup_dir: "{{ home }}/setup"
+work_git_dir: "{{ git_dir }}/work"
+

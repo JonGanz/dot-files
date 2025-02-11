@@ -5,9 +5,15 @@
     dest: "{{ home }}/.gitconfig"
     mode: '0644'
 
+- name: Ensure work Git directory exists
+  ansible.builtin.file:
+    dest: "{{ work_git_dir }}"
+    mode: 0700
+    state: directory
+
 - name: Ensure work-specific Git config is in place
   ansible.builtin.template:
     src: gitconfig-work.j2
-    dest: "{{ git_dir }}/work/.gitconfig"
+    dest: "{{ work_git_dir }}/.gitconfig"
     mode: '0644'
 

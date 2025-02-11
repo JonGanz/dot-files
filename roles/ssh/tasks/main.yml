@@ -10,7 +10,7 @@
 - name: Install SSH Keys
   include_tasks: install_key.yml
   loop: "{{ ssh_keys }}"
-  no_log: yes
+  no_log: true
 
 - name: Configure SSH Config for GitHub and Bitbucket
   ansible.builtin.blockinfile:
@@ -23,5 +23,5 @@
         User {{ github_username }}
 
       Host bitbucket.org
+        AddKeysToAgent yes
         IdentityFile ~/.ssh/id_rsa_work
-        User {{ bitbucket_username }}
