@@ -8,6 +8,8 @@ The general process will be Powershell scripts for setting up what we can on Win
 
 ## Windows Setup
 
+You will need to run a Powershell terminal as Administrator in order to complete installation. At certain points you will be prompted to setup a WSL user/password, or to restart the computer and run the script again.
+
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 ./Setup.ps1

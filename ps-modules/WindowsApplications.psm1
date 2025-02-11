@@ -4,6 +4,7 @@ function Install-WindowsApps {
     winget install -e --id Git.Git
     winget install -e --id Inkscape.Inkscape
     winget install -e --id Microsoft.PowerToys
+    winget install -e --id Microsoft.VisualStudioCode
     winget install -e --id Microsoft.WindowsTerminal
     winget install -e --id Obsidian.Obsidian
     winget install -e --id Spotify.Spotify
@@ -13,8 +14,14 @@ function Install-WindowsApps {
 }
 
 function Install-Chocolatey {
-    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
-    iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+    if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072;
+        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        Write-Host "Chocolatey was just installed; Please restart your computer and run the script again" -ForegroundColor Green
+        exit
+    }
+
+    Write-Host "Chocolatey already installed." -ForegroundColor Green
 }
 
 function Uninstall-UnnecessaryWindowsApps {
@@ -31,10 +38,13 @@ function Uninstall-UnnecessaryWindowsApps {
     Get-AppXPackage Microsoft.SkypeApp | Remove-AppXPackage
     Get-AppXPackage Microsoft.Wallet | Remove-AppXPackage
     Get-AppXPackage Microsoft.WindowsFeedbackHub | Remove-AppXPackage
+    Get-AppxPackage MicrosoftWindows.Client.WebExperience | Remove-AppxPackage # Widgets
     Get-AppXPackage Microsoft.WindowsMaps | Remove-AppXPackage
     Get-AppXPackage Microsoft.YourPhone | Remove-AppXPackage
     Get-AppXPackage Microsoft.ZuneMusic | Remove-AppXPackage
     Get-AppXPackage Microsoft.ZuneVideo | Remove-AppXPackage
+
+    Write-Host "Uninstalled unnecessary default apps..." -ForegroundColor Green
 }
 
 function Stop-OneDrive {
@@ -44,6 +54,7 @@ function Stop-OneDrive {
 
 function Update-WindowsApps {
     winget upgrade --all
+    choco upgrade chocolatey
 }
 
-Export-ModuleMember -Function Install-WindowsApps, Uninstall-UnnecessaryWindowsApps, Stop-OneDrive, Install-Chocolatey, Update-WindowsApps
+Export-ModuleMember -Function Install-WindowsApps, Uninstall-UnnecessaryWindowsApps, Stop-OneDrive, Install-Chocolatey, Update-WindowsApps, Install-ChocoApps
