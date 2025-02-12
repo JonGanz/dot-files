@@ -35,6 +35,6 @@
 [pull]
 	rebase = true
 
-[includeIf "gitdir:{{ git_dir }}/work/"]
-    path = {{ git_dir }}/work/.gitconfig
+[includeIf "gitdir:{{ work_git_dir }}/"]
+    path = {{ work_git_dir }}/.gitconfig
 
