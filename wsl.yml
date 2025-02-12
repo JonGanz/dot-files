@@ -10,4 +10,5 @@
     - neovim
     - ssh
     - git-config
+    - bash-aliases
 

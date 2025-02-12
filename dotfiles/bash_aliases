@@ -1,0 +1,10 @@
+alias vh='nvim .'
+alias cls='clear'
+
+alias g='git'
+alias gf='git f'
+alias gst='git status'
+
+alias dev='npm run dev'
+alias test='npm run test'
+

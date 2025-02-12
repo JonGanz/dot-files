@@ -1,0 +1,7 @@
+---
+- name: Link bash aliases to repository file
+  ansible.builtin.file:
+    src: "{{ setup_dir }}/dotfiles/bash_aliases"
+    dest: "{{ home }}/.bash_aliases"
+    state: link
+
