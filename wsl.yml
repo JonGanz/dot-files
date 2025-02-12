@@ -11,4 +11,5 @@
     - ssh
     - git-config
     - bash-aliases
+    - oh-my-posh
 

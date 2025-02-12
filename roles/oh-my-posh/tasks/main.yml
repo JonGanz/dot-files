@@ -1,0 +1,20 @@
+---
+- name: Download install script
+  ansible.builtin.get_url:
+    url: https://ohmyposh.dev/install.sh
+    dest: /tmp/ohmyposh.sh
+    mode: '0700'
+
+- name: Run install script
+  ansible.builtin.command:
+    cmd: /tmp/ohmyposh.sh
+
+# My previous setup for Ubuntu used ~/.bashrc, but for whatever reason I found
+# ~/.profile to work well with WSL.
+- name: Setup bash to use oh-my-posh
+  ansible.builtin.blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - personalization - oh-my-posh"
+    path: ~/.profile
+    block: |
+      eval "$(oh-my-posh init bash --config ~/setup/dotfiles/ohmyposh/gruvbox.omp.json)"
+
