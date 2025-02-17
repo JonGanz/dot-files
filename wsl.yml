@@ -6,10 +6,13 @@
   vars_files:
     - group_vars/secret-vars.yml
   roles:
-    - core-apps
-    - neovim
-    - ssh
-    - git-config
-    - bash-aliases
-    - oh-my-posh
+    - role: core-apps
+    - role: nodejs
+      vars:
+        node_version: "20.12.0"
+    - role: neovim
+    - role: ssh
+    - role: git-config
+    - role: bash-aliases
+    - role: oh-my-posh
 

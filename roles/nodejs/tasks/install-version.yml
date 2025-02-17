@@ -1,0 +1,17 @@
+---
+
+# vars node_version
+
+- name: "Check if NodeJS {{ node_version }} is installed"
+  ansible.builtin.command: "bash -c 'source ~/.nvm/nvm.sh && nvm ls {{ node_version }}'"
+  register: node_check
+  changed_when: false
+  ignore_errors: true
+
+- name: "Install NodeJS {{ node_version }}"
+  ansible.builtin.command: "bash -c 'source ~/.nvm/nvm.sh && nvm install {{ node_version }}'"
+  when: "'N/A' in node_check.stdout"
+
+- name: "Set {{ node_version }} as the default"
+  ansible.builtin.command: "bash -c 'source ~/.nvm/nvm.sh && nvm use {{ node_version }}'"
+

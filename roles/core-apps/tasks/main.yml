@@ -9,18 +9,3 @@
     - jq
     - unzip
 
-- name: Install NVM (Node Version Manager)
-  ansible.builtin.shell:
-    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-    chdir: "{{ home }}"
-    creates: "{{ home }}/.nvm/nvm.sh"
-
-- name: Setup bash autocomplete for NVM
-  ansible.builtin.blockinfile:
-    marker: "# {mark} ANSIBLE MANAGED BLOCK - nvm"
-    path: ~/.bashrc
-    block: |
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-      [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
