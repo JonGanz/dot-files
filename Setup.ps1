@@ -3,6 +3,7 @@ foreach ($Module in $Modules) {
     Import-Module $Module.FullName -Force
 }
 
+
 Initialize-WSL -Distro "Ubuntu-22.04"
 
 Install-DockerDesktop
@@ -18,6 +19,8 @@ if (((Get-CimInstance -ClassName Win32_OperatingSystem).Caption) -like "*Windows
 }
 
 Install-Fonts
+
+Set-TerminalConfig
 
 # TODO: oh-my-posh
 # TODO: Git config; is there a way to use a different username/email based on parent directory or anything?
