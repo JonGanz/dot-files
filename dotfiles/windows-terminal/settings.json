@@ -43,7 +43,7 @@
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
-    "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+    "defaultProfile": "{51855cb2-8cce-5362-8f54-464b92b32386}",
     "newTabMenu": 
     [
         {
@@ -74,12 +74,11 @@
                     "window",
                     "taskbar"
                 ],
-                "colorScheme": "Afterglow",
-                "guid": "{4ff56d04-d9cf-57ea-bae2-ad396374e7e3}",
+                "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
                 "hidden": false,
                 "icon": "none",
-                "name": "WSL2",
-                "source": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
+                "name": "Ubuntu",
+                "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
             },
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
@@ -106,7 +105,7 @@
                 "name": "Visual Studio Debug Console",
                 "source": "VSDebugConsole"
             },
-	    {
+            {
                 "guid": "{e00e0662-f082-5b9b-981a-a767ead1ce62}",
                 "hidden": true,
                 "name": "Developer PowerShell for VS 2022",
@@ -116,29 +115,6 @@
     },
     "schemes": 
     [
-        {
-            "background": "#1E1E2E",
-            "black": "#45475A",
-            "blue": "#89B4FA",
-            "brightBlack": "#585B70",
-            "brightBlue": "#89B4FA",
-            "brightCyan": "#94E2D5",
-            "brightGreen": "#A6E3A1",
-            "brightPurple": "#F5C2E7",
-            "brightRed": "#F38BA8",
-            "brightWhite": "#A6ADC8",
-            "brightYellow": "#F9E2AF",
-            "cursorColor": "#F5E0DC",
-            "cyan": "#94E2D5",
-            "foreground": "#CDD6F4",
-            "green": "#A6E3A1",
-            "name": "Catppuccin Mocha",
-            "purple": "#F5C2E7",
-            "red": "#F38BA8",
-            "selectionBackground": "#585B70",
-            "white": "#BAC2DE",
-            "yellow": "#F9E2AF"
-        },
         {
             "background": "#212121",
             "black": "#151515",
@@ -161,6 +137,29 @@
             "selectionBackground": "#303030",
             "white": "#D0D0D0",
             "yellow": "#E5B567"
+        },
+        {
+            "background": "#1E1E2E",
+            "black": "#45475A",
+            "blue": "#89B4FA",
+            "brightBlack": "#585B70",
+            "brightBlue": "#89B4FA",
+            "brightCyan": "#94E2D5",
+            "brightGreen": "#A6E3A1",
+            "brightPurple": "#F5C2E7",
+            "brightRed": "#F38BA8",
+            "brightWhite": "#A6ADC8",
+            "brightYellow": "#F9E2AF",
+            "cursorColor": "#F5E0DC",
+            "cyan": "#94E2D5",
+            "foreground": "#CDD6F4",
+            "green": "#A6E3A1",
+            "name": "Catppuccin Mocha",
+            "purple": "#F5C2E7",
+            "red": "#F38BA8",
+            "selectionBackground": "#585B70",
+            "white": "#BAC2DE",
+            "yellow": "#F9E2AF"
         },
         {
             "background": "#2B2A27",
