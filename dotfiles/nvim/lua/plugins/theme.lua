@@ -14,8 +14,7 @@ return {
     },
     {
         'eddyekofo94/gruvbox-flat.nvim',
-        priority = 1000,
-        enabled = true,
+        -- enabled = true,
         config = function()
             vim.g.gruvbox_transparent = true
             -- vim.cmd([[colorscheme gruvbox-flat]])
@@ -23,8 +22,6 @@ return {
     },
     {
         'sainnhe/everforest',
-        lazy = false,
-        priority = 1000,
         config = function()
             -- vim.cmd.colorscheme 'everforest'
         end
