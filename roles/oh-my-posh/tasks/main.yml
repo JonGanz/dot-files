@@ -16,5 +16,5 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK - personalization - oh-my-posh"
     path: ~/.profile
     block: |
-      eval "$(oh-my-posh init bash --config ~/setup/dotfiles/ohmyposh/gruvbox.omp.json)"
+      eval "$(oh-my-posh init bash --config ~/setup/dotfiles/ohmyposh/theme.omp.json)"
 
