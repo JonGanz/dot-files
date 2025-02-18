@@ -4,16 +4,31 @@
     "actions": 
     [
         {
+            "command": "unbound",
+            "keys": "ctrl+shift+p"
+        },
+        {
+            "command": "unbound",
+            "keys": "ctrl+shift+n"
+        },
+        {
             "command": 
             {
                 "action": "copy",
                 "singleLine": false
             },
-            "id": "User.copy.644BA8F2"
+            "id": "User.copy.644BA8F2",
+            "keys": "ctrl+c"
         },
         {
             "command": "paste",
-            "id": "User.paste"
+            "id": "User.paste",
+            "keys": "ctrl+v"
+        },
+        {
+            "command": "find",
+            "id": "User.find",
+            "keys": "ctrl+shift+f"
         },
         {
             "command": 
@@ -22,37 +37,13 @@
                 "split": "auto",
                 "splitMode": "duplicate"
             },
-            "id": "User.splitPane.A6751878"
-        },
-        {
-            "command": "find",
-            "id": "User.find"
-        }
-    ],
-    "copyFormatting": "none",
-    "copyOnSelect": false,
-    "defaultProfile": "{4ff56d04-d9cf-57ea-bae2-ad396374e7e3}",
-    "disableAnimations": true,
-    "experimental.useBackgroundImageForWindow": true,
-    "keybindings": 
-    [
-        {
-            "id": "User.copy.644BA8F2",
-            "keys": "ctrl+c"
-        },
-        {
-            "id": "User.find",
-            "keys": "ctrl+shift+f"
-        },
-        {
-            "id": "User.paste",
-            "keys": "ctrl+v"
-        },
-        {
             "id": "User.splitPane.A6751878",
             "keys": "alt+shift+d"
         }
     ],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{2c4de342-38b7-51cf-b940-2309a097f518}",
     "newTabMenu": 
     [
         {
@@ -78,6 +69,12 @@
         "list": 
         [
             {
+                "bellStyle": 
+                [
+                    "window",
+                    "taskbar"
+                ],
+                "colorScheme": "Afterglow",
                 "guid": "{4ff56d04-d9cf-57ea-bae2-ad396374e7e3}",
                 "hidden": false,
                 "icon": "none",
@@ -88,7 +85,8 @@
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
-                "name": "Windows PowerShell"
+                "name": "Windows PowerShell",
+                "startingDirectory": "C:\\Git"
             },
             {
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
@@ -97,6 +95,18 @@
                 "name": "Command Prompt"
             },
             {
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": true,
+                "name": "PowerShell Core",
+                "source": "Windows.Terminal.PowershellCore"
+            },
+            {
+                "guid": "{16208362-94fc-5b1f-a491-5b2624d5ab56}",
+                "hidden": true,
+                "name": "Visual Studio Debug Console",
+                "source": "VSDebugConsole"
+            },
+	    {
                 "guid": "{e00e0662-f082-5b9b-981a-a767ead1ce62}",
                 "hidden": true,
                 "name": "Developer PowerShell for VS 2022",
@@ -128,6 +138,98 @@
             "selectionBackground": "#585B70",
             "white": "#BAC2DE",
             "yellow": "#F9E2AF"
+        },
+        {
+            "background": "#212121",
+            "black": "#151515",
+            "blue": "#6C99BB",
+            "brightBlack": "#505050",
+            "brightBlue": "#6C99BB",
+            "brightCyan": "#7DD6CF",
+            "brightGreen": "#7E8E50",
+            "brightPurple": "#9F4E85",
+            "brightRed": "#AC4142",
+            "brightWhite": "#F5F5F5",
+            "brightYellow": "#E5B567",
+            "cursorColor": "#D0D0D0",
+            "cyan": "#7DD6CF",
+            "foreground": "#D0D0D0",
+            "green": "#7E8E50",
+            "name": "Afterglow",
+            "purple": "#9F4E85",
+            "red": "#AC4142",
+            "selectionBackground": "#303030",
+            "white": "#D0D0D0",
+            "yellow": "#E5B567"
+        },
+        {
+            "background": "#2B2A27",
+            "black": "#1C1F24",
+            "blue": "#2A6CC6",
+            "brightBlack": "#2B2A27",
+            "brightBlue": "#51AFEF",
+            "brightCyan": "#46D9FF",
+            "brightGreen": "#98BE65",
+            "brightPurple": "#C678DD",
+            "brightRed": "#FF5D38",
+            "brightWhite": "#DFDFDF",
+            "brightYellow": "#E6F972",
+            "cursorColor": "#9C9C9D",
+            "cyan": "#5699AF",
+            "foreground": "#EDE0CE",
+            "green": "#26A6A6",
+            "name": "Doom Peacock",
+            "purple": "#A9A1E1",
+            "red": "#CB4B16",
+            "selectionBackground": "#A60033",
+            "white": "#EDE0CE",
+            "yellow": "#BCD42A"
+        },
+        {
+            "background": "#282C34",
+            "black": "#000000",
+            "blue": "#A9A1E1",
+            "brightBlack": "#000000",
+            "brightBlue": "#A9A1E1",
+            "brightCyan": "#51AFEF",
+            "brightGreen": "#99BB66",
+            "brightPurple": "#C678DD",
+            "brightRed": "#FF6655",
+            "brightWhite": "#BFBFBF",
+            "brightYellow": "#ECBE7B",
+            "cursorColor": "#51AFEF",
+            "cyan": "#51AFEF",
+            "foreground": "#BBC2CF",
+            "green": "#98BE65",
+            "name": "DoomOne",
+            "purple": "#C678DD",
+            "red": "#FF6C6B",
+            "selectionBackground": "#42444B",
+            "white": "#BBC2CF",
+            "yellow": "#ECBE7B"
+        },
+        {
+            "background": "#24283B",
+            "black": "#1D202F",
+            "blue": "#7AA2F7",
+            "brightBlack": "#414868",
+            "brightBlue": "#7AA2F7",
+            "brightCyan": "#7DCFFF",
+            "brightGreen": "#9ECE6A",
+            "brightPurple": "#BB9AF7",
+            "brightRed": "#F7768E",
+            "brightWhite": "#C0CAF5",
+            "brightYellow": "#E0AF68",
+            "cursorColor": "#C0CAF5",
+            "cyan": "#7DCFFF",
+            "foreground": "#C0CAF5",
+            "green": "#9ECE6A",
+            "name": "tokyonight-storm",
+            "purple": "#BB9AF7",
+            "red": "#F7768E",
+            "selectionBackground": "#364A82",
+            "white": "#A9B1D6",
+            "yellow": "#E0AF68"
         }
     ],
     "theme": "Catppuccin Mocha",
