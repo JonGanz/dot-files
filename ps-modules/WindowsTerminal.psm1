@@ -15,8 +15,6 @@ function Set-TerminalConfig {
     $bgSourcePath = Join-Path `
         -Path (Get-Item $MyInvocation.PSCommandPath).DirectoryName `
         -ChildPath "dotfiles\windows-terminal\bg.jpg"
-    
-    Write-Host "Making link from $bgDestPath to $bgSourcePath"
 
     Install-Symlink `
         -TargetPath $bgSourcePath `
