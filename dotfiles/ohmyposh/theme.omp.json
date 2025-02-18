@@ -60,10 +60,10 @@
           "type": "git",
           "style": "powerline",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:yellow{{ end }}",
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:cyan{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:red{{ end }}",
-            "{{ if gt .Ahead 0 }}p:cyan{{ end }}",
-            "{{ if gt .Behind 0 }}p:cyan{{ end }}"
+            "{{ if gt .Ahead 0 }}p:yellow{{ end }}",
+            "{{ if gt .Behind 0 }}p:yellow{{ end }}"
           ]
         },
         {
