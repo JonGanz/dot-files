@@ -22,3 +22,7 @@ Enter your WSL instance, either via `wsl ~` or `ubuntu2204.exe`, or simply open 
 ```sh
 wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/windows-setup/setup.sh && bash setup.sh
 ```
+
+# TODO
+- [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
+- [ ] complete the TODO list in `Setup.ps1`
