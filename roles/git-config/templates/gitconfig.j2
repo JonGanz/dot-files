@@ -14,19 +14,20 @@
 	st = status
 
 [core]
-	editor = nvim -f
+    editor = nvim -f
+    symlinks = false
 
 [diff]
 	tool = bc3
 
 [difftool "bc3"]
-	path = c:/Program Files/Beyond Compare 4/BComp.exe
+	cmd = BComp.exe "$(wslpath -aw $LOCAL)" "$(wslpath -aw $REMOTE)"
 
 [merge]
 	tool = bc3
 
 [mergetool "bc3"]
-	path = C:/Program Files/Beyond Compare 4/BComp.exe
+	cmd = BComp.exe "$(wslpath -aw $LOCAL)" "$(wslpath -aw $REMOTE)" "$(wslpath -aw $BASE)" "$(wslpath -aw $MERGED)"
 
 [user]
 	name = {{ git_username_personal }}
