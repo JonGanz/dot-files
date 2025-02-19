@@ -8,6 +8,17 @@ return {
                 flavour = 'mocha',
                 transparent_background = true,
                 no_italic = true,
+                integrations = {
+                    harpoon = true,
+                    indent_blankline = {
+                        enabled = true,
+                    },
+                    markdown = true,
+                    mini = {
+                        enabled = true,
+                    },
+                    treesitter = true,
+                },
             })
             vim.cmd.colorscheme 'catppuccin-mocha'
         end
