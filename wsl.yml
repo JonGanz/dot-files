@@ -15,4 +15,5 @@
     - role: git-config
     - role: bash-aliases
     - role: oh-my-posh
+    - role: global-scripts
 
