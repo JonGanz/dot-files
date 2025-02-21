@@ -91,11 +91,13 @@
                     "window",
                     "taskbar"
                 ],
-                "guid": "{51855cb2-8cce-5362-8f54-464b92b32386}",
+                "name": "Ubuntu",
+                "commandline": "wsl.exe ~",
+                "cursorShape": "filledBox",
+                "guid": "{e3d289eb-f061-4a91-8d11-95491f13ae1a}",
                 "hidden": false,
                 "icon": "none",
-                "name": "Ubuntu",
-                "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
+                "tabTitle": "Ubuntu"
             },
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
