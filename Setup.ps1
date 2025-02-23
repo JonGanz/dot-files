@@ -3,7 +3,6 @@ foreach ($Module in $Modules) {
     Import-Module $Module.FullName -Force
 }
 
-
 Initialize-WSL -Distro "Ubuntu-22.04"
 
 Install-DockerDesktop

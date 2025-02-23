@@ -31,7 +31,7 @@
     ],
     "copyFormatting": "none",
     "copyOnSelect": false,
-    "defaultProfile": "{51855cb2-8cce-5362-8f54-464b92b32386}",
+    "defaultProfile": "{e3d289eb-f061-4a91-8d11-95491f13ae1a}",
     "disableAnimations": true,
     "experimental.useBackgroundImageForWindow": true,
     "keybindings": 
@@ -74,7 +74,7 @@
             "antialiasingMode": "cleartype",
             "backgroundImage": "%localappdata%\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\bg.jpg",
             "backgroundImageAlignment": "bottom",
-            "colorScheme": "Catppuccin Mocha",
+            "colorScheme": "Bamboo",
             "font": 
             {
                 "face": "JetBrainsMono Nerd Font",
@@ -91,12 +91,12 @@
                     "window",
                     "taskbar"
                 ],
-                "name": "Ubuntu",
                 "commandline": "wsl.exe ~",
                 "cursorShape": "filledBox",
                 "guid": "{e3d289eb-f061-4a91-8d11-95491f13ae1a}",
                 "hidden": false,
                 "icon": "none",
+                "name": "Ubuntu",
                 "tabTitle": "Ubuntu"
             },
             {
@@ -104,7 +104,7 @@
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
                 "hidden": false,
                 "name": "Windows PowerShell",
-                "startingDirectory": "C:\\Git"
+                "startingDirectory": "~"
             },
             {
                 "commandline": "%SystemRoot%\\System32\\cmd.exe",
@@ -156,6 +156,29 @@
             "selectionBackground": "#303030",
             "white": "#D0D0D0",
             "yellow": "#E5B567"
+        },
+        {
+            "background": "#252623",
+            "black": "#1C1E1B",
+            "blue": "#57A5E5",
+            "brightBlack": "#5B5E5A",
+            "brightBlue": "#57A5E5",
+            "brightCyan": "#70C2BE",
+            "brightGreen": "#8FB573",
+            "brightPurple": "#AAAAFF",
+            "brightRed": "#E75A7C",
+            "brightWhite": "#FFF8F0",
+            "brightYellow": "#DBB651",
+            "cursorColor": "#D0D0D0",
+            "cyan": "#70C2BE",
+            "foreground": "#F1E9D2",
+            "green": "#8FB573",
+            "name": "Bamboo",
+            "purple": "#AAAAFF",
+            "red": "#E75A7C",
+            "selectionBackground": "#303030",
+            "white": "#F1E9D2",
+            "yellow": "#DBB651"
         },
         {
             "background": "#1E1E2E",
