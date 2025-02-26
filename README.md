@@ -20,7 +20,7 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 Enter your WSL instance, either via `wsl ~` or `ubuntu2204.exe`, or simply open a new Ubuntu tab in Windows Terminal. Run the following:
 
 ```sh
-wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/feature/windows-setup/setup.sh && bash setup.sh
+wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/master/setup.sh && bash setup.sh
 ```
 
 # TODO
