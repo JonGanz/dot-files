@@ -273,9 +273,21 @@
             "yellow": "#E0AF68"
         }
     ],
-    "theme": "Catppuccin Mocha",
+    "theme": "Bamboo",
     "themes": 
     [
+        {
+            "name": "Bamboo",
+            "tab":
+            {
+                "background": "#252525"
+            },
+            "window":
+            {
+                "frame": "#7AA2F7",
+                "unfocusedFrame": "#BB9AF7"
+            }
+        },
         {
             "name": "Catppuccin Mocha",
             "tab": 
