@@ -3,6 +3,7 @@ function Install-WindowsApps {
     winget install -e --id GIMP.GIMP
     winget install -e --id Git.Git
     winget install -e --id Inkscape.Inkscape
+    winget install -e --id JanDeDobbeleer.OhMyPosh -s winget
     winget install -e --id Microsoft.PowerToys
     winget install -e --id Microsoft.VisualStudioCode
     winget install -e --id Microsoft.WindowsTerminal
