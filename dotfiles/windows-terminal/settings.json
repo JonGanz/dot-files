@@ -16,6 +16,10 @@
             "id": "User.paste"
         },
         {
+            "command": "find",
+            "id": "User.find"
+        },
+        {
             "command": 
             {
                 "action": "splitPane",
@@ -23,10 +27,6 @@
                 "splitMode": "duplicate"
             },
             "id": "User.splitPane.A6751878"
-        },
-        {
-            "command": "find",
-            "id": "User.find"
         }
     ],
     "copyFormatting": "none",
@@ -37,12 +37,12 @@
     "keybindings": 
     [
         {
-            "id": "User.splitPane.A6751878",
-            "keys": "alt+shift+d"
-        },
-        {
             "id": null,
             "keys": "ctrl+shift+p"
+        },
+        {
+            "id": "User.splitPane.A6751878",
+            "keys": "alt+shift+d"
         },
         {
             "id": null,
@@ -53,12 +53,12 @@
             "keys": "ctrl+c"
         },
         {
-            "id": "User.find",
-            "keys": "ctrl+shift+f"
-        },
-        {
             "id": "User.paste",
             "keys": "ctrl+v"
+        },
+        {
+            "id": "User.find",
+            "keys": "ctrl+shift+f"
         }
     ],
     "newTabMenu": 
@@ -74,6 +74,11 @@
             "antialiasingMode": "cleartype",
             "backgroundImage": "%localappdata%\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\bg.jpg",
             "backgroundImageAlignment": "bottom",
+            "bellStyle": 
+            [
+                "window",
+                "taskbar"
+            ],
             "colorScheme": "Bamboo",
             "font": 
             {
@@ -86,11 +91,6 @@
         "list": 
         [
             {
-                "bellStyle": 
-                [
-                    "window",
-                    "taskbar"
-                ],
                 "commandline": "wsl.exe ~",
                 "cursorShape": "filledBox",
                 "guid": "{e3d289eb-f061-4a91-8d11-95491f13ae1a}",
@@ -278,14 +278,20 @@
     [
         {
             "name": "Bamboo",
-            "tab":
+            "tab": 
             {
-                "background": "#252525"
+                "background": "#252525FF",
+                "iconStyle": "default",
+                "showCloseButton": "always",
+                "unfocusedBackground": null
             },
-            "window":
+            "window": 
             {
-                "frame": "#7AA2F7",
-                "unfocusedFrame": "#BB9AF7"
+                "applicationTheme": "system",
+                "experimental.rainbowFrame": false,
+                "frame": "#7AA2F7FF",
+                "unfocusedFrame": "#BB9AF7FF",
+                "useMica": false
             }
         },
         {
