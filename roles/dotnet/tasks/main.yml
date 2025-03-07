@@ -1,0 +1,8 @@
+---
+- name: Install dotnet 8.0
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    pkg:
+    - dotnet-sdk-8.0
+    - aspnetcore-runtime-8.0

@@ -42,3 +42,6 @@
       tags:
         - config
 
+    - role: dotnet
+      tags:
+        - core
