@@ -6,3 +6,18 @@
     pkg:
     - dotnet-sdk-8.0
     - aspnetcore-runtime-8.0
+    
+- name: Setup bash to use oh-my-posh
+  ansible.builtin.blockinfile:
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - dotnet"
+    path: ~/.bashrc
+    block: |
+      function _dotnet_bash_complete()
+      {
+        local cur="${COMP_WORDS[COMP_CWORD]}" IFS=$'\n'
+        local candidates
+        read -d '' -ra candidates < <(dotnet complete --position "${COMP_POINT}" "${COMP_LINE}" 2>/dev/null)
+        read -d '' -ra COMPREPLY < <(compgen -W "${candidates[*]:-}" -- "$cur")
+      }
+      complete -f -F _dotnet_bash_complete dotnet
+
