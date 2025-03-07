@@ -13,12 +13,13 @@ return {
                     'ansiblels',
                     'clangd',
                     'eslint',
+                    'intelephense',
                     'lua_ls',
                     'marksman',
-                    'intelephense',
-                    'ts_ls',
+                    'omnisharp',
                     'powershell_es',
                     'sqlls',
+                    'ts_ls',
                     'volar',
                     'yamlls'
                 },
@@ -32,12 +33,15 @@ return {
             lspconfig.ansiblels.setup({})
             lspconfig.clangd.setup({})
             lspconfig.eslint.setup({})
+            lspconfig.intelephense.setup({})
             lspconfig.lua_ls.setup({})
             lspconfig.marksman.setup({})
-            lspconfig.intelephense.setup({})
-            lspconfig.ts_ls.setup({})
+            lspconfig.omnisharp.setup({
+                cmd = { "dotnet", vim.fn.stdpath("data") .. "/mason/packages/omnisharp/libexec/OmniSharp.dll" },
+            })
             lspconfig.powershell_es.setup({})
             lspconfig.sqlls.setup({})
+            lspconfig.ts_ls.setup({})
             lspconfig.volar.setup({})
             lspconfig.yamlls.setup({})
 
