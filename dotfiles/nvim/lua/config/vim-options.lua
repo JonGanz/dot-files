@@ -3,6 +3,7 @@ vim.g.mapleader = ' '
 vim.opt.colorcolumn = '90'
 vim.opt.expandtab = true
 vim.opt.ignorecase = true
+vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.shiftwidth = 4
 vim.opt.showmode = false
