@@ -54,6 +54,8 @@ if command -v cmd.exe >/dev/null; then
     cmd.exe /C start "$escaped_url" > /dev/null 2>&1
 elif command -v xdg-open >/dev/null; then
     xdg-open "$pr_url"
+elif command -v open >/dev/null; then
+    open "$pr_url"
 else
     echo -e "\e[31mNo suitable command found to open the URL."
     echo "$pr_url"
