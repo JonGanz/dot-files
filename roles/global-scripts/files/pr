@@ -32,7 +32,7 @@ remote_url=$(git config --get remote.origin.url)
 platform=""
 pr_url=""
 
-target_branch=$(url_encode "${1:-main}")
+target_branch=$(url_encode "${1:-develop}")
 
 # Determine the platform based on the remote URL
 if [[ $remote_url == *"github.com"* ]]; then
