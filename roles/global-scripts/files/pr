@@ -1,0 +1,61 @@
+#!/bin/bash
+
+escape_for_cmd() {
+    echo "$1" | sed 's|&|^&|g'
+}
+
+url_encode() {
+    local raw="$1"
+    local encoded=""
+    local i
+    for (( i = 0; i < ${#raw}; i++ )); do
+        local char="${raw:$i:1}"
+        case "$char" in
+            [a-zA-Z0-9._~-]) # Safe characters
+                encoded+="$char"
+                ;;
+            *) # Encode everything else
+                encoded+=$(printf '%%%02X' "'$char")
+                ;;
+        esac
+    done
+    echo "$encoded"
+}
+
+# Get the current branch name
+branch_name=$(url_encode $(git rev-parse --abbrev-ref HEAD))
+
+# Get the remote repository URL
+remote_url=$(git config --get remote.origin.url)
+
+# Initialize variables
+platform=""
+pr_url=""
+
+target_branch=$(url_encode "${1:-main}")
+
+# Determine the platform based on the remote URL
+if [[ $remote_url == *"github.com"* ]]; then
+    platform="GitHub"
+    repo_name=$(echo $remote_url | sed -e 's|.*github.com[:/]||' -e 's|\.git||')
+    pr_url="https://github.com/${repo_name}/compare/${target_branch}...${branch_name}?expand=1"
+elif [[ $remote_url == *"bitbucket.org"* ]]; then
+    platform="BitBucket"
+    repo_name=$(echo $remote_url | sed -e 's|.*bitbucket.org[:/]||' -e 's|\.git||')
+    pr_url="https://bitbucket.org/${repo_name}/pull-requests/new?source=${branch_name}&dest=${target_branch}"
+else
+    echo -e "\e[31mUnsupported platform."
+    exit 1
+fi
+
+# Try to open it.
+if command -v cmd.exe >/dev/null; then
+    escaped_url=$(escape_for_cmd "$pr_url")
+    cmd.exe /C start "$escaped_url" > /dev/null 2>&1
+elif command -v xdg-open >/dev/null; then
+    xdg-open "$pr_url"
+else
+    echo -e "\e[31mNo suitable command found to open the URL."
+    echo "$pr_url"
+fi
+
