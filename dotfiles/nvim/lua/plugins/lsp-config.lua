@@ -42,7 +42,15 @@ return {
             lspconfig.powershell_es.setup({})
             lspconfig.sqlls.setup({})
             lspconfig.ts_ls.setup({})
-            lspconfig.volar.setup({})
+            lspconfig.volar.setup({
+                init_options = {
+                    typescript = {
+                        tsdk = vim.fn.expand(
+                            '~/.local/share/nvim/mason/packages/vue-language-server/node_modules/typescript/lib'
+                        ),
+                    },
+                },
+            })
             lspconfig.yamlls.setup({})
 
             vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
