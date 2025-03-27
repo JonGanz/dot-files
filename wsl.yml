@@ -41,6 +41,7 @@
     - role: global-scripts
       tags:
         - config
+        - globalScripts
 
     - role: dotnet
       tags:
