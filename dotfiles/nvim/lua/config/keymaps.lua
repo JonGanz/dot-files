@@ -4,6 +4,11 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "{", "{zz")
 vim.keymap.set("n", "}", "}zz")
+vim.keymap.set("n", "'a", "'azz")
+vim.keymap.set("n", "'b", "'bzz")
+vim.keymap.set("n", "'c", "'czz")
+vim.keymap.set("n", "<C-Down>", "16jzz")
+vim.keymap.set("n", "<C-Up>", "16kzz")
 
 -- Paste over something highlighted without losing the thing you yanked.
 vim.keymap.set("x", "<leader>p", "\"_dP", { desc = 'Paste & keep yanked text' })
