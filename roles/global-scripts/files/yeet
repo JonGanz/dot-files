@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]; then
+    echo -e "\e[31mError: Please provide a branch name"
+    exit 1
+fi
+
+BRANCH_NAME="$1"
+
+echo -e "\e[33mDeleting branch $BRANCH_NAME locally...\033[0m"
+git branch -D "$BRANCH_NAME"
+echo -e "\e[33mDeleting branch $BRANCH_NAME remotely...\033[0m"
+git push origin --delete "$BRANCH_NAME"
+
