@@ -46,3 +46,8 @@
     - role: dotnet
       tags:
         - core
+
+    - role: ansible-role-golang
+      tags:
+        - go
+
