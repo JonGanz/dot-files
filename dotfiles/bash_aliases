@@ -1,3 +1,4 @@
+alias wez='flatpak run org.wezfurlong.wezterm'
 alias vh='nvim .'
 alias cls='clear'
 

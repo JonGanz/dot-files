@@ -1,0 +1,51 @@
+---
+- name: Install Flatpak
+  include_tasks: flatpak.yml
+
+- name: Install Wezterm (Flatpack)
+  ansible.builtin.command:
+    cmd: flatpak install flathub org.wezfurlong.wezterm
+
+- name: Link Wezterm Config
+  ansible.builtin.file:
+    src: "{{ setup_dir }}/dotfiles/wezterm"
+    dest: "{{ home }}/.config/wezterm"
+    state: link
+
+- name: Libraries required for Brave
+  become: true
+  ansible.builtin.apt:
+    pkg:
+    - apt-transport-https
+    - curl
+
+- name: Add Brave GPG Key
+  become: true
+  ansible.builtin.get_url:
+    url: "https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+    dest: /usr/share/keyrings/brave-browser-archive-keyring.gpg
+
+- name: Brave Browser PPA setting
+  become: true
+  ansible.builtin.shell:
+    cmd: "echo \"deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main\" | sudo tee /etc/apt/sources.list.d/brave-browser-release.list"
+
+- name: Install Brave
+  become: true
+  ansible.builtin.apt:
+    pkg:
+    - brave-browser
+
+- name: Install GIMP & Inkscape
+  become: true
+  ansible.builtin.apt:
+    pkg:
+    - gimp
+    - inkscape
+
+- name: Install Spotify (Snap)
+  become: true
+  community.general.snap:
+    channel: 'latest/stable'
+    name: spotify
+    state: present

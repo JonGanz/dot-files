@@ -12,6 +12,10 @@
       tags:
         - core
 
+    - role: desktop-apps
+      tags:
+        - apps
+
     - role: neovim
       tags:
         - nvim
