@@ -37,6 +37,10 @@
       tags:
         - config
 
+    - role: desktop-personalization
+      tags:
+        - personalization
+
     - role: global-scripts
       tags:
         - config
