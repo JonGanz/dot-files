@@ -16,6 +16,10 @@
       tags:
         - apps
 
+    - role: docker
+      tags:
+        - docker
+
     - role: neovim
       tags:
         - nvim
