@@ -10,3 +10,8 @@
     - ncal
     - unzip
 
+- name: "Install Lazygit {{ lazygit_version }}"
+  ansible.builtin.unarchive:
+    src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
+    dest: "{{ home }}/bin/"
+    remote_src: true
