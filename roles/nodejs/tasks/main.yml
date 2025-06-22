@@ -1,10 +1,7 @@
 ---
-
-# vars: node_version
-
 - name: Install NVM (Node Version Manager)
   ansible.builtin.shell:
-    cmd: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+    cmd: "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v{{ nvm_version }}/install.sh | bash"
     chdir: "{{ home }}"
     creates: "{{ home }}/.nvm/nvm.sh"
 
