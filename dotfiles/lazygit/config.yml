@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
+
+git:
+  autoFetch: false
+  autoForwardBranches: none
+gui:
+  theme:
+    selectedLineBgColor:
+      - '#383937'

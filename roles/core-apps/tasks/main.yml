@@ -15,3 +15,14 @@
     src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
     dest: "{{ home }}/bin/"
     remote_src: true
+
+- name: Ensure Lazygit config directory is removed
+  ansible.builtin.file:
+    path: "{{ home }}/.config/lazygit"
+    state: absent
+
+- name: Link Lazygit Config
+  ansible.builtin.file:
+    src: "{{ setup_dir }}/dotfiles/lazygit"
+    dest: "{{ home }}/.config/lazygit"
+    state: link
