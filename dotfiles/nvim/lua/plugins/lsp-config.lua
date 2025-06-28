@@ -13,6 +13,7 @@ return {
                     'ansiblels',
                     'clangd',
                     'eslint',
+                    'gopls',
                     'intelephense',
                     'lua_ls',
                     'marksman',
@@ -33,6 +34,7 @@ return {
             lspconfig.ansiblels.setup({})
             lspconfig.clangd.setup({})
             lspconfig.eslint.setup({})
+            lspconfig.gopls.setup({})
             lspconfig.intelephense.setup({})
             lspconfig.lua_ls.setup({})
             lspconfig.marksman.setup({})
