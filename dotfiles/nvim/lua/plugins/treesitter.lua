@@ -22,6 +22,7 @@ return {
                     'scss',
                     'sql',
                     'typescript',
+                    'vue',
                     'yaml',
                 },
                 highlight = { enabled = true },

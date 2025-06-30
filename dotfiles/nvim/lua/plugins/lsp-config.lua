@@ -31,6 +31,11 @@ return {
         'neovim/nvim-lspconfig',
         config = function()
             local lspconfig = require("lspconfig")
+
+            -- Supposedly could use $MASON/packages, but either that doesn't work with
+            -- nvim 0.10.4 or it's not functioning correctly with the WSL setup.
+            local mason_package_dir = vim.fn.expand('~/.local/share/nvim/mason/packages')
+
             lspconfig.ansiblels.setup({})
             lspconfig.clangd.setup({})
             lspconfig.eslint.setup({})
@@ -43,13 +48,28 @@ return {
             })
             lspconfig.powershell_es.setup({})
             lspconfig.sqlls.setup({})
-            lspconfig.ts_ls.setup({})
+            lspconfig.ts_ls.setup({
+                init_options = {
+                    plugins = {
+                        {
+                            name = '@vue/typescript-plugin',
+                            location = mason_package_dir .. '/vue-language-server/node_modules/@vue/language-server',
+                            languages = { 'vue' },
+                        },
+                    },
+                },
+                filetypes = {
+                    'typescript',
+                    'javascript',
+                    'javascriptreact',
+                    'typescriptreact',
+                    'vue',
+                },
+            })
             lspconfig.volar.setup({
                 init_options = {
                     typescript = {
-                        tsdk = vim.fn.expand(
-                            '~/.local/share/nvim/mason/packages/vue-language-server/node_modules/typescript/lib'
-                        ),
+                        tsdk = mason_package_dir .. '/vue-language-server/node_modules/typescript/lib'
                     },
                 },
             })
