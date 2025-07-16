@@ -31,6 +31,7 @@ function Uninstall-UnnecessaryWindowsApps {
     Get-AppXPackage Microsoft.BingWeather | Remove-AppXPackage
     Get-AppXPackage Microsoft.GetHelp | Remove-AppXPackage
     Get-AppXPackage Microsoft.Getstarted | Remove-AppXPackage
+    Get-AppXPackage Microsoft.M365Companions | Remove-AppXPackage
     Get-AppXPackage Microsoft.MicrosoftSolitaireCollection | Remove-AppXPackage
     Get-AppXPackage Microsoft.MicrosoftStickyNotes | Remove-AppXPackage
     Get-AppXPackage Microsoft.MixedReality.Portal | Remove-AppXPackage
@@ -39,11 +40,11 @@ function Uninstall-UnnecessaryWindowsApps {
     Get-AppXPackage Microsoft.SkypeApp | Remove-AppXPackage
     Get-AppXPackage Microsoft.Wallet | Remove-AppXPackage
     Get-AppXPackage Microsoft.WindowsFeedbackHub | Remove-AppXPackage
-    Get-AppxPackage MicrosoftWindows.Client.WebExperience | Remove-AppxPackage # Widgets
     Get-AppXPackage Microsoft.WindowsMaps | Remove-AppXPackage
     Get-AppXPackage Microsoft.YourPhone | Remove-AppXPackage
     Get-AppXPackage Microsoft.ZuneMusic | Remove-AppXPackage
     Get-AppXPackage Microsoft.ZuneVideo | Remove-AppXPackage
+    Get-AppxPackage MicrosoftWindows.Client.WebExperience | Remove-AppxPackage # Widgets
 
     Write-Host "Uninstalled unnecessary default apps..." -ForegroundColor Green
 }
