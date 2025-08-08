@@ -27,6 +27,10 @@ require('lazy').setup({
     checker = {
         enabled = false,
     },
+    debug = false,
+    log = {
+        level = 'warn',
+    },
     performance = {
         rtp = {
             disabled_plugins = {

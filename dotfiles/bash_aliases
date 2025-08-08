@@ -1,6 +1,6 @@
 alias wez='flatpak run org.wezfurlong.wezterm'
 alias lg='lazygit'
-alias vh='nvim .'
+alias vh='> ~/.local/state/nvim/log && nvim .'
 alias cls='clear'
 
 alias g='git'
