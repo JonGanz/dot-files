@@ -12,4 +12,3 @@ vim.opt.softtabstop = 4
 vim.opt.tabstop = 4
 vim.opt.termguicolors = true
 vim.opt.wrap = false
-

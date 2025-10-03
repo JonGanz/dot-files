@@ -38,4 +38,3 @@ vim.keymap.set('n', '<leader>qq', '<cmd>qa<CR>', { desc = 'Quit All' })
 -- Something is preventing <CR> from opening the file in the quickfix list. This prevents
 -- that from happening.
 vim.cmd('autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>')
-

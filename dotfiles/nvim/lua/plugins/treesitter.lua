@@ -1,15 +1,13 @@
 return {
     {
         'nvim-treesitter/nvim-treesitter',
+        branch = 'master',
+        lazy = false,
         build = ':TSUpdate',
         config = function()
-            local config = require('nvim-treesitter.configs')
-            config.setup({
+            require('nvim-treesitter.configs').setup({
                 ensure_installed = {
                     'bash',
-                    'c',
-                    'c_sharp',
-                    'cpp',
                     'css',
                     'dockerfile',
                     'html',
@@ -18,23 +16,24 @@ return {
                     'lua',
                     'markdown',
                     'markdown_inline',
-                    'php',
                     'scss',
                     'sql',
                     'typescript',
                     'vue',
                     'yaml',
                 },
-                highlight = { enabled = true },
-                indent = { enabled = true },
+                highlight = {
+                    enable = true,
+                    disable = function(lang, buf)
+                        local max_filesize = 1024 * 1024 -- 1MB
+                        local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                        if ok and stats and stats.size > max_filesize then
+                            return true
+                        end
+                    end,
+                },
+                indent = { enable = true },
             })
-        end
-    },
-    {
-        'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'make',
-    },
-    {
-        'nvim-treesitter/nvim-treesitter-context',
+        end,
     },
 }
