@@ -1,10 +1,16 @@
 return {
     {
-        'nvim-mini/mini.statusline',
-        version = '*',
+        -- May be worth considering nvim-mini/mini.statusline. It seems to load a BIT
+        -- quicker, and is pretty clean, but could use some configuration. As far as content
+        -- is concerned, the defaults for each option have trade-offs, but I'm more
+        -- accustomed to the defaults provided by lualine.
+        'nvim-lualine/lualine.nvim',
         event = { 'BufReadPre', 'BufNewFile' },
+        dependencies = {
+            'nvim-tree/nvim-web-devicons',
+        },
         config = function()
-            require('mini.statusline').setup()
+            require('lualine').setup({})
         end,
     },
     {
@@ -16,6 +22,10 @@ return {
                 build = 'make',
             },
             'nvim-telescope/telescope-ui-select.nvim',
+            {
+                'nvim-tree/nvim-web-devicons',
+                opts = {},
+            },
         },
         config = function()
             local builtin = require('telescope.builtin')
