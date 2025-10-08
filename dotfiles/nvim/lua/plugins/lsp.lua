@@ -1,5 +1,29 @@
 return {
     {
+        'hrsh7th/nvim-cmp',
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp',
+        },
+        config = function()
+            local cmp = require('cmp')
+            cmp.setup({
+                window = {
+                    completion = cmp.config.window.bordered(),
+                    documentation = cmp.config.window.bordered(),
+                },
+                mapping = cmp.mapping.preset.insert({
+                    ['<C-e>'] = cmp.mapping.abort(),
+                    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+                }),
+                sources = cmp.config.sources({
+                    { name = 'nvim_lsp' },
+                }, {
+                    { name = 'buffer', keyword_length = 3 },
+                }),
+            })
+        end,
+    },
+    {
         'mason-org/mason-lspconfig.nvim',
         opts = {
             ensure_installed = {
@@ -24,6 +48,26 @@ return {
                     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
                 end,
             },
+        },
+    },
+    {
+        'nvimtools/none-ls.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+        config = function()
+            local null_ls = require('null-ls')
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { 'html', 'css', 'json', 'markdown', 'scss' },
+                    }),
+                },
+            })
+        end,
+        keys = {
+            { '<leader>ff', vim.lsp.buf.format, mode = 'n', desc = 'Format file' },
         },
     },
 }

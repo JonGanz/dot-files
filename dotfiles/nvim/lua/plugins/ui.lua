@@ -1,5 +1,13 @@
 return {
     {
+        'lukas-reineke/indent-blankline.nvim',
+        main = 'ibl',
+        event = { 'BufReadPre', 'BufNewFile' },
+        config = function()
+            require('ibl').setup()
+        end,
+    },
+    {
         -- May be worth considering nvim-mini/mini.statusline. It seems to load a BIT
         -- quicker, and is pretty clean, but could use some configuration. As far as content
         -- is concerned, the defaults for each option have trade-offs, but I'm more
