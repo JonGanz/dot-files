@@ -5,7 +5,7 @@ return {
 	config = function()
 		require('bamboo').setup {
             lualine = {
-                transparent = false,
+                transparent = true,
             },
             transparent = true,
 		}
