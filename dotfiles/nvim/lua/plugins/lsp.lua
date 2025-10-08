@@ -1,9 +1,5 @@
 return {
     {
-        'mason-org/mason.nvim',
-        opts = {},
-    },
-    {
         'mason-org/mason-lspconfig.nvim',
         opts = {
             ensure_installed = {
@@ -15,11 +11,19 @@ return {
             },
         },
         dependencies = {
-            'mason-org/mason.nvim',
-            'neovim/nvim-lspconfig',
+            {
+                'mason-org/mason.nvim',
+                opts = {},
+            },
+            {
+                'neovim/nvim-lspconfig',
+                config = function()
+                    vim.keymap.set('n', '<F2>', vim.lsp.buf.rename, {})
+                    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, {})
+                    vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
+                    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
+                end,
+            },
         },
-    },
-    {
-        'neovim/nvim-lspconfig',
     },
 }
