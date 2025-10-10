@@ -24,6 +24,7 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 ```
 
 # TODO
+- [ ] get the stylua.toml file working and picked up
 - [ ] ensure the ~/bin folder exists before installing LazyGit
 - [ ] ensure the ~/.config folder exists before installing LazyGit
 - [ ] Rust LSP

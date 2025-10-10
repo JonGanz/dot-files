@@ -97,7 +97,9 @@ return {
             local null_ls = require('null-ls')
             null_ls.setup({
                 sources = {
-                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.stylua.with({
+                        filetypes = { 'lua' },
+                    }),
                     null_ls.builtins.formatting.prettier.with({
                         filetypes = { 'html', 'css', 'json', 'markdown', 'scss' },
                     }),
