@@ -18,6 +18,17 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
 require('lazy').setup({
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                'gzip',
+                'tarPlugin',
+                'tohtml',
+                'tutor',
+                'zipPlugin',
+            },
+        },
+    },
 	spec = {
 		{ import = 'plugins' },
 	},
