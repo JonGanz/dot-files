@@ -15,11 +15,10 @@ return {
                     ['<C-e>'] = cmp.mapping.abort(),
                     ['<CR>'] = cmp.mapping.confirm({ select = false }),
                 }),
-                sources = cmp.config.sources({
-                    { name = 'nvim_lsp' },
-                }, {
-                    { name = 'buffer', keyword_length = 3 },
-                }),
+                sources = cmp.config.sources(
+                    { { name = 'nvim_lsp' } },
+                    { { name = 'buffer', keyword_length = 3 } }
+                ),
             })
         end,
     },
@@ -86,6 +85,12 @@ return {
             vim.lsp.config('vue_ls', vue_ls_config)
             vim.lsp.config('ts_ls', ts_ls_config)
             vim.lsp.enable({'ts_ls', 'vue_ls'})
+
+            -- Enable in-line diagnostics.
+            vim.diagnostic.config({
+                signs = false,
+                virtual_text = true,
+            })
         end,
     },
     {
