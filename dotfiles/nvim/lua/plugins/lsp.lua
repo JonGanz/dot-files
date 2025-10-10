@@ -28,10 +28,15 @@ return {
         opts = {
             ensure_installed = {
                 'ansiblels',
+                'clangd',
                 'eslint',
+                'gopls',
                 'lua_ls',
                 'marksman',
+                'omnisharp',
+                'sqlls',
                 'ts_ls',
+                'yamlls',
             },
         },
         dependencies = {
