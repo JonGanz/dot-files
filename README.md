@@ -24,6 +24,10 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 ```
 
 # TODO
+- [ ] migration to gruvbox
+    - [ ] the highlight color in the completion menu is unreadable
+    - [ ] oh-my-posh theme
+- [ ] make the lualine cleaner and more compact
 - [ ] get the stylua.toml file working and picked up
 - [ ] ensure the ~/bin folder exists before installing LazyGit
 - [ ] ensure the ~/.config folder exists before installing LazyGit
