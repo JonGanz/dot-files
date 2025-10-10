@@ -24,6 +24,9 @@ return {
         end,
     },
     {
+        'github/copilot.vim',
+    },
+    {
         'mason-org/mason-lspconfig.nvim',
         dependencies = {
             {
