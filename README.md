@@ -24,6 +24,8 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 ```
 
 # TODO
+- [ ] ensure the ~/bin folder exists before installing LazyGit
+- [ ] ensure the ~/.config folder exists before installing LazyGit
 - [ ] Rust LSP
 - [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
 - [ ] complete the TODO list in `Setup.ps1`
