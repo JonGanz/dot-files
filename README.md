@@ -25,8 +25,8 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 
 # TODO
 - [ ] migration to gruvbox
-    - [ ] the highlight color in the completion menu is unreadable
-    - [ ] try to change the border color of telescope to be prettier
+    - [x] the highlight color in the completion menu is unreadable
+    - [x] try to change the border color of telescope to be prettier
     - [ ] oh-my-posh theme
     - [ ] Windows Terminal theme
 - [ ] make the lualine cleaner and more compact

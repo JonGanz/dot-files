@@ -8,8 +8,12 @@ return {
             local cmp = require('cmp')
             cmp.setup({
                 window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
+                    completion = cmp.config.window.bordered({
+                        winhighlight = 'Normal:CmpNormal,FloatBorder:CmpBorder,CursorLine:CmpSelection,Search:None',
+                    }),
+                    documentation = cmp.config.window.bordered({
+                        winhighlight = 'Normal:CmpNormal,FloatBorder:CmpBorder',
+                    }),
                 },
                 mapping = cmp.mapping.preset.insert({
                     ['<C-e>'] = cmp.mapping.abort(),
