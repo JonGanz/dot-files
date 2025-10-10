@@ -26,11 +26,14 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 # TODO
 - [ ] migration to gruvbox
     - [ ] the highlight color in the completion menu is unreadable
+    - [ ] try to change the border color of telescope to be prettier
     - [ ] oh-my-posh theme
+    - [ ] Windows Terminal theme
 - [ ] make the lualine cleaner and more compact
 - [ ] get the stylua.toml file working and picked up
-- [ ] ensure the ~/bin folder exists before installing LazyGit
-- [ ] ensure the ~/.config folder exists before installing LazyGit
+- [ ] fix LazyGit setup when machine has no default folders (Server minimum install for instance); these probably apply to other tools too, LazyGit was just the first to run
+    - [ ] ensure the ~/bin folder exists before installing LazyGit
+    - [ ] ensure the ~/.config folder exists before installing LazyGit
 - [ ] Rust LSP
 - [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
 - [ ] complete the TODO list in `Setup.ps1`
