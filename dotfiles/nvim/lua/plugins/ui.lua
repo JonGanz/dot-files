@@ -40,6 +40,7 @@ return {
             vim.keymap.set('n', '<C-p>', builtin.find_files, {})
             vim.keymap.set('n', '<C-f>', builtin.live_grep, {})
             vim.keymap.set('n', '<C-s>', builtin.lsp_document_symbols, {})
+            vim.keymap.set('n', '<leader>gr', builtin.lsp_references, {})
             vim.keymap.set('n', '<leader><Tab>', builtin.buffers, {})
 
             require('telescope').setup({
