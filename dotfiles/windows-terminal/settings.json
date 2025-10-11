@@ -294,7 +294,7 @@
             "yellow" : "#D8A657"
         }
     ],
-    "theme": "Bamboo",
+    "theme": "Gruvbox",
     "themes": 
     [
         {
@@ -336,6 +336,14 @@
                 "frame": null,
                 "unfocusedFrame": null,
                 "useMica": false
+            }
+        },
+        {
+            "name": "Gruvbox",
+            "window":
+            {
+                "frame": "#D8A657",
+                "unfocusedFrame": "#D8A657"
             }
         }
     ],
