@@ -20,6 +20,11 @@ return {
             -- nvim-cmp overrides.
             vim.api.nvim_set_hl(0, 'CmpBorder', { bg = 'none' })
             vim.api.nvim_set_hl(0, 'CmpSelection', { bg = palette.bg0[1] })
+
+            -- Lualine overrides
+            vim.api.nvim_set_hl(0, 'LualineDim', {
+                fg = palette.bg5[1]
+            })
         end,
     },
 }

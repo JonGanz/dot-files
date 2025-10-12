@@ -18,7 +18,71 @@ return {
             'nvim-tree/nvim-web-devicons',
         },
         config = function()
-            require('lualine').setup({})
+            require('lualine').setup({
+                options = {
+                    theme = 'auto',
+                    section_separators = '',
+                    component_separators = '',
+                },
+                sections = {
+                    lualine_a = {
+                        {
+                            'mode',
+                            fmt = function(str)
+                                local mode_map = {
+                                    ['NORMAL'] = 'N',
+                                    ['INSERT'] = 'I',
+                                    ['VISUAL'] = 'V',
+                                    ['V-LINE'] = 'VL',
+                                    ['V-BLOCK'] = 'VB',
+                                    ['SELECT'] = 'S',
+                                    ['COMMAND'] = 'C',
+                                    ['REPLACE'] = 'R',
+                                    ['TERMINAL'] = 'T',
+                                }
+                                return mode_map[str] or str:sub(1, 1)
+                            end,
+                        },
+                    },
+                    lualine_c = {
+                        {
+                            function()
+                                local filepath = vim.fn.expand('%:~:.')
+                                if filepath == '' then
+                                    return '[No Name]'
+                                end
+                                local filename = vim.fn.fnamemodify(filepath, ':t')
+                                local dir = vim.fn.fnamemodify(filepath, ':h')
+                                if dir == '.' then
+                                    return filename
+                                else
+                                    return string.format('%%#LualineDim#%s/%%#LualineNormal#%s', dir, filename)
+                                end
+                            end,
+                            color = {
+                                gui = 'bold',
+                            },
+                        },
+                    },
+                    lualine_y = {
+                        {
+                            function()
+                                local current_line = vim.fn.line('.')
+                                local total_lines = vim.fn.line('$')
+                                return string.format('%d|%d', current_line, total_lines)
+                            end,
+                        },
+                    },
+                    lualine_z = {
+                        {
+                            function()
+                                local current_col = vim.fn.col('.')
+                                return string.format('%d', current_col)
+                            end,
+                        },
+                    },
+                },
+            })
         end,
     },
     {
