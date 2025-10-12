@@ -7,3 +7,5 @@ gui:
   theme:
     selectedLineBgColor:
       - '#383937'
+  authorColors: 
+    '*': '#d3869b'
