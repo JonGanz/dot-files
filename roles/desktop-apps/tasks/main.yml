@@ -6,6 +6,12 @@
   ansible.builtin.command:
     cmd: flatpak install flathub org.wezfurlong.wezterm
 
+- name: Ensure .config directory exists
+  ansible.builtin.file:
+    dest: "{{ home }}/.config"
+    mode: 0700
+    state: directory
+
 - name: Link Wezterm Config
   ansible.builtin.file:
     src: "{{ setup_dir }}/dotfiles/wezterm"

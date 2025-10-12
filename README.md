@@ -33,9 +33,9 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 - [x] make the lualine cleaner and more compact
 - [x] fix the fuschia color showing up for the commit log in lazygit
 - [ ] get the stylua.toml file working and picked up
-- [ ] fix LazyGit setup when machine has no default folders (Server minimum install for instance); these probably apply to other tools too, LazyGit was just the first to run
-    - [ ] ensure the ~/bin folder exists before installing LazyGit
-    - [ ] ensure the ~/.config folder exists before installing LazyGit
+- [x] fix LazyGit setup when machine has no default folders (Server minimum install for instance); these probably apply to other tools too, LazyGit was just the first to run
+    - [x] ensure the ~/bin folder exists before installing LazyGit
+    - [x] ensure the ~/.config folder exists before installing LazyGit
 - [ ] Rust LSP
 - [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
 - [ ] complete the TODO list in `Setup.ps1`

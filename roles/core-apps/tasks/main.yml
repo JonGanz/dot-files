@@ -10,11 +10,23 @@
     - ncal
     - unzip
 
+- name: Ensure bin directory exists
+  ansible.builtin.file:
+    dest: "{{ home }}/bin"
+    mode: 0700
+    state: directory
+
 - name: "Install Lazygit {{ lazygit_version }}"
   ansible.builtin.unarchive:
     src: "https://github.com/jesseduffield/lazygit/releases/download/v{{ lazygit_version }}/lazygit_{{ lazygit_version }}_Linux_x86_64.tar.gz"
     dest: "{{ home }}/bin/"
     remote_src: true
+
+- name: Ensure .config directory exists
+  ansible.builtin.file:
+    dest: "{{ home }}/.config"
+    mode: 0700
+    state: directory
 
 - name: Ensure Lazygit config directory is removed
   ansible.builtin.file:
