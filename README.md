@@ -24,11 +24,12 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 ```
 
 # TODO
-- [x] migration to gruvbox
+- [ ] migration to gruvbox
     - [x] the highlight color in the completion menu is unreadable
     - [x] try to change the border color of telescope to be prettier
     - [x] oh-my-posh theme
     - [x] Windows Terminal theme
+    - [ ] oh-my-posh theme
 - [x] make the lualine cleaner and more compact
 - [x] fix the fuschia color showing up for the commit log in lazygit
 - [ ] get the stylua.toml file working and picked up

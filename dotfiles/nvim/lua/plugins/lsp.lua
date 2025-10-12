@@ -61,7 +61,7 @@ return {
                 'yamlls',
             },
         },
-        config = function(opts)
+        config = function(_, opts)
             require('mason-lspconfig').setup(opts)
 
             -- Setup the Vue language support.
