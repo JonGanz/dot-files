@@ -1,5 +1,21 @@
 return {
     {
+        'kdheepak/lazygit.nvim',
+        cmd = {
+            'LazyGit',
+            'LazyGitConfig',
+            'LazyGitCurrentFile',
+            'LazyGitFilter',
+            'LazyGitFilterCurrentFile',
+        },
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+        },
+        keys = {
+            { '<leader>lg', '<Cmd>LazyGit<CR>', mode = 'n', desc = 'Open LazyGit' },
+        },
+    },
+    {
         'lukas-reineke/indent-blankline.nvim',
         main = 'ibl',
         event = { 'BufReadPre', 'BufNewFile' },
