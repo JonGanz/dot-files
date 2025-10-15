@@ -1,0 +1,9 @@
+call_parentheses = 'Always'
+column_width = 90
+indent_type = 'Spaces'
+indent_width = 4
+quote_style = 'ForceSingle'
+space_after_function_names = 'Never'
+
+[sort_requires]
+enabled = true

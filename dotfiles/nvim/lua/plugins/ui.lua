@@ -72,7 +72,11 @@ return {
                                 if dir == '.' then
                                     return filename
                                 else
-                                    return string.format('%%#LualineDim#%s/%%#LualineNormal#%s', dir, filename)
+                                    return string.format(
+                                        '%%#LualineDim#%s/%%#LualineNormal#%s',
+                                        dir,
+                                        filename
+                                    )
                                 end
                             end,
                             color = {
@@ -126,7 +130,7 @@ return {
             require('telescope').setup({
                 extensions = {
                     ['ui-select'] = {
-                        require('telescope.themes').get_dropdown({})
+                        require('telescope.themes').get_dropdown({}),
                     },
                 },
             })
@@ -149,12 +153,42 @@ return {
             harpoon:setup({})
         end,
         keys = {
-            { '<leader>a', '<Cmd>lua require("harpoon"):list():add()<CR>', mode = 'n', desc = 'Add to Harpoon' },
-            { '<C-j>', '<Cmd>lua require("harpoon"):list():select(1)<CR>', mode = 'n', desc = 'Harpoon file 1' },
-            { '<C-k>', '<Cmd>lua require("harpoon"):list():select(2)<CR>', mode = 'n', desc = 'Harpoon file 2' },
-            { '<C-l>', '<Cmd>lua require("harpoon"):list():select(3)<CR>', mode = 'n', desc = 'Harpoon file 3' },
-            { '<C-m>', '<Cmd>lua require("harpoon"):list():select(4)<CR>', mode = 'n', desc = 'Harpoon file 4' },
-            { '<C-e>', '<Cmd>lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())<CR>', mode = 'n', desc = 'View Harpoon file list' },
+            {
+                '<leader>a',
+                '<Cmd>lua require("harpoon"):list():add()<CR>',
+                mode = 'n',
+                desc = 'Add to Harpoon',
+            },
+            {
+                '<C-j>',
+                '<Cmd>lua require("harpoon"):list():select(1)<CR>',
+                mode = 'n',
+                desc = 'Harpoon file 1',
+            },
+            {
+                '<C-k>',
+                '<Cmd>lua require("harpoon"):list():select(2)<CR>',
+                mode = 'n',
+                desc = 'Harpoon file 2',
+            },
+            {
+                '<C-l>',
+                '<Cmd>lua require("harpoon"):list():select(3)<CR>',
+                mode = 'n',
+                desc = 'Harpoon file 3',
+            },
+            {
+                '<C-m>',
+                '<Cmd>lua require("harpoon"):list():select(4)<CR>',
+                mode = 'n',
+                desc = 'Harpoon file 4',
+            },
+            {
+                '<C-e>',
+                '<Cmd>lua require("harpoon").ui:toggle_quick_menu(require("harpoon"):list())<CR>',
+                mode = 'n',
+                desc = 'View Harpoon file list',
+            },
         },
     },
 }

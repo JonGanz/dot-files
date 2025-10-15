@@ -21,7 +21,12 @@ return {
         end,
         keys = {
             '<leader>w',
-            { '<leader>w.', '<Cmd>TextCaseOpenTelescope<CR>', mode = { 'n', 'x' }, desc = "Change case" },
+            {
+                '<leader>w.',
+                '<Cmd>TextCaseOpenTelescope<CR>',
+                mode = { 'n', 'x' },
+                desc = 'Change case',
+            },
         },
     },
     {
@@ -32,12 +37,12 @@ return {
             require('mini.comment').setup()
         end,
     },
-	{
-		'nvim-mini/mini.surround',
-		version = '*',
+    {
+        'nvim-mini/mini.surround',
+        version = '*',
         event = { 'BufReadPre', 'BufNewFile' },
         config = function()
             require('mini.surround').setup()
         end,
-	},
+    },
 }

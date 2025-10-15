@@ -66,8 +66,16 @@ return {
 
             -- Setup the Vue language support.
             -- https://github.com/vuejs/language-tools/wiki/Neovim
-            local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
-            local tsserver_filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' }
+            local vue_language_server_path = vim.fn.expand('$MASON/packages')
+                .. '/vue-language-server'
+                .. '/node_modules/@vue/language-server'
+            local tsserver_filetypes = {
+                'typescript',
+                'javascript',
+                'javascriptreact',
+                'typescriptreact',
+                'vue',
+            }
             local vue_plugin = {
                 name = '@vue/typescript-plugin',
                 location = vue_language_server_path,
@@ -88,7 +96,7 @@ return {
 
             vim.lsp.config('vue_ls', vue_ls_config)
             vim.lsp.config('ts_ls', ts_ls_config)
-            vim.lsp.enable({'ts_ls', 'vue_ls'})
+            vim.lsp.enable({ 'ts_ls', 'vue_ls' })
 
             -- Enable in-line diagnostics.
             vim.diagnostic.config({
