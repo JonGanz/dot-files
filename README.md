@@ -37,5 +37,6 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
     - [x] ensure the ~/bin folder exists before installing LazyGit
     - [x] ensure the ~/.config folder exists before installing LazyGit
 - [ ] Rust LSP
+- [ ] fix theme highlighting of directories in terminal. `ls` shows a blue on top of a green, and you can't read it
 - [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
 - [ ] complete the TODO list in `Setup.ps1`
