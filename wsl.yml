@@ -49,3 +49,10 @@
       tags:
         - go
 
+  tasks:
+
+    - name: Include SSH keychain setup
+      include_role:
+        name: ssh
+        tasks_from: ssh-keychain.yml
+
