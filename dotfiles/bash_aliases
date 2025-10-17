@@ -7,3 +7,5 @@ alias g='git'
 alias gf='git f'
 alias gst='git status'
 
+alias :q='exit'
+
