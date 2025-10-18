@@ -24,7 +24,20 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 ```
 
 # TODO
+- [ ] Firefox - harden / configure
+- [ ] Obsidian
+- [ ] Add Windows shortcut for gnome-screenshot (Win + Shift + S)
+- [ ] Setup Signal
+- [ ] Separate home vs work role
+- [ ] Customize desktop
+    - [ ] New wallpaper for 4k
+    - [ ] Add shortcuts for apps/desktops
+    - [ ] Remove the side panel
+    - [ ] Enlarge the top panel
+    - [ ] Rice top panel with goodies to taste
 - [ ] Rust LSP
+- [ ] On first pass of the installer, the step "Install Brave" fails as the package is not found. On second pass this works, so we need to ensure the PPA settings in the step before are sourced
 - [ ] fix theme highlighting of directories in terminal. `ls` shows a blue on top of a green, and you can't read it
 - [ ] make the Powershell setup a single-command to install Git, pull down the repo, then run the current setup script
 - [ ] complete the TODO list in `Setup.ps1`
+- [ ] JetBrains Mono font install: ~/.fonts doesn't exist when checking for the font the first time. All good, the error is ignored, but it sure would be nice if it wouldn't log a big scary error
