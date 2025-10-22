@@ -19,15 +19,32 @@ MAIN_BRANCH="main"
 CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
 TARGET_BRANCH="${BRANCH_TYPE}/${SEMVER}"
 
+STASHED=true
+
 git fetch --prune || { echo -e "\e[31mError: Failed to fetch from origin"; exit 1; }
-git stash save -m "Stashing changes to $CURRENT_BRANCH before merging release $TARGET_BRANCH" || { echo -e "\e[31mError: Failed to stash changes"; exit 1; }
+STASH_OUTPUT=$(git stash save -m "Stashing changes to $CURRENT_BRANCH before merging release $TARGET_BRANCH")
+STASH_EXIT_CODE=$?
+
+if [[ $STASH_EXIT_CODE -ne 0 ]]; then
+    echo -e "\e[31mError: Failed to stash changes"
+    exit 1
+fi
+if [[ "$STASH_OUTPUT" == "No local changes to save" ]]; then
+    STASHED=false
+fi
 
 git checkout $MAIN_BRANCH || { echo -e "\e[31mError: Failed to checkout 'main' branch"; exit 1; }
 git reset --hard "origin/$MAIN_BRANCH" || { echo -e "\e[31mError: Failed to update 'main' branch"; exit 1; }
 git merge --ff-only "origin/$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to merge $TARGET_BRANCH"; exit 1; }
 git push origin $MAIN_BRANCH || { echo -e "\e[31mError: Failed to push updated 'main' branch to origin"; exit 1; }
 git checkout "$CURRENT_BRANCH" || { echo -e "\e[31mError: Failed to checkout original branch $CURRENT_BRANCH"; exit 1; }
-git stash pop || { echo -e "\e[31mError: Failed to pop stashed changes"; exit 1; }
+
+if [ "$STASHED" = true ]; then
+    echo -e "\e[34mRestoring stashed changes..."
+    git stash pop || { echo -e "\e[31mError: Failed to pop stashed changes"; exit 1; }
+else
+    echo -e "\e[34mNo stashed changes to restore."
+fi
 
 echo -e "\e[32mSuccessfully merged and pushed the $TARGET_BRANCH branch to 'main'"
 

@@ -30,7 +30,7 @@
 
     - role: bash-aliases
       tags:
-        - config
+        - bash
 
     - role: oh-my-posh
       tags:
@@ -38,8 +38,7 @@
 
     - role: global-scripts
       tags:
-        - config
-        - globalScripts
+        - bash
 
     - role: dotnet
       tags:
