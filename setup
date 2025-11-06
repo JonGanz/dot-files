@@ -5,8 +5,13 @@ GOLANG_VER=1.25.3
 
 
 SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
-
 source "$SETUP_DIR/bash/ensure.sh"
+
+
+# Ensure configuration step completed.
+if [[ ! -f "$SETUP_DIR/.env" ]]; then
+    . "$SETUP_DIR/configure"
+fi
 
 
 # Add paths to PATH variable.
@@ -24,10 +29,16 @@ if [[ -f "$SETUP_DIR/dotfiles/bash_aliases" ]]; then
 fi
 EOF
 )"
-#ensure_symlink_file "$SETUP_DIR/dotfiles/bash_aliases" "$HOME/.bash_aliases"
-# ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
-#     src: "{{ setup_dir }}/dotfiles/bash_aliases"
-#     dest: "{{ home }}/.bash_aliases"
+
+
+# Setup Git config.
+if [[ ! -f "$HOME/.gitconfig" ]]; then
+    # sed "s|{{var}}|$VAL|g;"
+    sed \
+        "s/{{ git_username_personal }}/$GIT_USERNAME/g;
+         s/{{ git_email_personal }}/$GIT_EMAIL/g;" \
+        ./dotfiles/git/gitconfig.personal > "$HOME/.gitconfig"
+fi
 
 
 # Install applications via `pacman`.

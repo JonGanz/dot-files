@@ -1,3 +1,4 @@
 _temp
 vault.cred
-
+/.env
+/.env.tmp

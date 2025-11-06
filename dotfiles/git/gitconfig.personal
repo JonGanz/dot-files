@@ -1,0 +1,41 @@
+[alias]
+	b = branch
+	bl = branch -l
+	blr = branch -l -r
+	co = checkout
+	cp = cherry-pick
+	dd = difftool -d
+	dds = difftool -d --cached
+	df = difftool -y
+	dfs = difftool -y --cached
+	f = fetch -p
+	mt = mergetool
+	rbc = rebase --continue
+	st = status
+
+[core]
+    editor = nvim -f
+    symlinks = false
+
+[diff]
+	tool = bc3
+
+[difftool "bc3"]
+	cmd = BComp.exe "$(wslpath -aw $LOCAL)" "$(wslpath -aw $REMOTE)"
+
+[merge]
+	tool = bc3
+
+[mergetool "bc3"]
+	cmd = BComp.exe "$(wslpath -aw $LOCAL)" "$(wslpath -aw $REMOTE)" "$(wslpath -aw $BASE)" "$(wslpath -aw $MERGED)"
+
+[user]
+	name = {{ git_username_personal }}
+	email = {{ git_email_personal }}
+    
+[pull]
+	rebase = true
+
+[includeIf "gitdir:{{ work_git_dir }}/"]
+    path = {{ work_git_dir }}/.gitconfig
+
