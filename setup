@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# Variables.
+GOLANG_VER=1.25.3
+
+
+SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
+source "$SETUP_DIR/bash/ensure.sh"
+
+
+# Add paths to PATH variable.
+ensure_block_in_file "$HOME/.bashrc" "Initialize PATH" "$(cat <<EOF
+export PATH=\$PATH:$HOME/.local/bin
+export PATH=\$PATH:$HOME/bin
+EOF
+)"
+
+
+# Setup bash aliases.
+ensure_block_in_file "$HOME/.bashrc" "Use Bash Aliases" "$(cat <<-EOF
+if [[ -f "$SETUP_DIR/dotfiles/bash_aliases" ]]; then
+    . "$SETUP_DIR/dotfiles/bash_aliases"
+fi
+EOF
+)"
+#ensure_symlink_file "$SETUP_DIR/dotfiles/bash_aliases" "$HOME/.bash_aliases"
+# ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
+#     src: "{{ setup_dir }}/dotfiles/bash_aliases"
+#     dest: "{{ home }}/.bash_aliases"
+
+
+# Install applications via `pacman`.
+sudo pacman -S --noconfirm --needed \
+    chromium \
+    git \
+    jq \
+    lazygit \
+    neovim \
+    nvm \
+    ripgrep \
+    ttf-jetbrains-mono-nerd \
+    unzip \
+    waybar \
+    wezterm \
+
+
+# Setup NodeJS.
+# TODO: If Node version already good, don't bother with this.
+source /usr/share/nvm/init-nvm.sh
+nvm install --lts=krypton
+nvm use --lts
+ensure_block_in_file "$HOME/.bashrc" "Include NVM" "$(cat <<EOF
+source /usr/share/nvm/init-nvm.sh
+EOF
+)"
+
+
+# Install Golang.
+CURR_GOLANG=$(go version | sed -E 's/go version go([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g')
+if [[ "$CURR_GOLANG" != "$GOLANG_VER" ]]; then
+    echo "Found Go $CURR_GOLANG; replacing with $GOLANG_VER"
+    wget -O "/tmp/golang.$GOLANG_VER.tar.gz" "https://go.dev/dl/go$GOLAN_VER.linux-amd64.tar.gz"
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "/tmp/golang.$GOLANG_VER.tar.gz"
+else
+    echo "Current Golang version $GOLANG_VER detected"
+fi
+ensure_block_in_file "$HOME/.bashrc" "Include Go binaries" "$(cat <<EOF
+export PATH=\$PATH:/usr/local/go/bin
+EOF
+)"
+
+
+# Setup Wezterm config.
+ensure_directory "$HOME/.config"
+ensure_symlink_dir "$SETUP_DIR/dotfiles/wezterm" "$HOME/.config/wezterm"
+
+
+# Setup Hyprland config.
+ensure_directory "$HOME/.config"
+ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
+
+
+# Setup Neovim config.
+ensure_directory "$HOME/.config"
+ensure_symlink_dir "$SETUP_DIR/dotfiles/nvim" "$HOME/.config/nvim"
+
+
+# Setup Lazygit config.
+ensure_directory "$HOME/.config"
+ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
+
+
+# Install oh-my-posh ... ugh, curl script and run it..
+if ! command -v oh-my-posh >/dev/null 2>&1; then
+    curl -s https://ohmyposh.dev/install.sh | bash -s
+fi
+oh_my_posh_theme_file="$SETUP_DIR/dotfiles/ohmyposh/theme.omp.json"
+ensure_block_in_file "$HOME/.bashrc" "Initialize oh-my-posh" "$(cat <<EOF
+eval "\$(oh-my-posh init bash --config $oh_my_posh_theme_file)"
+EOF
+)"
+
+
+
+# TODO: Setup Git configs and SSH -- we need to be able to commit this WIP...
+# TODO: Switch to Melange theme, that one looked awesome.
+# TODO: Setup Waybar to look awesome.
+# TODO: Get some pimpin' backgrounds to match things.
+# TODO: Install GIMP/Inkscape.
+# TODO: Install Docker.
+# TODO: Replace rofi menu with something way nicer than that... or at least configure it to lot look like ass.
+# TODO: Install Spotify / TUI
+# TODO: Get a way to get audio control working..? Ha, this should probably be higher on the list, but who needs priorities?
