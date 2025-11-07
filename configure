@@ -43,13 +43,11 @@ cat "$SETUP_DIR/.env.tmp"
 echo "-------------------------------------------------------"
 
 
-# Confirm values are good.
-read -p "Continue with these changes? (y/n): " confim
+read -p "Continue with these changes? (y/n): " confirm
 if [[ $confirm == [yY] ]]; then
-    # Replace .env
-    rm "$SETUP_DIR/.env"
+    rm -f "$SETUP_DIR/.env"
     mv "$SETUP_DIR/.env.tmp" "$SETUP_DIR/.env"
 fi
 
+
 # TODO: Exit or handle what to do if we don't like the changes...
-#
