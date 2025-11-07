@@ -47,6 +47,7 @@ sudo pacman -S --noconfirm --needed \
     git \
     jq \
     lazygit \
+    less \
     neovim \
     nvm \
     ripgrep \

@@ -42,7 +42,7 @@ ensure_symlink_dir() {
 		mv "$link_path" "$link_path$now"
 	fi
 	echo "Ensuring path $link_path -> $data_path"
-	ln -sdf "$data_path" "$link_path"
+	ln -snfv "$data_path" "$link_path"
 }
 
 ensure_symlink_file() {
