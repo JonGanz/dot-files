@@ -9,3 +9,6 @@ alias gst='git status'
 
 alias :q='exit'
 
+# For work...
+alias rovo='acli rovodev run'
+
