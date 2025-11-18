@@ -96,8 +96,7 @@ return {
                     lualine_z = {
                         {
                             function()
-                                local current_col = vim.fn.col('.')
-                                return string.format('%d', current_col)
+                                return os.date('%H:%M')
                             end,
                         },
                     },
