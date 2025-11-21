@@ -120,11 +120,34 @@ return {
         },
         config = function()
             local builtin = require('telescope.builtin')
+            local actions = require('telescope.actions')
+
+            local function buffers_with_delete_binding(opts)
+                opts = opts or {}
+                opts.attach_mappings = function(prompt_bufnr, map)
+                    local delete_buf = function()
+                        actions.delete_buffer(prompt_bufnr)
+                    end
+
+                    map('i', '<C-d>', delete_buf)
+                    map('n', '<C-d>', delete_buf)
+
+                    return true
+                end
+
+                builtin.buffers(opts)
+            end
+
             vim.keymap.set('n', '<C-p>', builtin.find_files, {})
             vim.keymap.set('n', '<C-f>', builtin.live_grep, {})
             vim.keymap.set('n', '<C-s>', builtin.lsp_document_symbols, {})
             vim.keymap.set('n', '<leader>gr', builtin.lsp_references, {})
-            vim.keymap.set('n', '<leader><Tab>', builtin.buffers, {})
+            vim.keymap.set(
+                'n',
+                '<leader><Tab>',
+                buffers_with_delete_binding,
+                { desc = 'List Buffers (delete with <C-d>)' }
+            )
             vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
 
             require('telescope').setup({
