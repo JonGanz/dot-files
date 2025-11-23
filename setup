@@ -1,7 +1,8 @@
 #!/bin/bash
 
+
 # Variables.
-GOLANG_VER=1.25.3
+GOLANG_VER=1.25.4
 SOURCE_REPO=git@github.com:JonGanz/dot-files.git
 
 
@@ -29,6 +30,9 @@ EOF
 )"
 
 
+ensure_directory "$HOME/.config"
+
+
 # Setup bash aliases.
 ensure_block_in_file "$HOME/.bashrc" "Use Bash Aliases" "$(cat <<-EOF
 if [[ -f "$SETUP_DIR/dotfiles/bash_aliases" ]]; then
@@ -49,10 +53,13 @@ fi
 
 
 # Install applications via `pacman`.
+echo "Installing applications via pacman... "
+echo -en "\033[1;30m"
 sudo pacman -S --noconfirm --needed \
     chromium \
     gimp \
     git \
+    gurk \
     inkscape \
     jq \
     lazygit \
@@ -64,8 +71,7 @@ sudo pacman -S --noconfirm --needed \
     unzip \
     waybar \
     wezterm \
-    gurk \
-
+&& echo -en "\033[0m"
 
 # Setup NodeJS.
 if ! command -v node >/dev/null 2>&1; then
@@ -82,12 +88,14 @@ fi
 # Install Golang.
 CURR_GOLANG=$(go version | sed -E 's/go version go([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g')
 if [[ "$CURR_GOLANG" != "$GOLANG_VER" ]]; then
-    echo "Found Go $CURR_GOLANG; replacing with $GOLANG_VER"
+    echo "Found Golang $CURR_GOLANG; replacing with $GOLANG_VER"
+    echo -en "\033[1;30m"
     wget -O "/tmp/golang.$GOLANG_VER.tar.gz" "https://go.dev/dl/go$GOLAN_VER.linux-amd64.tar.gz"
     sudo rm -rf /usr/local/go
     sudo tar -C /usr/local -xzf "/tmp/golang.$GOLANG_VER.tar.gz"
+    echo -en "\033[0m"
 else
-    echo "Current Golang version $GOLANG_VER detected"
+    echo -e "Current Golang version $GOLANG_VER detected... $partial"
 fi
 ensure_block_in_file "$HOME/.bashrc" "Include Go binaries" "$(cat <<EOF
 export PATH=\$PATH:/usr/local/go/bin
@@ -96,22 +104,18 @@ EOF
 
 
 # Setup Wezterm config.
-ensure_directory "$HOME/.config"
 ensure_symlink_dir "$SETUP_DIR/dotfiles/wezterm" "$HOME/.config/wezterm"
 
 
 # Setup Hyprland config.
-ensure_directory "$HOME/.config"
 ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
 
 
 # Setup Neovim config.
-ensure_directory "$HOME/.config"
 ensure_symlink_dir "$SETUP_DIR/dotfiles/nvim" "$HOME/.config/nvim"
 
 
 # Setup Lazygit config.
-ensure_directory "$HOME/.config"
 ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
 
 
@@ -132,12 +136,9 @@ git remote set-url origin "$SOURCE_REPO"
 popd > /dev/null
 
 
-# TODO: If no SSH key setup, guide through creation, and at the end inform the user how to add it to the Github account.
-
-# TODO: Switch to Melange theme, that one looked awesome.
-# TODO: Setup Waybar to look awesome.
+# TODO: Install Spotify / TUI
 # TODO: Get some pimpin' backgrounds to match things.
 # TODO: Install Docker.
 # TODO: Replace rofi menu with something way nicer than that... or at least configure it to lot look like ass.
-# TODO: Install Spotify / TUI
 # TODO: Get a way to get audio control working..? Ha, this should probably be higher on the list, but who needs priorities?
+# TODO: If no SSH key setup, guide through creation, and at the end inform the user how to add it to the Github account.

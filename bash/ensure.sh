@@ -1,5 +1,9 @@
 #!/bin/bash
 
+partial="\e[33m\u25CB Skipped\e[0m"
+success="\e[32m✓ Success\e[0m"
+failure="\e[31m✗ Failure\e[0m"
+
 ensure_block_in_file() {
 	local path=$1
     local block_name=$2
@@ -11,25 +15,28 @@ ensure_block_in_file() {
 
     # TODO: If there is already a block but it's wrong, we should deal with that.
     if ! grep -q "$block_tag" "$path"; then
-        echo "Adding missing block $block_name to file $path"
+        echo -n "Adding missing block '$block_name' to file '$path'... "
         cat <<EOF >>"$path"
 $block_tag
 $content
 $block_tag_closing
 EOF
+        echo -e $success
     else
-        echo "Skipping: block $block_name already in file $path"
+        echo -e "Block '$block_name' already found in '$path'...  $partial"
     fi
 }
 
 ensure_directory() {
 	local path=$1
-	if [ ! -d "$path" ]; then
-		echo "Creating path $path"
-		mkdir "$path"
-	else
-		echo "Skipping: Path $path already exists"
-	fi
+    echo -n "Ensuring path '$path' is present... "
+    mkdir -p "$path"
+    resp=$?
+    if [[ resp -eq 0 ]]; then
+        echo -e $success
+    else
+        echo -e $failure
+    fi
 }
 
 ensure_symlink_dir() {
@@ -38,11 +45,16 @@ ensure_symlink_dir() {
 
 	if [[ ! -L "$link_path" && -d "$link_path" ]]; then
 		local now=$(date +%s)
-		echo "Non-symlink directory exists at $link_path; backing up at $link_path$now"
+		echo -e "\e[34mNon-symlink directory exists at $link_path; backing up at $link_path$now\e[0m"
 		mv "$link_path" "$link_path$now"
 	fi
-	echo "Ensuring path $link_path -> $data_path"
+	echo -n "Ensuring path '$link_path' -> '$data_path'... "
 	ln -snfv "$data_path" "$link_path"
+    if [[ $? -eq 0 ]]; then
+        echo -e $success
+    else
+        echo -e $failure
+    fi
 }
 
 ensure_symlink_file() {
