@@ -31,6 +31,7 @@ EOF
 
 
 ensure_directory "$HOME/.config"
+ensure_directory "$HOME/git/_oss"
 
 
 # Setup bash aliases.
@@ -56,6 +57,7 @@ fi
 echo "Installing applications via pacman... "
 echo -en "\033[1;30m"
 sudo pacman -S --noconfirm --needed \
+    base-devel \
     chromium \
     gimp \
     git \
@@ -72,6 +74,7 @@ sudo pacman -S --noconfirm --needed \
     waybar \
     wezterm \
 && echo -en "\033[0m"
+
 
 # Setup NodeJS.
 if ! command -v node >/dev/null 2>&1; then
@@ -101,6 +104,20 @@ ensure_block_in_file "$HOME/.bashrc" "Include Go binaries" "$(cat <<EOF
 export PATH=\$PATH:/usr/local/go/bin
 EOF
 )"
+
+
+# Install yay.
+if ! command -v yay > /dev/null 2>&1; then
+    pushd "$HOME/git/_oss"
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si
+    popd
+fi
+
+
+# Install brave.
+yay --cleanafter --answerclean A --noconfirm --needed -Sy brave-bin
 
 
 # Setup Wezterm config.
