@@ -1,3 +1,11 @@
+# Personal Computer Setup
+
+This repo stores my system setup. Not fully. It's a work in progress, while I evolve and feel out different approaches and systems. Infact, there is now a [rewrite](/REWRITE.md) document where I work on moving this entire repo over to a different setup entirely. This rewrite will be done live on master, I don't need separate branches. Besides, I want my nvim configurations to be the same on both without having to do constant rebases or cherry-picking.
+
+That said, below is the old README, where I specifically setup stuff for Ubuntu in WSL, and eventually began working on adding some Desktop features for Ubuntu. Those will be removed soon, hopefully. ;)
+
+---
+
 # Computer Setup
 
 I'm a developer and I love having access to Linux commands during development. I'm a gamer, I love having games just _work_ without fighting silly Linux issues. I'm also employed, and despite what some may think, a _lot_ of employers (every one I've ever had) uses Windows. Not Mac. Not Linux.
@@ -29,7 +37,7 @@ wget -O setup.sh https://raw.githubusercontent.com/JonGanz/dot-files/refs/heads/
 - [ ] Add Windows shortcut for gnome-screenshot (Win + Shift + S)
 - [ ] Setup Signal
 - [ ] Separate home vs work role
-- [ ] Customize desktop
+- [ ] Customize Gnome desktop experience
     - [ ] New wallpaper for 4k
     - [ ] Add shortcuts for apps/desktops
     - [ ] Remove the side panel

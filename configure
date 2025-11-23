@@ -1,0 +1,53 @@
+#!/bin/bash
+
+SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
+if [[ -f "$SETUP_DIR/.env" ]]; then
+    set -a
+    source "$SETUP_DIR/.env"
+    set +a
+fi
+
+rm "$SETUP_DIR/.env.tmp"
+while IFS= read -r line; do
+    variable_name=$(echo "$line" | cut -d , -f 1)
+    description=$(echo "$line" | cut -d , -f 2)
+    default_value=$(echo "$line" | cut -d , -f 3)
+    default_str=""
+
+    if [[ -n "$default_value" ]]; then
+        default_str=" (default: $default_value)"
+    fi
+    current_str=""
+    if [[ -n "${!variable_name}" ]]; then
+        current_str=" (current: '${!variable_name}')"
+    fi
+
+    echo "$description$current_str$default_str:"
+    read -p "" -e user_val < /dev/tty
+
+    if [[ ! -n "$user_val" ]]; then
+        user_val="${!variable_name}"
+    fi
+    if [[ ! -n "$user_val" ]]; then
+        user_val=$default_value
+    fi
+
+    echo "$variable_name=\"$user_val\"" >> "$SETUP_DIR/.env.tmp"
+done < "$SETUP_DIR/env.list"
+
+
+echo "The following will be used for your local configuration"
+echo "-------------------------------------------------------"
+cat "$SETUP_DIR/.env.tmp"
+echo "-------------------------------------------------------"
+
+
+read -p "Continue with these changes? (y/n): " confirm
+if [[ $confirm == [yY] ]]; then
+    rm -f "$SETUP_DIR/.env"
+    mv "$SETUP_DIR/.env.tmp" "$SETUP_DIR/.env"
+fi
+
+
+# TODO: Exit or handle what to do if we don't like the changes...

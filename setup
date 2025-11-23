@@ -1,0 +1,144 @@
+#!/bin/bash
+
+
+# Variables.
+GOLANG_VER=1.25.4
+SOURCE_REPO=git@github.com:JonGanz/dot-files.git
+
+
+SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+source "$SETUP_DIR/bash/ensure.sh"
+
+
+# Ensure configuration step completed.
+if [[ ! -f "$SETUP_DIR/.env" ]]; then
+    . "$SETUP_DIR/configure"
+fi
+
+
+# Bring in environment file.
+set -a
+. "$SETUP_DIR/.env"
+set +a
+
+
+# Add paths to PATH variable.
+ensure_block_in_file "$HOME/.bashrc" "Initialize PATH" "$(cat <<EOF
+export PATH=\$PATH:$HOME/.local/bin
+export PATH=\$PATH:$HOME/bin
+EOF
+)"
+
+
+ensure_directory "$HOME/.config"
+
+
+# Setup bash aliases.
+ensure_block_in_file "$HOME/.bashrc" "Use Bash Aliases" "$(cat <<-EOF
+if [[ -f "$SETUP_DIR/dotfiles/bash_aliases" ]]; then
+    . "$SETUP_DIR/dotfiles/bash_aliases"
+fi
+EOF
+)"
+
+
+# Setup Git config.
+if [[ ! -f "$HOME/.gitconfig" ]]; then
+    sed \
+        "s/{{ git_username_personal }}/$GIT_USERNAME/g;
+         s/{{ git_email_personal }}/$GIT_EMAIL/g;
+         s/{{ work_git_dir }}/$WORK_GIT_DIR/g;" \
+        ./dotfiles/git/gitconfig.personal > "$HOME/.gitconfig"
+fi
+
+
+# Install applications via `pacman`.
+echo "Installing applications via pacman... "
+echo -en "\033[1;30m"
+sudo pacman -S --noconfirm --needed \
+    chromium \
+    gimp \
+    git \
+    gurk \
+    inkscape \
+    jq \
+    lazygit \
+    less \
+    neovim \
+    nvm \
+    ripgrep \
+    ttf-jetbrains-mono-nerd \
+    unzip \
+    waybar \
+    wezterm \
+&& echo -en "\033[0m"
+
+# Setup NodeJS.
+if ! command -v node >/dev/null 2>&1; then
+    source /usr/share/nvm/init-nvm.sh
+    nvm install --lts=krypton
+    nvm use --lts
+    ensure_block_in_file "$HOME/.bashrc" "Include NVM" "$(cat <<EOF
+source /usr/share/nvm/init-nvm.sh
+EOF
+    )"
+fi
+
+
+# Install Golang.
+CURR_GOLANG=$(go version | sed -E 's/go version go([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g')
+if [[ "$CURR_GOLANG" != "$GOLANG_VER" ]]; then
+    echo "Found Golang $CURR_GOLANG; replacing with $GOLANG_VER"
+    echo -en "\033[1;30m"
+    wget -O "/tmp/golang.$GOLANG_VER.tar.gz" "https://go.dev/dl/go$GOLAN_VER.linux-amd64.tar.gz"
+    sudo rm -rf /usr/local/go
+    sudo tar -C /usr/local -xzf "/tmp/golang.$GOLANG_VER.tar.gz"
+    echo -en "\033[0m"
+else
+    echo -e "Current Golang version $GOLANG_VER detected... $partial"
+fi
+ensure_block_in_file "$HOME/.bashrc" "Include Go binaries" "$(cat <<EOF
+export PATH=\$PATH:/usr/local/go/bin
+EOF
+)"
+
+
+# Setup Wezterm config.
+ensure_symlink_dir "$SETUP_DIR/dotfiles/wezterm" "$HOME/.config/wezterm"
+
+
+# Setup Hyprland config.
+ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
+
+
+# Setup Neovim config.
+ensure_symlink_dir "$SETUP_DIR/dotfiles/nvim" "$HOME/.config/nvim"
+
+
+# Setup Lazygit config.
+ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
+
+
+# Install oh-my-posh ... ugh, curl script and run it..
+if ! command -v oh-my-posh >/dev/null 2>&1; then
+    curl -s https://ohmyposh.dev/install.sh | bash -s
+fi
+oh_my_posh_theme_file="$SETUP_DIR/dotfiles/ohmyposh/theme.omp.json"
+ensure_block_in_file "$HOME/.bashrc" "Initialize oh-my-posh" "$(cat <<EOF
+eval "\$(oh-my-posh init bash --config $oh_my_posh_theme_file)"
+EOF
+)"
+
+
+# Switch the repo over to the SSH path.
+pushd "$SETUP_DIR" > /dev/null
+git remote set-url origin "$SOURCE_REPO"
+popd > /dev/null
+
+
+# TODO: Install Spotify / TUI
+# TODO: Get some pimpin' backgrounds to match things.
+# TODO: Install Docker.
+# TODO: Replace rofi menu with something way nicer than that... or at least configure it to lot look like ass.
+# TODO: Get a way to get audio control working..? Ha, this should probably be higher on the list, but who needs priorities?
+# TODO: If no SSH key setup, guide through creation, and at the end inform the user how to add it to the Github account.

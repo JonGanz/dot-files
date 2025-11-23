@@ -100,6 +100,7 @@ local window_padding = {
 }
 
 config.color_scheme = 'Gruvbox Dark (Gogh)'
+config.enable_wayland = false
 config.enable_tab_bar = true
 config.font = font
 config.font_size = 16

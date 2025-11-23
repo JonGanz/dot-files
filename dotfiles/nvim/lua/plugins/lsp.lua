@@ -49,6 +49,7 @@ return {
         opts = {
             ensure_installed = {
                 'ansiblels',
+                'bashls',
                 'clangd',
                 'eslint',
                 'gopls',
