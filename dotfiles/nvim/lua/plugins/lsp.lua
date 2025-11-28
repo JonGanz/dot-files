@@ -49,6 +49,7 @@ return {
         opts = {
             ensure_installed = {
                 'ansiblels',
+                'basedpyright',
                 'bashls',
                 'clangd',
                 'eslint',
@@ -56,6 +57,7 @@ return {
                 'lua_ls',
                 'marksman',
                 'omnisharp',
+                'ruff',
                 'sqlls',
                 'ts_ls',
                 'vue_ls',
