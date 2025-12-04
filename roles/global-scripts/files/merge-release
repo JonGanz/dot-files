@@ -37,6 +37,14 @@ git checkout $MAIN_BRANCH || { echo -e "\e[31mError: Failed to checkout 'main' b
 git reset --hard "origin/$MAIN_BRANCH" || { echo -e "\e[31mError: Failed to update 'main' branch"; exit 1; }
 git merge --ff-only "origin/$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to merge $TARGET_BRANCH"; exit 1; }
 git push origin $MAIN_BRANCH || { echo -e "\e[31mError: Failed to push updated 'main' branch to origin"; exit 1; }
+
+if [[ $BRANCH_TYPE == "hotfix" ]]; then
+    git checkout develop || { echo -e "\e[31mError: Failed to checkout 'develop' branch"; exit 1; }
+    git rebase || { echo -e "\e[31mError: Failed to rebase 'develop' branch"; exit 1; }
+    git merge --ff-only "origin/$TARGET_BRANCH" || git merge --no-ff "origin/$TARGET_BRANCH" -m "Merged branch '$TARGET_BRANCH' into develop" || { echo -e "\e[31mError: Failed to merge 'main' into $CURRENT_BRANCH"; exit 1; }
+    git push origin develop || { echo -e "\e[31mError: Failed to push updated $CURRENT_BRANCH branch to origin"; exit 1; }
+fi
+
 git checkout "$CURRENT_BRANCH" || { echo -e "\e[31mError: Failed to checkout original branch $CURRENT_BRANCH"; exit 1; }
 
 if [ "$STASHED" = true ]; then
