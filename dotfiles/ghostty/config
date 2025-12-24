@@ -1,0 +1,3 @@
+cursor-invert-fg-bg = true
+font-size = 18
+theme = dark:Gruvbox Material Dark,light:Fairyfloss

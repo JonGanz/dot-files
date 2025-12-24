@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 partial="\e[33m\u25CB Skipped\e[0m"
 success="\e[32m✓ Success\e[0m"

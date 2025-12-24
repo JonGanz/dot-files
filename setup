@@ -1,13 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -uo pipefail
 
 
 # Variables.
-GOLANG_VER=1.25.4
-SOURCE_REPO=git@github.com:JonGanz/dot-files.git
+export GHOSTTY_VER=1.2.3
+export GOLANG_VER=1.25.4
+export NEOVIM_VERSION=0.11.4
+export NODE_VERSION=22.14.0
+export NVM_VERSION=0.40.3
+export SOURCE_REPO=git@github.com:JonGanz/dot-files.git
 
 
-SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+# Check OS.
+if [[ -r /etc/os-release ]]; then
+    . /etc/os-release
+    export OS="$ID"
+
+    if grep -qi microsoft /proc/version; then
+        # WSL2 probably...
+        export HAS_DE=0
+    else
+        export HAS_DE=1
+    fi
+else
+    echo "Cannot detect OS"
+    exit 1
+fi
+
+
+export APPIMAGE_DIR="$HOME/.appimage"
+export OPEN_SOURCE_DIR="$HOME/.repos"
+export SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
 source "$SETUP_DIR/bash/ensure.sh"
+
+ensure_directory "$APPIMAGE_DIR"
+ensure_directory "$HOME/.config"
+ensure_directory "$OPEN_SOURCE_DIR"
 
 
 # Ensure configuration step completed.
@@ -22,16 +51,78 @@ set -a
 set +a
 
 
+# Output formatting.
+partial="\e[33m\u25CB Unknown progress\e[0m"
+success="\e[32m✓ Success\e[0m"
+failure="\e[31m✗ Failure\e[0m"
+
+
+scripts=( \
+    "suite.core.sh" \
+    "git.sh" \
+    "yay.sh" \
+    "flatpak.sh" \
+    # "nodejs.sh" \
+    "rust.sh" \
+    "golang.sh" \
+    "yazi.sh" \
+    "oh-my-posh.sh" \
+    "neovim.sh" \
+    "suite.multimedia.sh" \
+    "ghostty.sh" \
+    "brave.sh" \
+    "web-apps.sh" \
+    "nextcloud-desktop.sh" \
+    "jellyfin.sh" \
+)
+
+
+for script in "${scripts[@]}"; do
+    echo -n "Running $script... "
+
+    if command -v bc >/dev/null 2>&1; then
+        USE_BC_TIME_MATH=1
+    fi
+
+    # Run the script and time it.
+    child_out=$(mktemp "/tmp/setup-$script.XXX")
+    timing=$( { time "./scripts/installs/$script" >"$child_out" 2>&1; } 2>&1 )
+    result=$?
+    real_time=$(echo "$timing" | head -n 2)
+    minutes=$(echo "$real_time" | awk '{print $2}' | sed 's/m.*//')
+    minutes="${minutes//$'\n'/}"
+    seconds=$(echo "$real_time" | awk '{print $2}' | sed 's/.*m//; s/s//')
+    seconds="${seconds//$'\n'/}"
+
+    if [[ "${USE_BC_TIME_MATH:-0}" == "1" ]]; then
+        run_time=$(echo "$minutes*60 + $seconds" | bc)
+    else
+        # TODO: Need to extract the decimal portion of the seconds since this only works for integer values.
+        run_time=$(( minutes * 60 + seconds ))
+    fi
+
+    if [[ "$result" == "0" ]]; then
+        echo -en "$success "
+        printf "(%s seconds)\n" "$run_time"
+    elif [[ "$result" == "1" ]]; then
+        echo -en "$failure "
+        printf "(%s seconds)\n" "$run_time"
+        echo -e "\e[31mSee $child_out for more details\e[0m"
+        exit 1
+    else
+        echo -en "$partial "
+        printf "(%s seconds)\n" "$run_time"
+        echo -e "\e[33mSee $child_out for more details\e[0m"
+    fi
+done
+
+
 # Add paths to PATH variable.
 ensure_block_in_file "$HOME/.bashrc" "Initialize PATH" "$(cat <<EOF
 export PATH=\$PATH:$HOME/.local/bin
 export PATH=\$PATH:$HOME/bin
 EOF
 )"
-
-
-ensure_directory "$HOME/.config"
-ensure_directory "$HOME/git/_oss"
 
 
 # Setup bash aliases.
@@ -43,81 +134,41 @@ EOF
 )"
 
 
-# Setup Git config.
-if [[ ! -f "$HOME/.gitconfig" ]]; then
-    sed \
-        "s/{{ git_username_personal }}/$GIT_USERNAME/g;
-         s/{{ git_email_personal }}/$GIT_EMAIL/g;
-         s/{{ work_git_dir }}/$WORK_GIT_DIR/g;" \
-        ./dotfiles/git/gitconfig.personal > "$HOME/.gitconfig"
-fi
+# Switch the repo over to the SSH path.
+pushd "$SETUP_DIR" > /dev/null
+git remote set-url origin "$SOURCE_REPO"
+popd > /dev/null
+
+
+# All done.
+exit 0
+
+
+# -----------------------------------------------------------------------
+
+
+
+
+
+
 
 
 # Install applications via `pacman`.
 echo "Installing applications via pacman... "
 echo -en "\033[1;30m"
 sudo pacman -S --noconfirm --needed \
-    base-devel \
     chromium \
-    gimp \
-    git \
     gurk \
-    inkscape \
-    jq \
     lazygit \
-    less \
-    neovim \
-    nvm \
-    ripgrep \
     ttf-jetbrains-mono-nerd \
-    unzip \
     waybar \
     wezterm \
 && echo -en "\033[0m"
 
 
 # Setup NodeJS.
-if ! command -v node >/dev/null 2>&1; then
-    source /usr/share/nvm/init-nvm.sh
-    nvm install --lts=krypton
-    nvm use --lts
-    ensure_block_in_file "$HOME/.bashrc" "Include NVM" "$(cat <<EOF
-source /usr/share/nvm/init-nvm.sh
-EOF
-    )"
-fi
 
 
-# Install Golang.
-CURR_GOLANG=$(go version | sed -E 's/go version go([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g')
-if [[ "$CURR_GOLANG" != "$GOLANG_VER" ]]; then
-    echo "Found Golang $CURR_GOLANG; replacing with $GOLANG_VER"
-    echo -en "\033[1;30m"
-    wget -O "/tmp/golang.$GOLANG_VER.tar.gz" "https://go.dev/dl/go$GOLAN_VER.linux-amd64.tar.gz"
-    sudo rm -rf /usr/local/go
-    sudo tar -C /usr/local -xzf "/tmp/golang.$GOLANG_VER.tar.gz"
-    echo -en "\033[0m"
-else
-    echo -e "Current Golang version $GOLANG_VER detected... $partial"
-fi
-ensure_block_in_file "$HOME/.bashrc" "Include Go binaries" "$(cat <<EOF
-export PATH=\$PATH:/usr/local/go/bin
-EOF
-)"
-
-
-# Install yay.
-if ! command -v yay > /dev/null 2>&1; then
-    pushd "$HOME/git/_oss"
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
-    makepkg -si
-    popd
-fi
-
-
-# Install brave.
-yay --cleanafter --answerclean A --noconfirm --needed -Sy brave-bin
 
 
 # Setup Wezterm config.
@@ -128,29 +179,9 @@ ensure_symlink_dir "$SETUP_DIR/dotfiles/wezterm" "$HOME/.config/wezterm"
 ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
 
 
-# Setup Neovim config.
-ensure_symlink_dir "$SETUP_DIR/dotfiles/nvim" "$HOME/.config/nvim"
-
-
 # Setup Lazygit config.
 ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
 
-
-# Install oh-my-posh ... ugh, curl script and run it..
-if ! command -v oh-my-posh >/dev/null 2>&1; then
-    curl -s https://ohmyposh.dev/install.sh | bash -s
-fi
-oh_my_posh_theme_file="$SETUP_DIR/dotfiles/ohmyposh/theme.omp.json"
-ensure_block_in_file "$HOME/.bashrc" "Initialize oh-my-posh" "$(cat <<EOF
-eval "\$(oh-my-posh init bash --config $oh_my_posh_theme_file)"
-EOF
-)"
-
-
-# Switch the repo over to the SSH path.
-pushd "$SETUP_DIR" > /dev/null
-git remote set-url origin "$SOURCE_REPO"
-popd > /dev/null
 
 
 # TODO: Install Spotify / TUI
