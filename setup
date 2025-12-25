@@ -81,6 +81,7 @@ scripts+=( \
 
 # terminal/dev tools
 scripts+=( \
+    "lazygit.sh" \
     "neovim.sh" \
     "oh-my-posh.sh" \
     "yazi.sh" \
@@ -183,18 +184,12 @@ echo "Installing applications via pacman... "
 echo -en "\033[1;30m"
 sudo pacman -S --noconfirm --needed \
     gurk \
-    lazygit \
     ttf-jetbrains-mono-nerd \
 && echo -en "\033[0m"
 
 
 # Setup Hyprland config.
 ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
-
-
-# Setup Lazygit config.
-ensure_symlink_dir "$SETUP_DIR/dotfiles/lazygit" "$HOME/.config/lazygit"
-
 
 
 # TODO: Install Spotify / TUI
