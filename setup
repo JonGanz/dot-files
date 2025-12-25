@@ -52,6 +52,7 @@ set +a
 
 
 # Output formatting.
+skipped="\e[33m\u25CB Skipped\e[0m"
 partial="\e[33m\u25CB Unknown progress\e[0m"
 success="\e[32m✓ Success\e[0m"
 failure="\e[31m✗ Failure\e[0m"
@@ -129,6 +130,10 @@ for script in "${scripts[@]}"; do
         printf "(%s seconds)\n" "$run_time"
         echo -e "\e[31mSee $child_out for more details\e[0m"
         exit 1
+    elif [[ "$result" == "2" ]]; then
+        echo -en "$skipped "
+        printf "(%s seconds)" "$run_time"
+        echo -e " - \e[33mSee $child_out for more details\e[0m"
     else
         echo -en "$partial "
         printf "(%s seconds)\n" "$run_time"

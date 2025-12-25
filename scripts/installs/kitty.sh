@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ "${HAS_DE:-0}" == "0" ]]; then
     echo "Skipping Kitty install for environment without Desktop Environment"
-    exit 1;
+    exit 2;
 fi
 
 : "${OPEN_SOURCE_DIR:?OPEN_SOURCE_DIR not set}"

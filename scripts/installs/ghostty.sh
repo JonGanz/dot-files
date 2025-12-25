@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ "${HAS_DE:-0}" == "0" ]]; then
     echo "Skipping Ghostty install for environment without Desktop Environment"
-    exit 1;
+    exit 2;
 fi
 
 : "${APPIMAGE_DIR:?APPIMAGE_DIR not set}"

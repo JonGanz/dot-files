@@ -3,7 +3,7 @@ set -euo pipefail
 
 if [[ "${HAS_DE:-0}" == "0" ]]; then
     echo "Skipping web-app install for environment without Desktop Environment"
-    exit 1;
+    exit 2;
 fi
 
 : "${SETUP_DIR:?SETUP_DIR not set}"
