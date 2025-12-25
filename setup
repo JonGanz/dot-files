@@ -74,6 +74,7 @@ scripts+=( \
 # SDKs
 scripts+=( \
     "golang.sh" \
+    "nodejs.sh" \
     "rust.sh" \
 )
 
