@@ -5,6 +5,7 @@ set -uo pipefail
 # Variables.
 export GHOSTTY_VER=1.2.3
 export GOLANG_VER=1.25.4
+export JET_BRAINS_VERSION=3.4.0
 export NEOVIM_VERSION=0.11.4
 export NODE_VERSION=22.14.0
 export NVM_VERSION=0.40.3
@@ -97,6 +98,11 @@ scripts+=( \
     "nextcloud-desktop.sh" \
     "web-apps.sh" \
     "steam.sh" \
+)
+
+# desktop environment
+scripts+=( \
+    "fonts.sh" \
 )
 
 
@@ -198,3 +204,4 @@ ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
 # TODO: Replace rofi menu with something way nicer than that... or at least configure it to lot look like ass.
 # TODO: Get a way to get audio control working..? Ha, this should probably be higher on the list, but who needs priorities?
 # TODO: If no SSH key setup, guide through creation, and at the end inform the user how to add it to the Github account.
+

@@ -31,3 +31,7 @@ Instead, let's start with a small list of scripts:
 `setup`, an all-in-one script that runs all the installations, makes necessary modifications to files, and sets up links for configuration files stored in source control.
 
 `configure`, an interactive script that loads a list of needed configuration values from `env.list`, then determines their values and produces `.env` in the setup directory. This will allow us to keep secrets or machine-specific configuration out of repository, and simply be prompted for these values. The `setup` script can run this if the `.env` file is not found, so that the first run will get allnecessary configuration setup.
+
+# TODO
+- [ ] fix the tmux config (update from work PC) so that it doesn't hang on hitting Escape
+- [ ] install Rust (I swear I had this already somewhere... the Arch computer perhaps?)
