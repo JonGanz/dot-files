@@ -48,6 +48,10 @@
       tags:
         - go
 
+    - role: rust
+      tags:
+        - rust
+
   tasks:
 
     - name: Include SSH keychain setup

@@ -16,8 +16,62 @@
     dest: "{{ home }}/.fonts/"
     remote_src: true
 
-- name: Set wallpaper
+- name: Configure Gnome
   ansible.builtin.shell: |
-    gsettings set org.gnome.desktop.background picture-uri-dark file://{{ setup_dir }}/wallpapers/cherry-blossom-32x9.jpg
-    gsettings set org.gnome.desktop.background picture-uri file://{{ setup_dir }}/wallpapers/sunset-32x9.jpg
-    gsettings set org.gnome.desktop.background picture-options spanned
+    gsettings set org.gnome.shell.extensions.tiling-assistant disable-tile-groups true
+    gsettings set org.gnome.shell.extensions.tiling-assistant enable-tiling-popup false
+
+- name: Setup GNOME
+  include_role:
+    name: ansible-role-customize-gnome
+  vars:
+    gnome_extensions:
+      - id: 3733 # Tiling Assistant
+
+# - name: Ensure GNOME Shell extension directory exists
+#   ansible.builtin.file:
+#     path: "{{ home }}/.local/share/gnome-shell/extensions"
+#     state: directory
+#     mode: 0755
+#
+# - name: Check if Tiling Assistant Extension is already installed
+#   ansible.builtin.stat:
+#     path: "{{ home }}/.local/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+#   register: tiling_extension
+#
+# - name: Download Tiling Assistant Extension zip
+#   ansible.builtin.get_url:
+#     url: "https://extensions.gnome.org/extension-data/tiling-assistantleleat-on-github.v48.shell-extension.zip"
+#     dest: "/tmp/tiling-assistant.zip"
+#   when: not tiling_extension.stat.exists
+#
+# - name: Ensure Tiling Assistant directory exists
+#   ansible.builtin.file:
+#     path: "{{ home }}/.local/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+#     state: directory
+#
+# - name: Unzip Tiling Assistant
+#   ansible.builtin.unarchive:
+#     src: "/tmp/tiling-assistant.zip"
+#     dest: "{{ home }}/.local/share/gnome-shell/extensions/tiling-assistant@leleat-on-github"
+#     remote_src: yes
+#   when: not tiling_extension.stat.exists
+
+# - name: Enable the extension
+#   ansible.builtin.shell:
+#     chdir: "/tmp/"
+#     cmd: |
+#       gnome-extensions install --force tiling-assistant.zip
+
+- name: Create custom keybinding for focus window left
+  shell: |
+    gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/focus-left/']"
+    gsettings set /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/focus-left/ name "Focus Window Left"
+    gsettings set /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/focus-left/ command "gdbus call --session --dest org.gnome.Shell --object-path /org/gnome/Shell --method org.gnome.Shell.Eval 'imports.misc.extensionUtils.getExtension(\"tiling-assistant@leleat-on-github\").focusWindow(\"left\")'"
+    gsettings set /org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/focus-left/ binding "<Super>Left"
+
+# - name: Set wallpaper
+#   ansible.builtin.shell: |
+#     gsettings set org.gnome.desktop.background picture-uri-dark file://{{ setup_dir }}/wallpapers/cherry-blossom-32x9.jpg
+#     gsettings set org.gnome.desktop.background picture-uri file://{{ setup_dir }}/wallpapers/sunset-32x9.jpg
+#     gsettings set org.gnome.desktop.background picture-options spanned

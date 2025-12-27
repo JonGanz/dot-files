@@ -2,9 +2,10 @@
 - name: Install Flatpak
   include_tasks: flatpak.yml
 
+# Wezterm
 - name: Install Wezterm (Flatpack)
   ansible.builtin.command:
-    cmd: flatpak install flathub org.wezfurlong.wezterm
+    cmd: flatpak install -y flathub org.wezfurlong.wezterm
 
 - name: Ensure .config directory exists
   ansible.builtin.file:
@@ -18,6 +19,7 @@
     dest: "{{ home }}/.config/wezterm"
     state: link
 
+# Brave
 - name: Libraries required for Brave
   become: true
   ansible.builtin.apt:
@@ -42,6 +44,7 @@
     pkg:
     - brave-browser
 
+# Media Apps
 - name: Install GIMP & Inkscape
   become: true
   ansible.builtin.apt:
@@ -49,9 +52,54 @@
     - gimp
     - inkscape
 
+# Spotify
 - name: Install Spotify (Snap)
   become: true
   community.general.snap:
     channel: 'latest/stable'
     name: spotify
     state: present
+
+# Steam
+- name: Add multiverse apt repository
+  become: true
+  ansible.builtin.apt_repository:
+    repo: "deb http://archive.ubuntu.com/ubuntu {{ ansible_lsb.codename }} multiverse"
+    state: present
+    update_cache: yes
+
+- name: Add i386 architecture support
+  become: true
+  ansible.builtin.command: dpkg --add-architecture i386
+  register: add_arch
+  changed_when: "'i386' not in add_arch.stdout"
+
+- name: Install Steam
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    pkg:
+    - steam-installer
+
+# Discord
+- name: Install Discord
+  include_tasks: install-from-deb.yml
+  vars:
+    deb_package_name: Discord
+    deb_package_url: "https://discord.com/api/download?platform=linux&format=deb"
+
+# Heroic Launcher
+- name: Install Heroic Launcher (Flatpak)
+  ansible.builtin.command:
+    cmd: flatpak install -y flathub com.heroicgameslauncher.hgl
+
+# Signal - this doesn't work
+# - name: Install Signal
+#   become: true
+#   ansible.builtin.shell: |
+#     wget -O- https://updates.signal.org/desktop/apt/keys.asc | gpg --dearmor > signal-desktop-keyring.gpg;
+#     cat signal-desktop-keyring.gpg | tee /usr/share/keyrings/signal-desktop-keyring.gpg > /dev/null;
+#     wget -O signal-desktop.sources https://updates.signal.org/static/desktop/apt/signal-desktop.sources;
+#     cat signal-desktop.sources | tee /etc/apt/sources.list.d/signal-desktop.sources > /dev/null;
+#     apt update && apt install signal-desktop;
+

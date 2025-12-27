@@ -23,7 +23,6 @@
     - role: neovim
       tags:
         - nvim
-        - apps
 
     - role: ssh
       tags:

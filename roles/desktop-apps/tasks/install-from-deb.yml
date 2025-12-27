@@ -1,0 +1,37 @@
+---
+- name: "Check if {{ deb_package_name }} is installed"
+  ansible.builtin.shell: "dpkg -s {{ deb_package_name }} | grep -q '^Status: install ok installed'"
+  register: app_installed
+  failed_when: false
+  changed_when: false
+
+- name: Set install_required fact
+  ansible.builtin.set_fact:
+    install_required: "{{ app_installed.rc != 0 or 'force-update' in ansible_run_tags }}"
+
+- name: Download .deb file if not installed
+  ansible.builtin.get_url:
+    url: "{{ deb_package_url }}"
+    dest: "/tmp/{{ deb_package_name }}.deb"
+    mode: "0644"
+  when: install_required
+
+- name: "Install {{ deb_package_name }} from deb package"
+  become: true
+  ansible.builtin.apt:
+    deb: "/tmp/{{ deb_package_name }}.deb"
+    state: present
+  when: install_required
+
+- name: Fix missing dependencies (if any)
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: no
+    autoremove: yes
+  when: install_required
+
+- name: Clean up .deb file
+  ansible.builtin.file:
+    path: "/tmp/{{ deb_package_name }}.deb"
+    state: absent

@@ -1,0 +1,15 @@
+---
+- name: Install rustup via APT
+  become: true
+  ansible.builtin.apt:
+    name:
+      - rustup
+    state:
+      latest
+
+- name: Install Rust
+  ansible.builtin.shell: rustup default stable
+
+- name: Update rustup
+  ansible.builtin.shell: rustup update
+
