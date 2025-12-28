@@ -53,6 +53,10 @@ set -a
 set +a
 
 
+# SSH Key setup will be outside the general scripts as it is interactive.
+. "$SETUP_DIR/scripts/ssh.setup.sh"
+
+
 # Output formatting.
 skipped="\e[33m\u25CB Skipped\e[0m"
 partial="\e[33m\u25CB Unknown progress\e[0m"
