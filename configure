@@ -2,6 +2,8 @@
 
 SETUP_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
 
+set +u
+    
 if [[ -f "$SETUP_DIR/.env" ]]; then
     set -a
     source "$SETUP_DIR/.env"
@@ -49,5 +51,6 @@ if [[ $confirm == [yY] ]]; then
     mv "$SETUP_DIR/.env.tmp" "$SETUP_DIR/.env"
 fi
 
+set -u
 
 # TODO: Exit or handle what to do if we don't like the changes...

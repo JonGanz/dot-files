@@ -7,9 +7,11 @@ set -euo pipefail
 
 if [[ ! -f "$HOME/.gitconfig" ]]; then
     sed \
-        "s/{{ git_username_personal }}/$GIT_USERNAME/g;
-         s/{{ git_email_personal }}/$GIT_EMAIL/g;
-         s/{{ work_git_dir }}/$WORK_GIT_DIR/g;" \
+        -e "s/{{ git_username_personal }}/$GIT_USERNAME/g;" \
+        -e "s/{{ git_email_personal }}/$GIT_EMAIL/g;" \
+        -e "s|{{ work_git_dir }}|$WORK_GIT_DIR|g;" \
         ./dotfiles/git/gitconfig.personal > "$HOME/.gitconfig"
+else
+    echo "$HOME/.gitconfig already exists; skipping generation"
 fi
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -uo pipefail
+sudo -v
 
 
 # Variables.

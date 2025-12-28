@@ -9,7 +9,10 @@ source "$SETUP_DIR/bash/ensure.sh"
 
 if [[ $OS == "ubuntu" ]]; then
 
-    CURRENT_VERSION=$(nvim --version | sed -E 's/NVIM v([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g' | head -n 1)
+    CURRENT_VERSION=""
+    if command -v nvim >/dev/null 2>&1; then
+        CURRENT_VERSION=$(nvim --version | sed -E 's/NVIM v([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/g' | head -n 1)
+    fi
     DIR="$OPEN_SOURCE_DIR/neovim"
 
     if [[ $NEOVIM_VERSION == $CURRENT_VERSION ]]; then
