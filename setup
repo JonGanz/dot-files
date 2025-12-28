@@ -103,6 +103,7 @@ scripts+=( \
     "nextcloud-desktop.sh" \
     "web-apps.sh" \
     "steam.sh" \
+    "spotify.sh" \
 )
 
 # desktop environment
@@ -204,7 +205,6 @@ sudo pacman -S --noconfirm --needed \
 ensure_symlink_dir "$SETUP_DIR/dotfiles/hypr" "$HOME/.config/hypr"
 
 
-# TODO: Install Spotify / TUI
 # TODO: Get some pimpin' backgrounds to match things.
 # TODO: Replace rofi menu with something way nicer than that... or at least configure it to lot look like ass.
 # TODO: Get a way to get audio control working..? Ha, this should probably be higher on the list, but who needs priorities?
