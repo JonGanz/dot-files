@@ -4,6 +4,7 @@ sudo -v
 
 
 # Variables.
+export FREECAD_VER=1.0.2
 export GHOSTTY_VER=1.2.3
 export GOLANG_VER=1.25.4
 export JET_BRAINS_VERSION=3.4.0
@@ -106,6 +107,7 @@ scripts+=( \
     "steam.sh" \
     "spotify.sh" \
     "obsidian.sh" \
+    "cad.sh" \
 )
 
 # desktop environment
