@@ -11,7 +11,11 @@ JELLYFIN_BIN="flatpak run com.github.iwalton3.jellyfin-media-player"
 ICON_PATH="/usr/share/pixmaps/jellyfin.png"
 ICON_URL="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.png"
 
-flatpak install -y --noninteractive flathub com.github.iwalton3.jellyfin-media-player
+flatpak install \
+    -y \
+    --noninteractive \
+    --user flathub \
+    com.github.iwalton3.jellyfin-media-player
 
 sudo tee "$DESKTOP_FILE" > /dev/null <<EOF
 [Desktop Entry]
@@ -27,7 +31,7 @@ EOF
 sudo chmod 644 "$DESKTOP_FILE"
 
 if [[ ! -f "$ICON_PATH" ]]; then
-  sudo curl -fsSL "$ICON_URL" -o "$ICON_PATH"
-  sudo chmod 644 "$ICON_PATH"
+    sudo curl -fsSL "$ICON_URL" -o "$ICON_PATH"
+    sudo chmod 644 "$ICON_PATH"
 fi
 

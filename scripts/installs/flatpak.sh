@@ -7,8 +7,11 @@ if [[ $OS == "ubuntu" ]]; then
         flatpak \
         gnome-software-plugin-flatpak
 
-    flatpak remote-add --if-not-exists \
-        flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+    flatpak remote-add \
+        --system \
+        --if-not-exists \
+        flathub \
+        https://dl.flathub.org/repo/flathub.flatpakrepo
 
 elif [[ $OS == "arch" ]]; then
 
