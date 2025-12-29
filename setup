@@ -10,6 +10,7 @@ export JET_BRAINS_VERSION=3.4.0
 export NEOVIM_VERSION=0.11.4
 export NODE_VERSION=22.14.0
 export NVM_VERSION=0.40.3
+export OBSIDIAN_VER=1.10.6
 export SOURCE_REPO=git@github.com:JonGanz/dot-files.git
 
 
@@ -104,6 +105,7 @@ scripts+=( \
     "web-apps.sh" \
     "steam.sh" \
     "spotify.sh" \
+    "obsidian.sh" \
 )
 
 # desktop environment
