@@ -4,8 +4,8 @@
 	blr = branch -l -r
 	co = checkout
 	cp = cherry-pick
-	dd = difftool -d
-	dds = difftool -d --cached
+	dd = difftool -d --ignore-submodules=all
+	dds = difftool -d --cached --ignore-submodules=all
 	df = difftool -y
 	dfs = difftool -y --cached
 	f = fetch -p
