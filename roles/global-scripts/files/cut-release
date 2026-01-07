@@ -6,6 +6,8 @@ if [[ -z "$1" ]]; then
 fi
 
 SEMVER="$1"
+FLAG="$2"  # optional --tag
+
 MAJOR_MINOR=$(echo "$SEMVER" | cut -d '.' -f 1,2)
 PATCH=$(echo "$SEMVER" | cut -d '.' -f 3)
 
@@ -20,11 +22,70 @@ CURRENT_BRANCH=$(git symbolic-ref --short HEAD)
 TARGET_BRANCH="${BRANCH_TYPE}/${SEMVER}"
 
 git fetch --prune || { echo -e "\e[31mError: Failed to fetch repository updates"; exit 1; }
-git branch $TARGET_BRANCH "origin/$SOURCE_BRANCH" || { echo -e "\e[31mError: Failed to create branch"; exit 1; }
-git tag $SEMVER $TARGET_BRANCH || { echo -e "\e[31mError: Failed to tag branch"; exit 1; }
-git push -u origin $TARGET_BRANCH || { echo -e "\e[31mError: Failed to push release branch to origin"; exit 1; }
-git push origin $SEMVER || { echo -e "\e[31mError: Failed to push tag to origin"; exit 1; }
-git branch -D $TARGET_BRANCH || { echo -e "\e[31mError: Failed to remove release branch"; exit 1; }
+
+if [[ "$BRANCH_TYPE" == "hotfix" ]]; then
+    echo -e "\e[34mChecking for existing hotfix branches ahead of main..."
+
+    # Hotfix branches are cut from main
+    SOURCE_BRANCH="main"
+
+    # Strict match: origin/hotfix/x.y.z (all numeric)
+    HOTFIX_BRANCHES=$(git branch -r | grep -Eo '^ *origin/hotfix/[0-9]+\.[0-9]+\.[0-9]+$' || true)
+
+    BLOCKING_BRANCHES=()
+
+    for BR in $HOTFIX_BRANCHES; do
+        # Compare BR with origin/main
+        AHEAD=$(git rev-list --right-only --count "origin/main...$BR")
+
+        if [[ "$AHEAD" -gt 0 ]]; then
+            BLOCKING_BRANCHES+=("${BR#origin/}")
+        fi
+    done
+
+    if [[ ${#BLOCKING_BRANCHES[@]} -gt 0 ]]; then
+        echo -e "\e[31mError: Cannot create new hotfix branch. The following hotfix branches must be merged into main first:"
+        for BR in "${BLOCKING_BRANCHES[@]}"; do
+            echo -e "  - $BR"
+        done
+        exit 1
+    fi
+fi
+
+# Check if branch already exists on origin
+BRANCH_EXISTS=false
+if git show-ref --verify --quiet "refs/remotes/origin/$TARGET_BRANCH"; then
+    BRANCH_EXISTS=true
+fi
+
+if [[ "$BRANCH_EXISTS" == true ]]; then
+    echo -e "\e[34mBranch $TARGET_BRANCH already exists on origin; reusing it."
+else
+    git branch "$TARGET_BRANCH" "origin/$SOURCE_BRANCH" || { echo -e "\e[31mError: Failed to create branch"; exit 1; }
+    git push -u origin "$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to push branch to origin"; exit 1; }
+fi
+
+if [[ "$BRANCH_TYPE" == "release" ]]; then
+    echo -e "\e[34mTagging release $SEMVER..."
+    git tag "$SEMVER" "origin/$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to create tag"; exit 1; }
+    git push origin "$SEMVER" || { echo -e "\e[31mError: Failed to push tag"; exit 1; }
+
+elif [[ "$BRANCH_TYPE" == "hotfix" ]]; then
+    if [[ "$BRANCH_EXISTS" == true && "$FLAG" == "--tag" ]]; then
+        echo -e "\e[34mTagging hotfix $SEMVER..."
+        git tag "$SEMVER" "origin/$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to create tag"; exit 1; }
+        git push origin "$SEMVER" || { echo -e "\e[31mError: Failed to push tag"; exit 1; }
+    else
+        echo -e "\e[34mSkipping hotfix tag creation (branch new or --tag missing)."
+    fi
+fi
+
+##############################################
+# If we created the branch locally, remove it after pushing
+##############################################
+if [[ "$BRANCH_EXISTS" == false ]]; then
+    git branch -D "$TARGET_BRANCH" || { echo -e "\e[31mError: Failed to remove local branch"; exit 1; }
+fi
 
 echo -e "\e[32mSuccessfully cut branch $TARGET_BRANCH from $SOURCE_BRANCH"
 
