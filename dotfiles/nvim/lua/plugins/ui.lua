@@ -138,8 +138,21 @@ return {
                 builtin.buffers(opts)
             end
 
+            local function live_grep_smart()
+                if vim.fn.mode() == 'v' or vim.fn.mode() == 'V' then
+                    local old_reg = vim.fn.getreg('"')
+                    local old_reg_type = vim.fn.getregtype('"')
+                    vim.cmd('noau normal! "vy"')
+                    local selection = vim.fn.getreg('"')
+                    vim.fn.setreg('"', old_reg, old_reg_type)
+                    builtin.live_grep({ default_text = selection })
+                else
+                    builtin.live_grep()
+                end
+            end
+
             vim.keymap.set('n', '<C-p>', builtin.find_files, {})
-            vim.keymap.set('n', '<C-f>', builtin.live_grep, {})
+            vim.keymap.set({ 'n', 'v' }, '<C-f>', live_grep_smart, {})
             vim.keymap.set('n', '<C-s>', builtin.lsp_document_symbols, {})
             vim.keymap.set('n', '<leader>gr', builtin.lsp_references, {})
             vim.keymap.set(
