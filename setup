@@ -108,6 +108,8 @@ scripts+=( \
     "spotify.sh" \
     "obsidian.sh" \
     "cad.sh" \
+    "discord.sh" \
+    "blender.sh" \
 )
 
 # desktop environment
