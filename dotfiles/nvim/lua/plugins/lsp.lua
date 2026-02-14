@@ -57,6 +57,7 @@ return {
                 'lua_ls',
                 'marksman',
                 'omnisharp',
+                'openscad_lsp',
                 'ruff',
                 'sqlls',
                 'ts_ls',
