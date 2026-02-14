@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro pop; then
+    
+    sudo apt-get install -y steam
+    
+elif is_distro ubuntu; then
 
     if ! command -v steam >/dev/null 2>&1; then
         DEB_FILE_PATH="/tmp/steam.deb"
@@ -10,4 +15,3 @@ if [[ $OS == "ubuntu" ]]; then
     fi
 
 fi
-

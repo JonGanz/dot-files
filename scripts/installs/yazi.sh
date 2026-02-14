@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
+source "$SETUP_DIR/bash/ensure.sh"
 
 # TODO: Add a version number that we are going to checkout.
 : "${OPEN_SOURCE_DIR:?OPEN_SOURCE_DIR not set}"
-: "${SETUP_DIR:?SETUP_DIR not set}"
 
-source "$SETUP_DIR/bash/ensure.sh"
-
-if [[ "$OS" == "ubuntu" ]]; then
+if is_distro ubuntu; then
     
     DIR="$OPEN_SOURCE_DIR/yazi"
 
@@ -28,7 +27,7 @@ if [[ "$OS" == "ubuntu" ]]; then
 
     popd
 
-elif [[ "$OS" == "arch" ]]; then
+elif is_distro arch; then
 
     sudo pacman -S --noconfirm --needed \
         yazi \

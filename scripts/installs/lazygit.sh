@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 : "${SETUP_DIR:?SETUP_DIR not set}"
 
 source "$SETUP_DIR/bash/ensure.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     # Get the latest version.
     LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
@@ -31,7 +32,7 @@ if [[ $OS == "ubuntu" ]]; then
         echo "Skipping install; current version already installed."
     fi
 
-elif [[ $OS == "arch" ]]; then
+elif is_distro arch; then
 
     sudo pacman -S --noconfirm --needed lazygit
 

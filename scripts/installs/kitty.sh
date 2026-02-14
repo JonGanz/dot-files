@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 if [[ "${HAS_DE:-0}" == "0" ]]; then
     echo "Skipping Kitty install for environment without Desktop Environment"
@@ -13,7 +14,7 @@ source "$SETUP_DIR/bash/ensure.sh"
 
 DIR="$OPEN_SOURCE_DIR/kitty"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
     ensure_directory "$DIR"
     pushd "$DIR"
 

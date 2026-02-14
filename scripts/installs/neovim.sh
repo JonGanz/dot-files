@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 : "${NEOVIM_VERSION:?NEOVIM_VERSION not set}"
 : "${OPEN_SOURCE_DIR:?OPEN_SOURCE_DIR not set}"
@@ -7,7 +8,7 @@ set -euo pipefail
 
 source "$SETUP_DIR/bash/ensure.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     CURRENT_VERSION=""
     if command -v nvim >/dev/null 2>&1; then
@@ -41,7 +42,7 @@ if [[ $OS == "ubuntu" ]]; then
     sudo make install
     popd
 
-elif [[ $OS == "arch" ]]; then
+elif is_distro arch; then
     
     sudo pacman -S --noconfirm --needed neovim
 

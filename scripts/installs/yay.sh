@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 : "${OPEN_SOURCE_DIR:?OPEN_SOURCE_DIR not set}"
 : "${SETUP_DIR:?SETUP_DIR not set}"
 
 source "$SETUP_DIR/bash/ensure.sh"
 
-if [[ $OS == "arch" ]]; then
+if is_distro arch; then
     
     DIR="$OPEN_SOURCE_DIR/yay"
 

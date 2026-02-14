@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     sudo apt install -y \
         flatpak \
@@ -13,7 +14,7 @@ if [[ $OS == "ubuntu" ]]; then
         flathub \
         https://dl.flathub.org/repo/flathub.flatpakrepo
 
-elif [[ $OS == "arch" ]]; then
+elif is_distro arch; then
 
     sudo pacman -S --noconfirm --needed \
         flatpak

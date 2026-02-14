@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 : "${JET_BRAINS_VERSION:?JET_BRAINS_VERSION not set}"
 : "${SETUP_DIR:?SETUP_DIR not set}"
 
 source "$SETUP_DIR/bash/ensure.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     ensure_directory "$HOME/.local/share/fonts"
 
@@ -52,7 +53,7 @@ if [[ $OS == "ubuntu" ]]; then
         echo "Skipping install; current version already installed."
     fi
 
-elif [[ $OS == "arch" ]]; then
+elif is_distro arch; then
 
     sudo pacman -S --noconfirm --needed ttf-jetbrains-mono-nerd
 

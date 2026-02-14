@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 : "${NVM_VERSION:?NVM_VERSION not set}"
 : "${SETUP_DIR:?SETUP_DIR not set}"
 
 source "$SETUP_DIR/bash/ensure.sh"
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     if ! command -v nvm >/dev/null 2>&1; then
         curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh" | bash
@@ -21,7 +22,7 @@ if [[ $OS == "ubuntu" ]]; then
         curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v$NVM_VERSION/install.sh" | bash
     fi
 
-elif [[ $OS == "arch" ]]; then
+elif is_distro arch; then
 
     sudo pacman -S --noconfirm --needed \
         nvm

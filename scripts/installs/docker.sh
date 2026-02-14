@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+source "$SETUP_DIR/scripts/distro.fn.sh"
 
 if [[ "${HAS_DE:-0}" == "0" ]]; then
     echo "Skipping Docker install for environment without Desktop Environment"
@@ -7,7 +8,7 @@ if [[ "${HAS_DE:-0}" == "0" ]]; then
     exit 2;
 fi
 
-if [[ $OS == "ubuntu" ]]; then
+if is_distro ubuntu; then
 
     if command -v docker >/dev/null 2>&1; then
         exit 0
