@@ -47,10 +47,13 @@ EOF
         sudo chmod 644 "$ICON_PATH"
     fi
 
+    sudo apt-get install -y openscad
+
 elif is_distro arch; then
 
     sudo pacman -S --no-confirm --needed \
-        freecad
+        freecad \
+        openscad
 
 fi
 
