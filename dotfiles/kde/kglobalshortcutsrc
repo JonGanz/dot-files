@@ -8,7 +8,7 @@ Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,Switch to Next Keyboard Lay
 _k_friendly_name=Keyboard Layout Switcher
 
 [kaccess]
-Toggle Screen Reader On and Off=Meta+Alt+S,Meta+Alt+S,Toggle Screen Reader On and Off
+Toggle Screen Reader On and Off=none,Meta+Alt+S,Toggle Screen Reader On and Off
 _k_friendly_name=Accessibility
 
 [kmix]
@@ -254,3 +254,12 @@ toggle do not disturb=none,,Toggle do not disturb
 
 [services][ghostty.desktop]
 _launch=Meta+Return
+
+[services][org.kde.konsole.desktop]
+_launch=none
+
+[services][org.kde.plasma-systemmonitor.desktop]
+_launch=Meta+Del
+
+[services][org.kde.plasma.emojier.desktop]
+_launch=Meta+.
