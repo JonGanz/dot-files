@@ -110,6 +110,8 @@ scripts+=( \
     "cad.sh" \
     "discord.sh" \
     "blender.sh" \
+    "readest.sh" \
+    "signal.sh" \
 )
 
 # desktop environment
