@@ -50,6 +50,10 @@ ensure_symlink_dir() {
 	fi
 	echo -n "Ensuring path '$link_path' -> '$data_path'... "
 	ln -snfv "$data_path" "$link_path"
+    if [[ $? -eq 1 || $? -eq 13 ]]; then
+        echo -n "sudo: Ensuring path '$link_path' -> '$data_path'... "
+        sudo ln -snfv "$data_path" "$link_path"
+    fi
     if [[ $? -eq 0 ]]; then
         echo -e $success
     else
