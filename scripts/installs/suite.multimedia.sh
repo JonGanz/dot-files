@@ -11,7 +11,8 @@ if is_distro ubuntu; then
 
     sudo apt install -y \
         gimp \
-        inkscape
+        inkscape \
+        mpv
 
 elif is_distro arch; then
 
