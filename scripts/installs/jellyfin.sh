@@ -14,7 +14,7 @@ ICON_URL="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/jellyfin.p
 flatpak install \
     -y \
     --noninteractive \
-    --user flathub \
+    --system flathub \
     com.github.iwalton3.jellyfin-media-player
 
 sudo tee "$DESKTOP_FILE" > /dev/null <<EOF
