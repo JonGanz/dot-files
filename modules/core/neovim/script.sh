@@ -8,7 +8,7 @@ install() {
 
 configure() {
     log_info "Configuring neovim..."
-    # Placeholder for nvim config
+    link_config "config/nvim" "$HOME/.config/nvim"
 }
 
 update() {
