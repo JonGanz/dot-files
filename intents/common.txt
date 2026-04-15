@@ -1,0 +1,5 @@
+core/essentials
+core/tmux
+core/git
+core/neovim
+apps/gimp
