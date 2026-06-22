@@ -3,6 +3,8 @@
 install() {
     if is_wsl; then
         log_warn "Skipping MySQL Workbench (GUI) in WSL environment."
+        log_info "Installing mysql-client for CLI access..."
+        pkg_install mysql-client
         return
     fi
 
