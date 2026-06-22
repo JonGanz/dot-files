@@ -6,6 +6,7 @@ core/docker
 core/lazygit
 core/oh-my-posh
 core/fonts
+core/kde
 sdks/node
 sdks/rust
 sdks/go
