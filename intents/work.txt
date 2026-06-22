@@ -1,1 +1,2 @@
 apps/mysql-workbench
+apps/claude
