@@ -8,7 +8,7 @@ A modular, idempotent, and multi-platform Bash-based setup system for Linux envi
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/youruser/setup2.git && cd setup2
+   git clone https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
    ```
 
 2. **Run the setup:**
@@ -77,7 +77,6 @@ These values are saved to `.local.env` (which is git-ignored) and can be used in
 ```text
 .
 ├── setup.sh                 # Main entry point
-├── GEMINI.md                # Developer-focused documentation
 ├── lib/                     # Shared Bash libraries
 │   ├── env.sh               # OS & WSL detection
 │   ├── log.sh               # Colored logging utilities
