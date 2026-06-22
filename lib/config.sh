@@ -13,6 +13,8 @@ CONFIG_ITEMS=(
     "git_username_personal|Git User Name (Personal)|NONE"
     "git_email_personal|Git User Email (Personal)|NONE"
     "work_git_dir|Work Git Directory (e.g. ~/work)|OPTIONAL"
+    "git_username_work|Git User Name (Work)|OPTIONAL"
+    "git_email_work|Git User Email (Work)|OPTIONAL"
 )
 
 load_config() {
