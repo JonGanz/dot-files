@@ -10,5 +10,6 @@ core/global-scripts
 sdks/node
 sdks/rust
 sdks/go
+sdks/python
 apps/yazi
 apps/gimp
