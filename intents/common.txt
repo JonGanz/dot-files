@@ -1,4 +1,5 @@
 core/essentials
+core/bash
 core/tmux
 core/git
 core/neovim
