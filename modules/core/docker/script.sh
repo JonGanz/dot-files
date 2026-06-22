@@ -3,6 +3,11 @@
 # Docker installation and rootless configuration
 
 install() {
+    if is_wsl; then
+        log_info "WSL detected — skipping Docker install (use Windows Docker Desktop integration)."
+        return 0
+    fi
+
     if is_arch; then
         log_info "Installing Docker via pacman..."
         pkg_install docker docker-buildx docker-compose docker-rootless-extras-bin
@@ -32,6 +37,11 @@ install() {
 }
 
 configure() {
+    if is_wsl; then
+        log_info "WSL detected — skipping Docker configuration (use Windows Docker Desktop integration)."
+        return 0
+    fi
+
     log_info "Configuring Docker (Rootless)..."
 
     # Install rootless dependencies
@@ -75,6 +85,11 @@ configure() {
 }
 
 update() {
+    if is_wsl; then
+        log_info "WSL detected — skipping Docker update (managed by Windows Docker Desktop)."
+        return 0
+    fi
+
     if is_arch; then
         pkg_update docker docker-buildx docker-compose
     elif is_ubuntu; then
