@@ -5,6 +5,8 @@ core/git
 core/neovim
 core/docker
 core/lazygit
+core/lazydocker
+apps/glow
 core/oh-my-posh
 core/fonts
 core/global-scripts
