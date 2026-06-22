@@ -59,6 +59,15 @@ configure() {
             sudo ln -s "$GO_INSTALL_DIR/bin/gofmt" /usr/local/bin/gofmt
         fi
     fi
+
+    # Add Go binary paths to .bashrc for future sessions
+    if ! grep -q "go/bin" "$HOME/.bashrc"; then
+        log_info "Adding Go paths to .bashrc..."
+        {
+            echo 'export PATH="$PATH:/usr/local/go/bin"'
+            echo 'export PATH="$PATH:$HOME/go/bin"'
+        } >> "$HOME/.bashrc"
+    fi
 }
 
 update() {

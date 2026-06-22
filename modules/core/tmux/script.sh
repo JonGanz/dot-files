@@ -5,11 +5,13 @@ install() {
 }
 
 configure() {
-    # Symlink config from the organized config directory
-    if [ -f "$DIR/config/tmux/tmux.conf" ]; then
-        link_config "config/tmux/tmux.conf" "$HOME/.tmux.conf"
+    local src="$DIR/config/tmux/tmux.conf"
+    local dest="$HOME/.tmux.conf"
+
+    if [ -f "$src" ]; then
+        symlink_file "$src" "$dest"
     else
-        log_warn "tmux.conf not found at config/tmux/tmux.conf."
+        log_warn "tmux.conf not found at $src."
     fi
 }
 

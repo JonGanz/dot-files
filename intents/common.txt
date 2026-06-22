@@ -1,6 +1,13 @@
 core/essentials
-core/go
 core/tmux
 core/git
 core/neovim
+core/docker
+core/lazygit
+core/oh-my-posh
+core/fonts
+sdks/node
+sdks/rust
+sdks/go
+apps/yazi
 apps/gimp

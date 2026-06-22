@@ -1,40 +1,92 @@
 #!/bin/bash
 
-# Utility functions for the setup system
+# Utility functions
 
-# Link a configuration file or directory from the repo to the target path
-# Usage: link_config <repo_relative_path> <target_path>
-link_config() {
-    local src="$DIR/$1"
+# Check if a command exists
+has_cmd() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Symlink a file, creating parent directories if needed
+# Usage: symlink_file <src> <dest>
+symlink_file() {
+    local src="$1"
     local dest="$2"
-    local dest_dir=$(dirname "$dest")
 
     if [ ! -e "$src" ]; then
-        log_error "Source config not found: $src"
+        log_error "Source file does not exist: $src"
         return 1
     fi
 
-    # Create destination parent directory if it doesn't exist
-    if [ ! -d "$dest_dir" ]; then
-        log_info "Creating directory: $dest_dir"
-        mkdir -p "$dest_dir"
-    fi
+    # Create destination directory if it doesn't exist
+    mkdir -p "$(dirname "$dest")"
 
-    # Handle existing file/link/directory
-    if [ -L "$dest" ]; then
-        local current_src=$(readlink -f "$dest")
-        if [ "$current_src" == "$src" ]; then
-            log_success "Symlink already correct: $dest -> $src"
-            return 0
-        fi
-        log_info "Updating symlink: $dest"
+    # Remove existing file or symlink
+    if [ -L "$dest" ] || [ -f "$dest" ]; then
         rm "$dest"
-    elif [ -e "$dest" ]; then
-        log_warn "Backing up existing entry: $dest to $dest.bak"
-        rm -rf "$dest.bak" # Remove old backup if exists
-        mv "$dest" "$dest.bak"
     fi
 
-    log_info "Linking $dest -> $src"
+    log_info "Linking $src to $dest"
     ln -s "$src" "$dest"
+}
+
+# Render a template file by replacing {{ variable_name }} with its value
+# Usage: render_template <src_template> <dest_file>
+render_template() {
+    local src="$1"
+    local dest="$2"
+    
+    if [ ! -f "$src" ]; then
+        log_error "Template file not found: $src"
+        return 1
+    fi
+    
+    log_info "Rendering template $src to $dest"
+    
+    # Create destination directory if it doesn't exist
+    mkdir -p "$(dirname "$dest")"
+    
+    # Start with the source content
+    local content
+    content=$(cat "$src")
+    
+    # Find all {{ key }} patterns and replace them
+    # We use a temporary file to avoid issues with large content or special characters
+    local tmp_file
+    tmp_file=$(mktemp)
+    cp "$src" "$tmp_file"
+    
+    # Iterate over all exported variables that match our CONFIG_ITEMS
+    # This is a bit safer than trying to replace everything
+    for item in "${CONFIG_ITEMS[@]}"; do
+        IFS='|' read -r key desc default <<< "$item"
+        local value="${!key}"
+        
+        # Escape special characters for sed
+        local escaped_value=$(echo "$value" | sed 's/[\/&]/\\&/g')
+        
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            sed -i '' "s/{{[[:space:]]*$key[[:space:]]*}}/$escaped_value/g" "$tmp_file"
+        else
+            sed -i "s/{{[[:space:]]*$key[[:space:]]*}}/$escaped_value/g" "$tmp_file"
+        fi
+    done
+    
+    mv "$tmp_file" "$dest"
+}
+
+# Refresh PATH and source language environments for all SDKs
+# This ensures that tools installed in previous modules are available in the current subshell
+refresh_envs() {
+    # The setup script defines DIR, which is the root of the project
+    local sdks_dir="$DIR/modules/sdks"
+    
+    if [ -d "$sdks_dir" ]; then
+        for sdk in "$sdks_dir"/*; do
+            if [ -d "$sdk" ] && [ -f "$sdk/env.sh" ]; then
+                # log_info "Refreshing environment for $(basename "$sdk")..."
+                source "$sdk/env.sh"
+            fi
+        done
+    fi
 }

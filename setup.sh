@@ -10,12 +10,14 @@ source "$DIR/lib/log.sh"
 source "$DIR/lib/env.sh"
 source "$DIR/lib/pkg.sh"
 source "$DIR/lib/util.sh"
+source "$DIR/lib/config.sh"
 
 # Default values
 INTENT="common"
 UPDATE=false
 ONLY_MODULE=""
 DRY_RUN=false
+FORCE_RECONFIGURE=false
 
 # Usage information
 usage() {
@@ -24,6 +26,7 @@ usage() {
     echo "  --intent <name>    Set the intent (e.g., personal, work). Default: common"
     echo "  --update           Run update routines for existing modules"
     echo "  --only <module>    Run only a specific module"
+    echo "  --reconfigure      Force a prompt for all configuration values"
     echo "  --dry-run          Show what would happen without executing"
     echo "  --help             Show this help message"
     exit 1
@@ -44,6 +47,10 @@ while [[ $# -gt 0 ]]; do
             ONLY_MODULE="$2"
             shift 2
             ;;
+        --reconfigure)
+            FORCE_RECONFIGURE=true
+            shift
+            ;;
         --dry-run)
             DRY_RUN=true
             shift
@@ -61,6 +68,13 @@ done
 # Run the setup
 main() {
     detect_env
+
+    # Initial configuration setup
+    if [ "$FORCE_RECONFIGURE" = true ]; then
+        reconfigure
+    else
+        ensure_config
+    fi
 
     log_step "Starting setup with intent: $INTENT"
     if [ "$UPDATE" = true ]; then
@@ -120,6 +134,10 @@ run_module() {
             source "$DIR/lib/log.sh"
             source "$DIR/lib/env.sh"
             source "$DIR/lib/pkg.sh"
+            source "$DIR/lib/util.sh"
+            source "$DIR/lib/config.sh"
+            load_config
+            refresh_envs
             source "$module_path"
 
             if [ "$UPDATE" = true ]; then

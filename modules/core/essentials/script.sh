@@ -4,11 +4,28 @@
 
 install() {
     log_info "Installing essential tools..."
-    local pkgs=(curl jq less ripgrep sed unzip)
+    local pkgs=( \
+        curl \
+        ffmpeg \
+        jq \
+        less \
+        ripgrep \
+        sed \
+        unzip \
+    )
     if is_arch; then
-        pkgs+=(base-devel)
+        pkgs+=( \
+            base-devel \
+        )
     elif is_ubuntu; then
-        pkgs+=(build-essential)
+        pkgs+=( \
+            build-essential \
+            linux-tools-common \
+            linux-tools-generic \
+            ncal \
+            nfs-common \
+            resvg \
+        )
     fi
     pkg_install "${pkgs[@]}"
 }
@@ -19,11 +36,28 @@ configure() {
 
 update() {
     log_info "Updating essential tools..."
-    local pkgs=(curl jq less ripgrep sed unzip)
+    local pkgs=( \
+        curl \
+        ffmpeg \
+        jq \
+        less \
+        ripgrep \
+        sed \
+        unzip \
+    )
     if is_arch; then
-        pkgs+=(base-devel)
+        pkgs+=( \
+            base-devel \
+        )
     elif is_ubuntu; then
-        pkgs+=(build-essential)
+        pkgs+=( \
+            build-essential \
+            linux-tools-common \
+            linux-tools-generic \
+            ncal \
+            nfs-common \
+            resvg \
+        )
     fi
     pkg_update "${pkgs[@]}"
 }
