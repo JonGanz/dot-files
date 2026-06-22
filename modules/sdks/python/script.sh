@@ -13,6 +13,14 @@ install() {
                 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
             log_info "Installing pyenv..."
             curl https://pyenv.run | bash
+            # WSL2: git clone stores symlinks as text files when core.symlinks=false.
+            # Repair any bin/ entries that are text files containing a relative path.
+            find "$HOME/.pyenv/bin" -maxdepth 1 -type f | while read -r f; do
+                content=$(cat "$f")
+                if [[ "$content" != *$'\n'* && "$content" == ../* ]]; then
+                    rm "$f" && ln -s "$content" "$f"
+                fi
+            done
         else
             log_success "pyenv is already installed."
         fi
