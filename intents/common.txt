@@ -2,6 +2,7 @@ core/essentials
 core/bash
 core/tmux
 core/git
+core/ssh
 core/neovim
 core/docker
 core/lazygit

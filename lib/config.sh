@@ -15,6 +15,8 @@ CONFIG_ITEMS=(
     "work_git_dir|Work Git Directory (e.g. ~/work)|OPTIONAL"
     "git_username_work|Git User Name (Work)|OPTIONAL"
     "git_email_work|Git User Email (Work)|OPTIONAL"
+    "ssh_windows_username|Windows Username (for WSL work key import)|OPTIONAL"
+    "ssh_work_key_name|Work SSH key filename — must match its name in Windows ~/.ssh (e.g. id_rsa)|OPTIONAL"
 )
 
 load_config() {

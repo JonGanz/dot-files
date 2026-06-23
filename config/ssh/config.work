@@ -1,0 +1,18 @@
+# Personal / GitHub
+Host github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_personal
+    IdentitiesOnly yes
+
+# Work / Bitbucket
+Host bitbucket.org
+    User git
+    IdentityFile ~/.ssh/{{ ssh_work_key_name }}
+    IdentitiesOnly yes
+
+# Default: use work key for all other SSH connections
+Host *
+    IdentityFile ~/.ssh/{{ ssh_work_key_name }}
+    AddKeysToAgent yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
