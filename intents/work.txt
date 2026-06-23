@@ -1,3 +1,4 @@
 apps/mysql-workbench
 apps/claude
 apps/lazysql
+core/ansible
