@@ -6,6 +6,7 @@ install() {
     log_info "Installing essential tools..."
     local pkgs=( \
         curl \
+        dos2unix \
         ffmpeg \
         jq \
         less \
