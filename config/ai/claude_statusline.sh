@@ -65,11 +65,21 @@ else
 fi
 segments+=("${ctx_emoji} ${ctx_color}${used_int}%${RESET}")
 
-# --- Session cost (yellow) ---
-cost=$(_jq '.cost.total_cost_usd')
-if [ -n "$cost" ]; then
-    cost_fmt=$(printf '%.4f' "$cost")
-    segments+=("${YELLOW}\$${cost_fmt}${RESET}")
+# --- Rate limit usage: 5-hour session and 7-day weekly (yellow, only present for subscribers) ---
+five_hr=$(_jq '.rate_limits.five_hour.used_percentage')
+seven_day=$(_jq '.rate_limits.seven_day.used_percentage')
+if [ -n "$five_hr" ] || [ -n "$seven_day" ]; then
+    limits_seg=""
+    if [ -n "$five_hr" ]; then
+        five_hr_int=$(printf '%.0f' "$five_hr")
+        limits_seg="${YELLOW}5h ${five_hr_int}%${RESET}"
+    fi
+    if [ -n "$seven_day" ]; then
+        seven_day_int=$(printf '%.0f' "$seven_day")
+        [ -n "$limits_seg" ] && limits_seg="${limits_seg} "
+        limits_seg="${limits_seg}${YELLOW}7d ${seven_day_int}%${RESET}"
+    fi
+    segments+=("$limits_seg")
 fi
 
 # --- Code velocity: +lines green / -lines red ---
@@ -91,13 +101,6 @@ if [ -n "$model" ]; then
     else
         segments+=("${MAGENTA}🤖 ${model}${RESET}")
     fi
-fi
-
-# --- Bitbucket repo link (gray) ---
-# Always uses https://bitbucket.org/activategames/<repo-name> when in a git repo
-if [ -n "$repo" ]; then
-    bb_url="https://bitbucket.org/activategames/${repo}"
-    segments+=("${LINK_GRAY}${bb_url}${RESET}")
 fi
 
 # --- Join with dim-gray pipe separators ---
