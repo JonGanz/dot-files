@@ -8,6 +8,12 @@ _jq() {
     printf '%s' "$input" | jq -r "$1 // empty"
 }
 
+# tmux status-bar integration
+{
+    mkdir -p ~/.cache/ai-usage 2>/dev/null
+    echo "$input" | jq -c '{provider:"claude", model:.model.display_name, context_pct:(.context_window.used_percentage//0), context_size:(.context_window.context_window_size//0), cost_usd:(.cost.total_cost_usd//0), duration_ms:(.cost.total_duration_ms//0), rate_5h_pct:(.rate_limits.five_hour.used_percentage//-1), rate_7d_pct:(.rate_limits.seven_day.used_percentage//-1), updated_at:now|floor, resets_at_5h:(.rate_limits.five_hour.resets_at//-1), resets_at_7d:(.rate_limits.seven_day.resets_at//-1)}' > ~/.cache/ai-usage/claude.json 2>/dev/null &
+}
+
 # --- Colors (ANSI 16 — theme-aware) ---
 RESET='\033[0m'
 BOLD='\033[1m'
