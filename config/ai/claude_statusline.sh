@@ -32,22 +32,13 @@ PIPE="${DIM}${GRAY_DIM} | ${RESET}"
 
 segments=()
 
-# --- Repo name (bold yellow) ---
-repo=$(_jq '.workspace.repo.name')
-if [ -n "$repo" ]; then
-    segments+=("${BOLD}${YELLOW}${repo}${RESET}")
-else
-    cwd_display=$(_jq '.workspace.current_dir')
-    [ -n "$cwd_display" ] && segments+=("${BOLD}${YELLOW}${cwd_display}${RESET}")
-fi
-
 # --- Git branch (bold cyan, leaf icon) ---
 cwd=$(_jq '.workspace.current_dir')
 if [ -n "$cwd" ]; then
     branch=$(git --no-optional-locks -C "$cwd" branch --show-current 2>/dev/null)
 fi
 if [ -n "$branch" ]; then
-    segments+=("${BOLD}${CYAN}🌿 ${branch}${RESET}")
+    segments+=("${BOLD}${CYAN}${branch}${RESET}")
 fi
 
 # --- Context usage: dynamic emoji + colored percentage ---
@@ -55,30 +46,66 @@ used_pct=$(_jq '.context_window.used_percentage')
 used_pct="${used_pct:-0}"
 used_int=$(printf '%.0f' "$used_pct")
 if [ "$used_int" -lt 20 ]; then
-    ctx_emoji="🟢"; ctx_color="$CTX_GREEN"
+    ctx_color="$CTX_GREEN"
 elif [ "$used_int" -lt 70 ]; then
-    ctx_emoji="🟡"; ctx_color="$CTX_YELLOW"
+    ctx_color="$CTX_YELLOW"
 elif [ "$used_int" -lt 90 ]; then
-    ctx_emoji="🟠"; ctx_color="$CTX_ORANGE"
+    ctx_color="$CTX_ORANGE"
 else
-    ctx_emoji="🔴"; ctx_color="$CTX_RED"
+    ctx_color="$CTX_RED"
 fi
-segments+=("${ctx_emoji} ${ctx_color}${used_int}%${RESET}")
+segments+=("${ctx_color}${used_int}%${RESET}")
 
 # --- Rate limit usage: 5-hour session and 7-day weekly (yellow, only present for subscribers) ---
 five_hr=$(_jq '.rate_limits.five_hour.used_percentage')
+five_hr_reset=$(_jq '.rate_limits.five_hour.resets_at')
+
 seven_day=$(_jq '.rate_limits.seven_day.used_percentage')
+seven_day_reset=$(_jq '.rate_limits.seven_day.resets_at')
+
+format_remaining() {
+    local reset="$1"
+    local now remaining days hours mins
+
+    [ -z "$reset" ] && return
+
+    now=$(date +%s)
+    remaining=$((reset - now))
+
+    if [ "$remaining" -le 0 ]; then
+        printf "0m"
+        return
+    fi
+
+    days=$((remaining / 86400))
+    hours=$(((remaining % 86400) / 3600))
+    mins=$(((remaining % 3600) / 60))
+
+    if [ "$days" -gt 0 ]; then
+        printf "%dd%dh" "$days" "$hours"
+    elif [ "$hours" -gt 0 ]; then
+        printf "%dh%02dm" "$hours" "$mins"
+    else
+        printf "%dm" "$mins"
+    fi
+}
+
 if [ -n "$five_hr" ] || [ -n "$seven_day" ]; then
     limits_seg=""
+
     if [ -n "$five_hr" ]; then
         five_hr_int=$(printf '%.0f' "$five_hr")
-        limits_seg="${YELLOW}5h ${five_hr_int}%${RESET}"
+        five_hr_remaining=$(format_remaining "$five_hr_reset")
+        limits_seg="${YELLOW}5h ${five_hr_int}% (${five_hr_remaining})${RESET}"
     fi
+
     if [ -n "$seven_day" ]; then
         seven_day_int=$(printf '%.0f' "$seven_day")
+        seven_day_remaining=$(format_remaining "$seven_day_reset")
         [ -n "$limits_seg" ] && limits_seg="${limits_seg} "
-        limits_seg="${limits_seg}${YELLOW}7d ${seven_day_int}%${RESET}"
+        limits_seg="${limits_seg}${YELLOW}7d ${seven_day_int}% (${seven_day_remaining})${RESET}"
     fi
+
     segments+=("$limits_seg")
 fi
 
@@ -97,9 +124,9 @@ model=$(_jq '.model.display_name')
 if [ -n "$model" ]; then
     effort=$(_jq '.effort.level')
     if [ -n "$effort" ]; then
-        segments+=("${MAGENTA}🤖 ${model} [${effort}]${RESET}")
+        segments+=("${MAGENTA}${model} [${effort}]${RESET}")
     else
-        segments+=("${MAGENTA}🤖 ${model}${RESET}")
+        segments+=("${MAGENTA}${model}${RESET}")
     fi
 fi
 
