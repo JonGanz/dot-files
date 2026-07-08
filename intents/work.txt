@@ -1,4 +1,5 @@
 apps/mysql-workbench
 apps/claude
+apps/copilot-cli
 apps/lazysql
 core/ansible
