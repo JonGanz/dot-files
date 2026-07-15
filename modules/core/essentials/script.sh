@@ -12,6 +12,7 @@ install() {
         less \
         ripgrep \
         sed \
+        tree \
         unzip \
     )
     if is_arch; then
@@ -44,6 +45,7 @@ update() {
         less \
         ripgrep \
         sed \
+        tree \
         unzip \
     )
     if is_arch; then
