@@ -8,6 +8,8 @@ install() {
         curl \
         dos2unix \
         ffmpeg \
+        fzf \
+        imagemagick \
         jq \
         less \
         ripgrep \
