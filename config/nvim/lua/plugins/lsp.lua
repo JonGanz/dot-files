@@ -93,6 +93,16 @@ return {
                     },
                 },
                 filetypes = tsserver_filetypes,
+                settings = {
+                    diagnostics = {
+                        ignoredCodes = {
+                            -- File is CommonJS and can be converted to an ES module? Cool, shud'up about it will ya?
+                            80001,
+                            -- Stop telling me I can change from require to import, okay?
+                            80005,
+                        },
+                    },
+                },
             }
 
             local vue_ls_config = {}
