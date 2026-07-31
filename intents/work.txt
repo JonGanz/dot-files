@@ -2,4 +2,5 @@ apps/mysql-workbench
 apps/claude
 apps/copilot-cli
 apps/lazysql
+apps/taskwarrior
 core/ansible
