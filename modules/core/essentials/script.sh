@@ -5,6 +5,7 @@
 install() {
     log_info "Installing essential tools..."
     local pkgs=( \
+	bats \
         curl \
         dos2unix \
         ffmpeg \
