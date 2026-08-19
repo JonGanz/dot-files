@@ -4,6 +4,7 @@
 if [ -d "/usr/local/go/bin" ]; then
     export PATH="$PATH:/usr/local/go/bin"
 fi
-if [ -d "$HOME/go/bin" ]; then
-    export PATH="$PATH:$HOME/go/bin"
+GO_PATH="${GOPATH:-$HOME/go}"
+if [ -d "$GO_PATH/bin" ]; then
+    export PATH="$PATH:$GO_PATH/bin"
 fi

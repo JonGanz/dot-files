@@ -65,7 +65,7 @@ configure() {
         log_info "Adding Go paths to .bashrc..."
         {
             echo 'export PATH="$PATH:/usr/local/go/bin"'
-            echo 'export PATH="$PATH:$HOME/go/bin"'
+            echo 'export PATH="$PATH:${GOPATH:-$HOME/go}/bin"'
         } >> "$HOME/.bashrc"
     fi
 }
