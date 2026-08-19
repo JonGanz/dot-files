@@ -3,11 +3,11 @@
 # Taskwarrior CLI task manager.
 
 install() {
-    log_info "Installing Taskwarrior..."
+    log_info "Installing Taskwarrior and Timewarrior..."
     if is_arch; then
-        pkg_install task
+        pkg_install task timew
     elif is_ubuntu; then
-        pkg_install taskwarrior
+        pkg_install taskwarrior timewarrior
     fi
 }
 
@@ -22,10 +22,10 @@ configure() {
 }
 
 update() {
-    log_info "Updating Taskwarrior..."
+    log_info "Updating Taskwarrior and Timewarrior..."
     if is_arch; then
-        pkg_update task
+        pkg_update task timew
     elif is_ubuntu; then
-        pkg_update taskwarrior
+        pkg_update taskwarrior timewarrior
     fi
 }
