@@ -18,6 +18,9 @@
 data.location=~/.local/share/task
 hooks.location=~/.config/task/hooks
 
+# Editor
+editor=nvim
+
 # Color theme (uncomment one to use)
 #include light-16.theme
 #include light-256.theme
