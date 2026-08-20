@@ -13,6 +13,7 @@ CONFIG_ITEMS=(
     "git_username_personal|Git User Name (Personal)|NONE"
     "git_email_personal|Git User Email (Personal)|NONE"
     "work_git_dir|Work Git Directory (e.g. ~/work)|OPTIONAL"
+    "own_projects_dir|Own Projects Directory (e.g. ~/projects)|~/projects"
     "git_username_work|Git User Name (Work)|OPTIONAL"
     "git_email_work|Git User Email (Work)|OPTIONAL"
     "ssh_windows_username|Windows Username (for WSL work key import)|OPTIONAL"

@@ -30,6 +30,29 @@ symlink_file() {
     ln -s "$src" "$dest"
 }
 
+# Symlink a directory, creating parent directories if needed
+# Usage: symlink_dir <src> <dest>
+symlink_dir() {
+    local src="$1"
+    local dest="$2"
+
+    if [ ! -d "$src" ]; then
+        log_error "Source directory does not exist: $src"
+        return 1
+    fi
+
+    # Create parent directory if it doesn't exist
+    mkdir -p "$(dirname "$dest")"
+
+    # Remove existing file, symlink, or directory
+    if [ -L "$dest" ] || [ -e "$dest" ]; then
+        rm -rf "$dest"
+    fi
+
+    log_info "Linking $src to $dest"
+    ln -s "$src" "$dest"
+}
+
 # Render a template file by replacing {{ variable_name }} with its value
 # Usage: render_template <src_template> <dest_file>
 render_template() {
@@ -73,6 +96,28 @@ render_template() {
     done
     
     mv "$tmp_file" "$dest"
+}
+
+# Clone a repo if it doesn't exist yet, otherwise fast-forward pull it
+# Usage: clone_or_pull <repo_url> <dest_dir>
+clone_or_pull() {
+    local repo_url="$1"
+    local dest_dir="${2/#\~/$HOME}"
+
+    if [ -d "$dest_dir/.git" ]; then
+        log_info "Updating $dest_dir..."
+        if ! git -C "$dest_dir" pull --ff-only; then
+            log_error "Failed to fast-forward pull $dest_dir (local changes or diverged history?)"
+            return 1
+        fi
+    else
+        log_info "Cloning $repo_url to $dest_dir..."
+        mkdir -p "$(dirname "$dest_dir")"
+        if ! git clone "$repo_url" "$dest_dir"; then
+            log_error "Failed to clone $repo_url"
+            return 1
+        fi
+    fi
 }
 
 # Refresh PATH and source language environments for all SDKs
