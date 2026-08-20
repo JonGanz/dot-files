@@ -4,3 +4,4 @@ apps/copilot-cli
 apps/lazysql
 apps/taskwarrior
 core/ansible
+apps/fleet
