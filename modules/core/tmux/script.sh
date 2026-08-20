@@ -5,6 +5,8 @@ HARPOON_COMMIT="76954b686a41341bd299114655e8f442d8be44a"
 install() {
     pkg_install tmux
     install_harpoon
+    clone_or_pull "git@github.com:JonGanz/tmux-asc-binder.git" "$own_projects_dir/tmux-asc-binder"
+    clone_or_pull "git@github.com:JonGanz/tmux-url-scanner.git" "$own_projects_dir/tmux-url-scanner"
 }
 
 install_harpoon() {
@@ -49,4 +51,6 @@ update() {
     pkg_update tmux
     rm -f "$HOME/.local/bin/harpoon"
     install_harpoon
+    clone_or_pull "git@github.com:JonGanz/tmux-asc-binder.git" "$own_projects_dir/tmux-asc-binder"
+    clone_or_pull "git@github.com:JonGanz/tmux-url-scanner.git" "$own_projects_dir/tmux-url-scanner"
 }
