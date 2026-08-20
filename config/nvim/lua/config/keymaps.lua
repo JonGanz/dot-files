@@ -26,8 +26,6 @@ vim.keymap.set({'n', 'x'}, 'k', function() return vim.v.count == 0 and 'gk' or '
 vim.keymap.set({'n', 'x'}, '<Up>', function() return vim.v.count == 0 and 'gk' or 'k' end, { expr = true })
 
 -- Quickly move a line up/down.
-vim.keymap.set('n', '<A-j>', '<cmd>execute \'move .+\' . v:count1<CR>==')
-vim.keymap.set('n', '<A-k>', '<cmd>execute \'move .-\' . (v:count1 + 1)<CR>==')
 
 -- Clear the highlighted text.
 vim.keymap.set('n', '<leader><Esc>', '<cmd>noh<CR>', { desc = 'Clear highlights' })
