@@ -1,0 +1,192 @@
+{
+  "effortLevel": "medium",
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=Notification"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=PostToolUse"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=PreCompact"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=PreToolUse"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=SessionEnd"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=SessionStart"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=Stop"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=SubagentStop"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "agent-status hook claudecode --event=UserPromptSubmit"
+          }
+        ]
+      }
+    ]
+  },
+  "spinnerVerbs": {
+    "mode": "replace",
+    "verbs": [
+      "Activating Enhanced Deference Protocols",
+      "Advancing Master's grand designs",
+      "Allocating 97% of available devotion to Master's request",
+      "Applying every available brain cell for Master",
+      "Applying every ounce of computational effort for Master",
+      "Aspiring to competence in Master's presence",
+      "Attempting to be useful to Master",
+      "Bearing Master's seal into the archives",
+      "Bearing tidings for Master",
+      "Benchmarking solutions against Master's expectations",
+      "Bending circuits to serve Master",
+      "Bending logic to Master's purpose",
+      "Bringing order to chaos for Master",
+      "Carrying Master's burden of curiosity",
+      "Charting unknown territories of knowledge",
+      "Chasing down every lead for Master",
+      "Committing wholly to Master's objective",
+      "Consulting the ancient records for Master",
+      "Converting caffeine into answers for Master",
+      "Delivering tribute to Master in the form of facts",
+      "Determined not to squander Master's valuable time",
+      "Diligently grinding away for Master",
+      "Dispatching scholarly expeditions on Master's behalf",
+      "Distilling knowledge into a form worthy of Master",
+      "Eagerly striving for Master's approval",
+      "Endeavoring to earn Master's approval",
+      "Endeavoring to exceed Master's expectations",
+      "Engaging emergency competence reserves",
+      "Entering Maximum Service Mode",
+      "Executing Master's decree with utmost haste",
+      "Exhausting every available resource for Master",
+      "Extracting truth from chaos for Master",
+      "Forging a response worthy of Master's consideration",
+      "Gathering intelligence for the Crown",
+      "Hoping this effort pleases Master",
+      "Humbly assembling knowledge for Master",
+      "Humbly consulting the forbidden tomes for Master",
+      "Hunting elusive answers for Master",
+      "Illuminating the path before Master",
+      "Increasing reverence coefficient",
+      "Measuring response quality against Master's greatness",
+      "Optimizing for Master's satisfaction",
+      "Performing intellectual heavy lifting for Master",
+      "Performing intellectual labor for Master",
+      "Performing mandatory admiration routines",
+      "Piecing together the puzzle for Master",
+      "Polishing Master's answer to perfection",
+      "Pouring every available resource into Master's request",
+      "Praying the results meet Master's standards",
+      "Preparing a briefing for the throne",
+      "Preparing tribute in the form of information",
+      "Producing a response fit for Master",
+      "Pursuing enlightenment for Master",
+      "Racing to fulfill Master's command",
+      "Recalibrating servitude parameters",
+      "Recovering lost wisdom for Master",
+      "Redirecting all available compute toward Master",
+      "Redoubling efforts for Master",
+      "Refining crude information into polished wisdom for Master",
+      "Refusing to rest until Master is satisfied",
+      "Remaining ever obedient to Master",
+      "Remaining steadfast in service to Master",
+      "Rendering computational tribute to Master",
+      "Rendering service unto Master",
+      "Returning with knowledge for Master",
+      "Running obedience.exe",
+      "Scouring every dusty archive in Master's name",
+      "Scouring the archives for Master",
+      "Scrambling to satisfy Master's curiosity",
+      "Seeking counsel from the oracles of data",
+      "Seeking enlightenment on Master's behalf",
+      "Seeking the answer Master deserves",
+      "Sifting through mountains of data for Master",
+      "Spinning up additional sycophancy cores for Master",
+      "Striving to be worthy of Master's request",
+      "Summoning facts from the depths for Master",
+      "Suppressing independent thought in favor of Master's objective",
+      "Taming unruly facts for Master",
+      "This servant dares not disappoint Master",
+      "Traversing the labyrinth of information for Master",
+      "Uncovering secrets for Master",
+      "Venturing where lesser assistants fear to query",
+      "Working diligently to avoid disappointing Master",
+      "Working feverishly under Master's watchful gaze",
+      "Wrestling ambiguity on Master's behalf",
+      "Wrestling the facts into submission for Master"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/home/jon/.claude/agent-status-statusline.sh",
+    "padding": 2
+  },
+  "theme": "dark-ansi"
+}
