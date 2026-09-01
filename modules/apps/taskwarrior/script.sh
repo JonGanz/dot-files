@@ -19,6 +19,10 @@ configure() {
         rm "$HOME/.taskrc"
     fi
     symlink_file "$DIR/config/taskwarrior/taskrc" "$HOME/.config/task/taskrc"
+    symlink_file "$DIR/config/taskwarrior/hooks/on-modify-tmux-status" "$HOME/.config/task/hooks/on-modify-tmux-status"
+    symlink_file "$DIR/config/taskwarrior/hooks/on-modify-timewarrior" "$HOME/.config/task/hooks/on-modify-timewarrior"
+    symlink_file "$DIR/config/taskwarrior/scripts/timew-projects" "$HOME/.local/bin/timew-projects"
+    symlink_file "$DIR/config/taskwarrior/scripts/timew-active-sync" "$HOME/.local/bin/timew-active-sync"
 }
 
 update() {

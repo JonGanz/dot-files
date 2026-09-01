@@ -1,0 +1,30 @@
+#!/bin/bash
+# Delegates to timew-active-sync whenever a modification could change which
+# tasks are active, or change the tags of a task that already is. That
+# script reconciles Timewarrior's one open interval against the full set of
+# currently-ACTIVE tasks, which is what lets two tasks started at once both
+# get credited (see timew-active-sync for why Timewarrior can't literally
+# overlap two intervals).
+#
+# Deferred and backgrounded rather than run inline: on-modify hooks execute
+# BEFORE Taskwarrior commits the change to disk (the hook's stdout is what
+# gets written), so a `task export` run synchronously from here always sees
+# the pre-modification state -- it can never observe the very change that
+# triggered it. Deferring past the hook's own exit lets the commit land
+# first.
+
+IFS= read -r old_task
+IFS= read -r new_task
+
+# Always echo the new task back unmodified, or task will abort the change.
+echo "$new_task"
+
+old_active=$(echo "$old_task" | jq -r 'has("start")')
+new_active=$(echo "$new_task" | jq -r 'has("start")')
+
+if [ "$old_active" = "true" ] || [ "$new_active" = "true" ]; then
+    ( sleep 0.3; ~/setup/config/taskwarrior/scripts/timew-active-sync ) >/dev/null 2>&1 &
+    disown
+fi
+
+exit 0

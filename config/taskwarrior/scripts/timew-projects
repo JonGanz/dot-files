@@ -1,0 +1,47 @@
+#!/bin/bash
+# Summarizes Timewarrior time tracked per Taskwarrior project bucket.
+#
+# `timew summary` defaults to today only when given no range hint, but
+# `timew export` defaults to all-time -- this uses export so an omitted
+# range genuinely means "everything ever tracked" rather than silently
+# scoping to today.
+#
+# `task _projects` only lists projects that appear on tasks matching the
+# default (pending) filter, so a project whose only tasks are completed or
+# deleted silently disappears. `rc.list.all.projects=1` on the `projects`
+# report includes those too (context disabled so an active context can't
+# hide any either); drop any project that comes back with zero tracked time.
+#
+# Usage: timew-projects [range hint...]
+#   timew-projects                       all-time totals
+#   timew-projects :week                 this week
+#   timew-projects :month                this month
+#   timew-projects 2026-08-01 to 2026-08-25
+
+set -euo pipefail
+
+command -v task >/dev/null 2>&1 || { echo "timew-projects: task not found" >&2; exit 1; }
+command -v timew >/dev/null 2>&1 || { echo "timew-projects: timew not found" >&2; exit 1; }
+command -v jq >/dev/null 2>&1 || { echo "timew-projects: jq not found" >&2; exit 1; }
+
+range=("$@")
+total_secs=0
+
+while IFS= read -r project; do
+    [ -n "$project" ] || continue
+
+    secs=$(timew export "${range[@]}" "$project" 2>/dev/null | jq '
+        [.[] | (if .end then (.end | strptime("%Y%m%dT%H%M%SZ") | mktime)
+                         else (now | floor) end)
+             - (.start | strptime("%Y%m%dT%H%M%SZ") | mktime)]
+        | add // 0')
+
+    [ "$secs" -gt 0 ] || continue
+
+    total_secs=$((total_secs + secs))
+    printf '%-20s %02d:%02d:%02d\n' "$project" $((secs / 3600)) $((secs % 3600 / 60)) $((secs % 60))
+done < <(task rc.context=none rc.verbose=nothing rc.list.all.projects=1 projects 2>/dev/null |
+    awk '$0 ~ /^\(none\)/ { next } $0 ~ /^[A-Za-z0-9_.].*[0-9]+$/ { sub(/[ \t]+[0-9]+$/, ""); print }')
+
+printf -- '-%.0s' $(seq 1 29); echo
+printf '%-20s %02d:%02d:%02d\n' "total" $((total_secs / 3600)) $((total_secs % 3600 / 60)) $((total_secs % 60))

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Taskwarrior on-modify hook: on a start/stop edge, re-syncs @tw_active_task /
+# @tw_active_task_2 by delegating to the same logic tmux startup uses (see
+# tw-active-task-sync.sh) -- both must agree on what's currently active.
+# Fires on every modification; we only care about the start/stop edge.
+# Always calls the sync script regardless of the hook's own environment --
+# `task done`/`modify` can run from a shell that never inherited $TMUX (SSH,
+# cron, an editor subprocess), and tmux set-option is a harmless no-op if no
+# server is reachable.
+#
+# The sync is backgrounded with a brief delay rather than run inline: on-modify
+# hooks execute BEFORE taskwarrior commits the change to disk (the hook's
+# stdout is what gets written), so a `task export` run synchronously from here
+# always sees the pre-modification state -- it can never observe the very
+# change that triggered it. Deferring past the hook's own exit lets the commit
+# land first.
+
+IFS= read -r old_task
+IFS= read -r new_task
+
+# Always echo the new task back unmodified, or task will abort the change.
+echo "$new_task"
+
+old_start=$(echo "$old_task" | jq -r '.start // empty')
+new_start=$(echo "$new_task" | jq -r '.start // empty')
+
+if [ "$old_start" != "$new_start" ]; then
+    ( sleep 0.3; ~/setup/config/tmux/tw-active-task-sync.sh ) >/dev/null 2>&1 &
+    disown
+fi
+
+exit 0
