@@ -36,3 +36,16 @@ editor=nvim
 #include solarized-dark-256.theme
 #include solarized-light-256.theme
 #include no-color.theme
+
+# Optional Jira ticket link, kept separate from `project` (the general
+# time-reporting bucket) since not every task maps to a ticket.
+uda.ticket.type=string
+uda.ticket.label=Ticket
+uda.ticket.urgency.coefficient=0
+
+# Surface the ticket column on the reports that matter, otherwise identical
+# to the built-in defaults (just with `ticket` spliced in after `project`).
+report.list.columns=id,start.age,entry.age,depends.indicator,priority,project,ticket,tags,recur.indicator,scheduled.countdown,due,until.remaining,description.count,urgency
+report.list.labels=ID,Active,Age,D,P,Project,Ticket,Tags,R,Sch,Due,Until,Description,Urg
+report.next.columns=id,start.age,entry.age,depends,priority,project,ticket,tags,recur,scheduled.countdown,due.relative,until.remaining,description,urgency
+report.next.labels=ID,Active,Age,Deps,P,Project,Ticket,Tag,Recur,S,Due,Until,Description,Urg
