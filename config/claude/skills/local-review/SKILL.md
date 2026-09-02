@@ -46,8 +46,12 @@ branch:
    local `<root-branch>` if there's no remote-tracking ref). If this fails (unrelated histories,
    branch not found), report that clearly for this repo and skip its diff - don't guess a branch.
 7. Diff scope is `$merge_base..HEAD` - i.e. **committed** changes on the current branch since it
-   diverged from root. Note uncommitted working-tree changes separately (`git -C <repo> status
-   --short`) but don't fold them into the review unless the user asked for that.
+   diverged from root, and **only** those. Never review unstaged or staged-but-uncommitted
+   working-tree changes, even if the user's `$ARGUMENTS` doesn't say otherwise - if they want
+   working-tree changes reviewed too, that's a different, explicit ask, not the default for this
+   skill. Run `git -C <repo> status --short` and if it shows anything, name those files in your
+   final text reply as "not reviewed (uncommitted)" so the user knows they were excluded - but
+   never fold their content into the diff, the lint/test scope, or the findings.
 8. If `HEAD` is even with `$merge_base` (nothing committed since divergence), report that and
    move on - there's nothing to review in this repo.
 
@@ -78,7 +82,9 @@ the repo doesn't document.
 ## Step 5 - Actually run the tools, don't assume
 
 For each repo, check `package.json` (or the language-appropriate manifest) for lint/test scripts
-and run them **scoped to the changed files** where the tooling allows it:
+and run them **scoped to the changed files** - i.e. `git -C <repo> diff --name-only
+$merge_base..HEAD`, not `git status`, so uncommitted files never enter the lint/test scope either
+- where the tooling allows it:
 
 ```sh
 npx eslint <changed files>          # or the repo's documented lint command
