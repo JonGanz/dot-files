@@ -33,7 +33,8 @@
         {
           "properties": {
             "cache_duration": "none",
-            "style": "full"
+            "style": "full",
+            "mapped_locations": {}
           },
           "template": " {{ .Path }} ",
           "foreground": "p:background",
