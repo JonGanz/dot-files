@@ -24,54 +24,52 @@ Optional `$ARGUMENTS`:
    named specific repos, filter to those (error clearly if a named one isn't a git repo here).
 3. If no repos are found either way, say so and stop.
 
-## Step 2 - Per repo: find the merge-base (not a hardcoded branch)
+## Step 2 - Per repo: run the prep script
 
-For each repo, do **not** assume `develop`, `main`, or any fixed name. Resolve the actual root
-branch:
+Steps 2-5 of a prior version of this skill (merge-base resolution, diff extraction, standards-doc
+discovery, scoped lint/test) are deterministic - no judgment calls needed - so they're a script,
+not a sequence of ad-hoc `find`/`cat`/`grep` calls. Run it once per repo:
 
-1. If `--base <branch>` was given, use it for this repo too (verify it resolves - locally or as
-   `origin/<branch>` - before relying on it).
-2. Else prefer the remote's actual default branch: `git -C <repo> symbolic-ref refs/remotes/origin/HEAD`
-   (strip `refs/remotes/origin/`). This is authoritative when set.
-3. Else fall back to checking, in order, whether `develop`, `main`, `master` exist as
-   `origin/<name>` (`git -C <repo> branch -a`) and use the first that does.
-4. If the current branch's own upstream (`git -C <repo> rev-parse --abbrev-ref @{u}`) differs from
-   the resolved root branch (e.g. it points at itself on origin), that's fine - the root branch
-   from steps 2-3 is what you diff against, not the upstream.
-5. If `origin/<root>` looks like it might be stale (very few or suspiciously many commits ahead),
-   it's fine to `git -C <repo> fetch origin <root-branch>` once to refresh it - but never fetch
-   unconditionally in a loop, and if a fetch hangs on credentials, abort it and note that the
-   comparison is against a possibly-stale local ref rather than blocking the whole review on it.
-6. Compute `merge_base=$(git -C <repo> merge-base HEAD origin/<root-branch>)` (fall back to the
-   local `<root-branch>` if there's no remote-tracking ref). If this fails (unrelated histories,
-   branch not found), report that clearly for this repo and skip its diff - don't guess a branch.
-7. Diff scope is `$merge_base..HEAD` - i.e. **committed** changes on the current branch since it
-   diverged from root, and **only** those. Never review unstaged or staged-but-uncommitted
-   working-tree changes, even if the user's `$ARGUMENTS` doesn't say otherwise - if they want
-   working-tree changes reviewed too, that's a different, explicit ask, not the default for this
-   skill. Run `git -C <repo> status --short` and if it shows anything, name those files in your
-   final text reply as "not reviewed (uncommitted)" so the user knows they were excluded - but
-   never fold their content into the diff, the lint/test scope, or the findings.
-8. If `HEAD` is even with `$merge_base` (nothing committed since divergence), report that and
-   move on - there's nothing to review in this repo.
+```sh
+~/.claude/skills/local-review/prep.sh <repo-path> [--base <branch>] [--fetch]
+```
 
-## Step 3 - Per repo: load the repo's own standards
+- `<repo-path>` - absolute or relative path to the repo (from Step 1's scope).
+- `--base <branch>` - pass through if `$ARGUMENTS` gave one; otherwise the script resolves the
+  root branch itself (remote `HEAD`, then `develop`/`main`/`master` in that order - never a
+  hardcoded guess).
+- `--fetch` - only pass this if you have a specific reason to think `origin/<root>` is stale
+  (e.g. it looks suspiciously far behind); it fetches once with a 20s timeout and falls back to
+  the existing local ref silently on failure. Default: omit it.
 
-Before judging anything a violation, read what this specific repo actually documents. Check for,
-and read whichever exist:
-- `CLAUDE.md`, `AGENTS.md`, `.claude/CLAUDE.md` (and any `@`-included files they reference)
-- `STYLE.md`, `CONTRIBUTING.md`
-- Lint/format config: `.eslintrc*`, `.prettierrc*`, `.editorconfig`, or language-equivalent
-  (`.editorconfig`, `ruleset.xml`, `.stylecop.json`, etc. for non-JS stacks)
-- A "Conventions"/"Testing"/"Style" section in `README.md` if no dedicated doc exists
+The script prints the path to a generated Markdown report as its last line of output - read that
+file. It contains, in order:
+- resolved root branch + merge-base + HEAD
+- uncommitted files (`git status --short`) - excluded from everything below; name these in your
+  final reply as "not reviewed (uncommitted)"
+- commit log and full diff for `$merge_base..HEAD` (**committed** changes only - never working-tree
+  changes, even if `$ARGUMENTS` doesn't say otherwise)
+- contents of whichever standards docs exist (`CLAUDE.md`, `AGENTS.md`, `.claude/CLAUDE.md`,
+  `STYLE.md`, `CONTRIBUTING.md`) and which lint/format config files are present
+- scoped lint/test output for changed files only (eslint/vitest/jest, whichever the repo has
+  wired up in `node_modules/.bin`) - if a repo uses a different manifest/language or a lint/test
+  runner the script doesn't recognize, it says so in the report; run that tooling yourself,
+  scoped to the same changed-files list, rather than skipping it
 
-Cite the actual rule (file + what it says) when you flag a violation - don't invent conventions
-the repo doesn't document.
+If the script exits non-zero (no merge-base, unrelated histories, branch not found, nothing
+committed since divergence), it explains why on stderr - report that clearly for this repo and
+move on, don't guess a branch or fall back to manual git commands to route around it.
 
-## Step 4 - Per repo: read the diff for real
+Cite the actual rule (file + what it says) when you flag a standards violation later - don't
+invent conventions the repo doesn't document. Cross-reference lint output against the diff: a
+warning on a line the diff didn't touch is pre-existing debt, not something this change
+introduced.
 
-1. `git -C <repo> log --oneline $merge_base..HEAD` - understand the shape of the change first.
-2. `git -C <repo> diff $merge_base..HEAD` - read the whole thing, not just a truncated tail.
+## Step 3 - Per repo: read the diff for real
+
+Using the report from Step 2:
+1. Read the commit log first - understand the shape of the change.
+2. Read the full diff, not just a truncated tail.
 3. For any file where the diff changes logic (not pure formatting/locale/docs), open the full
    current file for surrounding context - a 3-line hunk out of context hides most real bugs.
 4. Look specifically for **duplicated implementations of the same feature** (e.g. a legacy view
@@ -79,25 +77,7 @@ the repo doesn't document.
    whether this change was applied to all of them consistently, or only one - a silent behavioral
    split between variants is a high-value finding.
 
-## Step 5 - Actually run the tools, don't assume
-
-For each repo, check `package.json` (or the language-appropriate manifest) for lint/test scripts
-and run them **scoped to the changed files** - i.e. `git -C <repo> diff --name-only
-$merge_base..HEAD`, not `git status`, so uncommitted files never enter the lint/test scope either
-- where the tooling allows it:
-
-```sh
-npx eslint <changed files>          # or the repo's documented lint command
-npx vitest run <changed spec files>  # or the repo's documented test command
-```
-
-- Cross-reference lint output against the diff: a warning on a line the diff didn't touch is
-  pre-existing debt, not something this change introduced - don't misattribute it.
-- If the repo documents a coverage bar for changed files (check the standards docs from Step 3),
-  note whether changed/added source files have accompanying tests, and whether coverage was run.
-- If a repo has no lint/test tooling wired up, say so plainly rather than skipping silently.
-
-## Step 6 - Verify, don't guess, on anything about runtime behavior
+## Step 4 - Verify, don't guess, on anything about runtime behavior
 
 If a finding rests on a claim about framework/runtime behavior you're not certain of (async
 ordering, an i18n fallback chain, a reactivity/watch timing edge case, a library default) -
@@ -106,18 +86,18 @@ exercises the real code path in the repo and confirms the actual behavior, then 
 finishing. Reading the source and reasoning about it is not verification when the runtime
 behavior is what's actually in question - run it and see.
 
-## Step 7 - Cross-repo contract compatibility (multi-repo scope only)
+## Step 5 - Cross-repo contract compatibility (multi-repo scope only)
 
 When more than one repo is in scope, that's the point of the review, not a coincidence: the user
 is describing one feature/fix that spans repos, so the highest-value bugs live at the boundary
 between them, not inside any single repo. A per-repo review done in isolation cannot catch these
 - each repo can look perfectly internally consistent on its own, and the break only shows up when
-you compare both sides of a contract. **Do not rely on the per-repo pass in Step 8 to catch this
+you compare both sides of a contract. **Do not rely on the per-repo pass in Step 6 to catch this
 - it structurally can't, since each per-repo agent never sees the other repos.**
 
 Do a dedicated compatibility pass over **all** repos in scope together:
 
-1. From each repo's diff (Step 4), pull out anything that is a contract surface between repos,
+1. From each repo's diff (Step 3), pull out anything that is a contract surface between repos,
    e.g.:
    - Moleculer service `actions`/`events` definitions, and `broker.call`/`ctx.call`/`ctx.emit`/
      `ctx.broadcast` call sites (name, param schema, response shape, version)
@@ -144,26 +124,26 @@ Do a dedicated compatibility pass over **all** repos in scope together:
      though it's a known consumer/producer of it. Flag this explicitly rather than silently
      treating "no diff there" as "nothing to check."
    - **Documented backward-compatibility rules being broken** - check each repo's own standards
-     from Step 3 (e.g. "inter-app Moleculer actions/events must remain backward compatible with
+     from Step 2 (e.g. "inter-app Moleculer actions/events must remain backward compatible with
      the prior version, never silently break existing consumers") against what the diff actually
      does.
 4. This step needs simultaneous visibility into every repo's diff and full tree - never delegate
-   it to one of the isolated per-repo agents in Step 8; it must be done by an agent (or by you
+   it to one of the isolated per-repo agents in Step 6; it must be done by an agent (or by you
    directly) that was handed all the repos' paths and diffs together.
 
-## Step 8 - Scale to repo count
+## Step 6 - Scale to repo count
 
-- Single repo in scope: do Steps 2-6 directly yourself; skip Step 7 (nothing to cross-check).
+- Single repo in scope: do Steps 2-4 directly yourself; skip Step 5 (nothing to cross-check).
 - Multiple repos in scope: in **one message**, launch in parallel:
-  - one `general-purpose` Agent per repo, doing Steps 3-6 on that repo alone, **and**
-  - one additional `general-purpose` Agent dedicated entirely to Step 7, given every repo's path
-    plus the diffs/merge-bases you already resolved in Steps 1-4, explicitly told to check
-    cross-repo contract compatibility only - not to redo any single repo's internal review.
+  - one `general-purpose` Agent per repo, doing Steps 2-4 on that repo alone, **and**
+  - one additional `general-purpose` Agent dedicated entirely to Step 5, given every repo's path
+    plus the prep reports you already generated in Step 2, explicitly told to check cross-repo
+    contract compatibility only - not to redo any single repo's internal review.
   Every subagent returns its findings as a structured list (file, summary, concrete failure
   scenario) rather than calling `ReportFindings` itself - you aggregate everything and report once
   at the end so findings across repos and the cross-repo pass all land in one place.
 
-## Step 9 - Report
+## Step 7 - Report
 
 Call `ReportFindings` once, across all reviewed repos plus the cross-repo pass, most-severe first.
 When more than one repo was reviewed, prefix each finding's `file` with `<repo-dir>/` so the repo
