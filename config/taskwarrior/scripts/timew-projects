@@ -26,6 +26,8 @@ command -v jq >/dev/null 2>&1 || { echo "timew-projects: jq not found" >&2; exit
 
 range=("$@")
 total_secs=0
+projects=()
+secs_by_project=()
 
 while IFS= read -r project; do
     [ -n "$project" ] || continue
@@ -39,9 +41,18 @@ while IFS= read -r project; do
     [ "$secs" -gt 0 ] || continue
 
     total_secs=$((total_secs + secs))
-    printf '%-20s %02d:%02d:%02d\n' "$project" $((secs / 3600)) $((secs % 3600 / 60)) $((secs % 60))
+    projects+=("$project")
+    secs_by_project+=("$secs")
 done < <(task rc.context=none rc.verbose=nothing rc.list.all.projects=1 projects 2>/dev/null |
     awk '$0 ~ /^\(none\)/ { next } $0 ~ /^[A-Za-z0-9_.].*[0-9]+$/ { sub(/[ \t]+[0-9]+$/, ""); print }')
 
-printf -- '-%.0s' $(seq 1 29); echo
-printf '%-20s %02d:%02d:%02d\n' "total" $((total_secs / 3600)) $((total_secs % 3600 / 60)) $((total_secs % 60))
+# percentages are of this report's own total, so they need the full total known before any row prints
+for i in "${!projects[@]}"; do
+    project="${projects[$i]}"
+    secs="${secs_by_project[$i]}"
+    pct=$(awk -v s="$secs" -v t="$total_secs" 'BEGIN { printf "%.1f", (t > 0 ? s * 100 / t : 0) }')
+    printf '%-20s %02d:%02d:%02d  %5s%%\n' "$project" $((secs / 3600)) $((secs % 3600 / 60)) $((secs % 60)) "$pct"
+done
+
+printf -- '-%.0s' $(seq 1 37); echo
+printf '%-20s %02d:%02d:%02d  %5s%%\n' "total" $((total_secs / 3600)) $((total_secs % 3600 / 60)) $((total_secs % 60)) "100.0"
