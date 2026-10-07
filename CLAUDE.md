@@ -60,6 +60,8 @@ Modules are sourced (not executed), so functions share the lib namespace. Use th
 
 User-specific values (git name/email, work directory) are stored in `.local.env` (gitignored). The `CONFIG_ITEMS` array in `lib/config.sh` defines what gets prompted. Config values are exported as shell variables and available inside modules after `load_config` runs.
 
+`CONFIG_ITEMS` entries are `KEY|DESCRIPTION|DEFAULT|INTENTS`. The optional `INTENTS` field (comma-separated, empty = all) limits upfront prompting to those intents. Any code that parses an item with `IFS='|' read` must name all four fields. A module that needs a value regardless of intent (e.g. when run with `--only`) declares `CONFIG_REQUIRES=(key ...)`; `run_module` calls `ensure_module_config` to prompt for any that are unset, and fails the module if there's no TTY to ask on.
+
 Config templates use `{{ variable_name }}` placeholders. `render_template src dest` replaces these with values from `CONFIG_ITEMS` variables.
 
 `refresh_envs` sources `modules/sdks/*/env.sh` to make SDK tools (cargo, nvm, go) available within the current subshell — call this before using a tool installed by a prior module.

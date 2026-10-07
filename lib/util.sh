@@ -82,7 +82,7 @@ render_template() {
     # Iterate over all exported variables that match our CONFIG_ITEMS
     # This is a bit safer than trying to replace everything
     for item in "${CONFIG_ITEMS[@]}"; do
-        IFS='|' read -r key desc default <<< "$item"
+        IFS='|' read -r key desc default intents <<< "$item"
         local value="${!key}"
         
         # Escape special characters for sed

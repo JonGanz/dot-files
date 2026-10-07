@@ -71,9 +71,9 @@ main() {
 
     # Initial configuration setup
     if [ "$FORCE_RECONFIGURE" = true ]; then
-        reconfigure
+        reconfigure || exit 1
     else
-        ensure_config
+        ensure_config || exit 1
     fi
 
     log_step "Starting setup with intent: $INTENT"
@@ -139,6 +139,11 @@ run_module() {
             load_config
             refresh_envs
             source "$module_path"
+
+            # Prompt for anything the module needs that the intent-scoped prompting skipped
+            if [ "${#CONFIG_REQUIRES[@]}" -gt 0 ]; then
+                ensure_module_config || exit 1
+            fi
 
             if [ "$UPDATE" = true ]; then
                 if declare -f update >/dev/null; then

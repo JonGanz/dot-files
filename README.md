@@ -70,6 +70,16 @@ The system includes an interactive configuration layer. On the first run (or whe
 
 These values are saved to `.local.env` (which is git-ignored) and can be used in templates throughout your modules.
 
+Items in `CONFIG_ITEMS` (`lib/config.sh`) may carry an optional 4th field, `INTENTS`, e.g. `...|OPTIONAL|work`. Items tagged with an intent are only prompted for when running that intent, so a personal machine is never asked for work values. Untagged items apply to every intent.
+
+Because `--only <module>` skips that upfront prompting, a module that cannot run without a value declares it at the top of its `script.sh`:
+
+```bash
+CONFIG_REQUIRES=(onedrive_work_dir)
+```
+
+Before the module runs, any of those keys still unset are prompted for regardless of intent. In a non-interactive shell the module fails with an error instead of waiting for input.
+
 ---
 
 ## 📂 Project Structure
