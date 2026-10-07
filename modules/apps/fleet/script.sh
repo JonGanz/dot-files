@@ -26,7 +26,14 @@ build() {
 }
 
 configure() {
-    : # no config files to symlink; fleet is driven by its own ~/.config/fleet/repos.yaml, written by hand
+    # repos.yaml is written by hand; only the hooks and task CLAUDE.md template are managed here.
+    symlink_file "$DIR/config/fleet/task-claude.md" "$HOME/.config/fleet/task-claude.md"
+
+    local hook
+    for hook in "$DIR"/config/fleet/hooks/*/*; do
+        [ -f "$hook" ] || continue
+        symlink_file "$hook" "$HOME/.config/fleet/hooks/$(basename "$(dirname "$hook")")/$(basename "$hook")"
+    done
 }
 
 update() {
