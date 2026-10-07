@@ -21,6 +21,7 @@ CONFIG_ITEMS=(
     "own_projects_dir|Own Projects Directory (e.g. ~/projects)|~/projects|"
     "git_username_work|Git User Name (Work)|OPTIONAL|work"
     "git_email_work|Git User Email (Work)|OPTIONAL|work"
+    "onedrive_work_dir|OneDrive work folder (e.g. /mnt/c/Users/you/OneDrive - Company)|NONE|work"
     "ssh_windows_username|Windows Username (for WSL work key import)|OPTIONAL|work"
     "ssh_work_key_name|Work SSH key filename — must match its name in Windows ~/.ssh (e.g. id_rsa)|OPTIONAL|work"
 )

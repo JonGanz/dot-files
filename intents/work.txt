@@ -4,3 +4,4 @@ apps/lazysql
 apps/taskwarrior
 core/ansible
 apps/fleet
+core/onedrive-archive
