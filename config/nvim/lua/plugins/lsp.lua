@@ -58,6 +58,7 @@ return {
                 'marksman',
                 'omnisharp',
                 'ruff',
+                'rust_analyzer',
                 'sqlls',
                 'ts_ls',
                 'vue_ls',
