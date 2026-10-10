@@ -15,6 +15,7 @@ sdks/node
 sdks/rust
 sdks/go
 apps/claude
+apps/opencode
 apps/agent-status-collector
 sdks/python
 apps/yazi
