@@ -33,6 +33,11 @@ configure() {
 
     log_info "Wiring up Claude Code integration (safe/idempotent, backs up settings.json first)..."
     agent-status setup claudecode
+
+    if has_cmd opencode; then
+        log_info "Wiring up OpenCode integration (writes ~/.config/opencode/plugins/agent-status.ts)..."
+        agent-status setup opencode
+    fi
 }
 
 update() {
