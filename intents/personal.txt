@@ -1,1 +1,2 @@
 apps/steam
+apps/snapmaker-orca
