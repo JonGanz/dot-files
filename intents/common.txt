@@ -21,3 +21,4 @@ sdks/python
 apps/yazi
 apps/gimp
 apps/wezterm
+apps/handy
