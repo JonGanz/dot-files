@@ -37,6 +37,9 @@ editor=nvim
 #include solarized-light-256.theme
 #include no-color.theme
 
+# Show all projects when using `task projects`
+list.all.projects=1
+
 # Optional Jira ticket link, kept separate from `project` (the general
 # time-reporting bucket) since not every task maps to a ticket.
 uda.ticket.type=string
