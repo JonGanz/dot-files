@@ -1,6 +1,6 @@
 ---
 name: local-review
-description: Local, GitHub/Bitbucket-free PR-style code review of a repo's branch changes against its merge-base with the repo's own default/root branch (never hardcoded to "develop"). Targets the current directory if it's a git repo, otherwise every git repo found in the current directory's direct subdirectories. When multiple repos are in scope, treats them as one feature/fix spanning repos and adds a dedicated cross-repo contract-compatibility pass (Moleculer actions/events, socket/REST payloads, shared schemas, DB migrations another repo's models reference) so a breaking change on one side isn't missed just because each repo's own diff looks internally consistent. Also reviews each repo for coding errors, inconsistencies (incl. across duplicated code paths like legacy/v2 variants), violations of the repo's own documented conventions, formatting/lint issues, dead code (locales, CSS rules, unused exports), and edge cases. Invoke on /local-review, optionally with specific repo names and/or --base <branch>.
+description: Local, GitHub/Bitbucket-free PR-style code review of a repo's branch changes against its merge-base with the repo's own default/root branch (never hardcoded to "develop"). Targets the current directory if it's a git repo, otherwise every git repo found in the current directory's direct subdirectories. When multiple repos are in scope, treats them as one feature/fix spanning repos and adds a dedicated cross-repo contract-compatibility pass (Moleculer actions/events, socket/REST payloads, shared schemas, DB migrations another repo's models reference) so a breaking change on one side isn't missed just because each repo's own diff looks internally consistent. Also reviews each repo for coding errors, inconsistencies (incl. across duplicated code paths like legacy/v2 variants), violations of the repo's own documented conventions, formatting/lint issues, dead code (locales, CSS rules, unused exports), and edge cases. Output is an interactive published report page (code context per finding, severity/repo filters, fix-selection checkboxes that build a paste-ready fix prompt), or a short text if the review is clean. Invoke on /local-review, optionally with specific repo names and/or --base <branch>.
 argument-hint: [repo-name...] [--base <branch>]
 ---
 
@@ -55,6 +55,11 @@ file. It contains, in order:
   wired up in `node_modules/.bin`) - if a repo uses a different manifest/language or a lint/test
   runner the script doesn't recognize, it says so in the report; run that tooling yourself,
   scoped to the same changed-files list, rather than skipping it
+
+Sanity-check the resolved root: if the commit log is dominated by unrelated merged PRs (the branch was
+cut from a different integration branch than the one picked, e.g. `main` when work branches off
+`develop`), compare `git merge-base HEAD origin/<other>` and re-run with `--base <other>`; state the base
+you used in the report.
 
 If the script exits non-zero (no merge-base, unrelated histories, branch not found, nothing
 committed since divergence), it explains why on stderr - report that clearly for this repo and
@@ -139,17 +144,50 @@ Do a dedicated compatibility pass over **all** repos in scope together:
   - one additional `general-purpose` Agent dedicated entirely to Step 5, given every repo's path
     plus the prep reports you already generated in Step 2, explicitly told to check cross-repo
     contract compatibility only - not to redo any single repo's internal review.
-  Every subagent returns its findings as a structured list (file, summary, concrete failure
-  scenario) rather than calling `ReportFindings` itself - you aggregate everything and report once
+  Every subagent returns its findings as a structured list (file, line, the relevant code lines, summary,
+  concrete failure scenario, severity, any alternative fixes) rather than publishing anything itself - you aggregate everything and report once
   at the end so findings across repos and the cross-repo pass all land in one place.
 
 ## Step 7 - Report
 
-Call `ReportFindings` once, across all reviewed repos plus the cross-repo pass, most-severe first.
-When more than one repo was reviewed, prefix each finding's `file` with `<repo-dir>/` so the repo
-is unambiguous. For a cross-repo finding, set `file` to the path on the side you'd fix first (or
-that has the diff), and name the counterpart repo/file explicitly in the summary and failure
-scenario text so the boundary is clear without a second `file` field. Empty findings array if
-nothing survived - don't pad with stylistic nitpicks to have something to show. For any repo that
-had nothing to review (no diff, no tooling) or was skipped, say so briefly in your text reply, not
-as a finding.
+The output is a published artifact (an interactive report page), not a `ReportFindings` call.
+
+**No findings survived:** reply with a short text saying the review is clean, which repos and commit
+ranges were reviewed, and any repo that was skipped or had nothing to review. Do not publish a page.
+Don't pad with stylistic nitpicks to have something to show.
+
+**One or more findings:** build and publish the report, then give the user the link.
+
+1. **Collect the commits.** For each repo in scope, the reviewed range is `merge_base..HEAD` from
+   the prep report: record `repo`, short `base`, short `head`, and the commit list as `[hash, subject]`
+   pairs (`git -C <repo> log --format='%h %s' <base>..<head>`). These hashes are what was reviewed;
+   if a repo is rebased or amended later, they stop matching, so always record them.
+2. **Write the review JSON** to the scratchpad directory (not `/tmp`), following the schema in the
+   docstring of `~/.claude/skills/local-review/build-report.py`. Per finding:
+   - `sev` (`high` = wrong behavior or security/data loss in a reachable path, `medium` = real but
+     narrower or needs a trigger, `low` = style, dead code, hygiene, informational), `repo`, optional
+     `cross` (counterpart repo for a contract finding), `title` (a short claim, not a sentence).
+   - `file` + `start` + `code` (the ~5-20 real lines around the problem, copied from the current file,
+     never invented) + `hl` (0-based indexes into `code` of the offending lines). Use `code: null`
+     only when the finding is spread across places.
+   - `why`: the failure scenario in plain HTML (`<code>` allowed): what input or state leads to what
+     wrong result. `origin` when it matters whether this branch introduced it (e.g. it came in with
+     a rebase). `fix`: the suggested change.
+   - `options`: when the fix has genuine alternatives, list each as a short imperative label (the
+     viewer renders them as checkboxes plus a free-form box). Leave empty for a single obvious fix.
+   Order findings most-severe first. Prefix nothing; `repo` carries the repo name.
+   In `meta`, set a fresh `id`, a 2-4 word `title`, `branch`, a `summaryHtml` saying what was compared
+   and how it was verified (read only vs run), a `warningHtml` if anything about the reviewed commits
+   needs a caveat, and a `footerHtml` listing what was **not reviewed** (uncommitted files per repo,
+   skipped repos, tooling that did not run).
+3. **Build:** `python3 ~/.claude/skills/local-review/build-report.py <review.json> <review.html>`
+   (both in the scratchpad). It refuses an empty findings list and invalid severities.
+4. **Publish** `<review.html>` with the Artifact tool (`icon: "code"`, a one-sentence `description`).
+   Do not hand-edit the HTML; change the JSON and rebuild. To revise a review published earlier in the
+   same session, rebuild to the same `<review.html>` path and publish it again so the URL is kept.
+5. **Reply** with the link and a few lines: how many findings by severity, the one or two that matter
+   most, and the not-reviewed list. The page lets the user tick findings to fix, pick among the
+   options and add notes, and copies a ready-to-paste fix prompt; mention that. Artifacts are private
+   by default, so say so if the review is for someone else.
+
+Never call `ReportFindings` for this skill.

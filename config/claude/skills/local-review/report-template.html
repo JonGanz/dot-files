@@ -1,0 +1,314 @@
+<title>{{TITLE}}</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky filter bar, then one finding per block: header, why it matters, code with the offending lines marked. Gruvbox dark by default, Gruvbox light when the viewer is light. */
+:root {
+  --bg: #fbf1c7; --bg1: #ebdbb2; --bg2: #d5c4a1; --fg: #3c3836; --fg-dim: #665c54; --line: #bdae93;
+  --red: #9d0006; --orange: #af3a03; --yellow: #b57614; --green: #79740e; --aqua: #427b58; --blue: #076678; --purple: #8f3f71;
+  --hl: rgba(157, 0, 6, .13); --code-bg: #f2e5bc;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #282828; --bg1: #3c3836; --bg2: #504945; --fg: #ebdbb2; --fg-dim: #a89984; --line: #665c54;
+    --red: #fb4934; --orange: #fe8019; --yellow: #fabd2f; --green: #b8bb26; --aqua: #8ec07c; --blue: #83a598; --purple: #d3869b;
+    --hl: rgba(251, 73, 52, .18); --code-bg: #1d2021; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #282828; --bg1: #3c3836; --bg2: #504945; --fg: #ebdbb2; --fg-dim: #a89984; --line: #665c54;
+  --red: #fb4934; --orange: #fe8019; --yellow: #fabd2f; --green: #b8bb26; --aqua: #8ec07c; --blue: #83a598; --purple: #d3869b;
+  --hl: rgba(251, 73, 52, .18); --code-bg: #1d2021; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.6; padding-block: 28px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+main { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1 { font-family: var(--mono); font-size: 26px; font-weight: 500; margin: 0; letter-spacing: -.01em; text-wrap: balance; color: var(--yellow); }
+.meta { color: var(--fg-dim); font-size: 14px; margin: 6px 0 0; max-width: 70ch; }
+.meta code, .why code { font-family: var(--mono); font-size: .88em; background: var(--bg1); padding: 1px 5px; }
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-block: 1px solid var(--line); padding-block: 10px; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
+.bar .grp { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.bar .lbl { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--fg-dim); margin-right: 2px; }
+button.chip { font: 500 12px var(--mono); color: var(--fg); background: var(--bg1); border: 1px solid var(--line); padding: 4px 10px; cursor: pointer; }
+button.chip[aria-pressed="true"] { background: var(--yellow); color: var(--code-bg); border-color: var(--yellow); }
+button.chip:focus-visible, summary:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.count { margin-left: auto; font-family: var(--mono); font-size: 12px; color: var(--fg-dim); }
+.finding { display: flex; flex-direction: column; gap: 12px; min-width: 0; border-left: 4px solid var(--sev); padding-left: 16px; }
+.finding[data-sev="high"] { --sev: var(--red); }
+.finding[data-sev="medium"] { --sev: var(--orange); }
+.finding[data-sev="low"] { --sev: var(--aqua); }
+.head { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: baseline; }
+.badge { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--sev); border: 1px solid var(--sev); padding: 1px 7px; }
+.repo { font: 500 11px var(--mono); color: var(--purple); }
+.cross { font: 500 11px var(--mono); color: var(--blue); }
+h2 { font-size: 18px; font-weight: 600; margin: 0; flex-basis: 100%; text-wrap: balance; }
+.why { margin: 0; max-width: 72ch; }
+.why b { color: var(--yellow); font-weight: 600; }
+.fix { margin: 0; max-width: 72ch; color: var(--fg-dim); }
+.fix b { color: var(--green); font-weight: 600; }
+.snip { background: var(--code-bg); border: 1px solid var(--line); min-width: 0; }
+.snip .path { font: 400 12px var(--mono); color: var(--fg-dim); padding: 6px 12px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.snip .code { overflow-x: auto; }
+.snip pre { margin: 0; font: 400 13px/1.55 var(--mono); width: max-content; min-width: 100%; }
+.ln { display: flex; }
+.ln .n { flex: none; width: 52px; text-align: right; padding-right: 12px; color: var(--fg-dim); user-select: none; font-variant-numeric: tabular-nums; }
+.ln .t { white-space: pre; padding-right: 16px; }
+.ln.hl { background: var(--hl); }
+.ln.hl .n { color: var(--red); }
+.ln.hl .t::after { content: ""; }
+.note { font: 400 12px var(--mono); color: var(--orange); padding: 6px 12px; border-top: 1px dashed var(--line); }
+.commits { display: flex; flex-direction: column; gap: 10px; }
+.commits h3 { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--fg-dim); margin: 0; }
+.commits .repos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 12px; }
+.commits details { background: var(--bg1); border: 1px solid var(--line); min-width: 0; }
+.commits summary { cursor: pointer; padding: 8px 12px; font: 500 13px var(--mono); display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.commits summary span { color: var(--fg-dim); font-weight: 400; }
+.commits ul { list-style: none; margin: 0; padding: 4px 12px 10px; font: 400 12px/1.7 var(--mono); overflow-x: auto; }
+.commits li { white-space: nowrap; }
+.commits li b { color: var(--yellow); font-weight: 500; margin-right: 10px; }
+.commits .warn { margin: 0; padding: 8px 12px; border-left: 4px solid var(--orange); background: var(--bg1); font-size: 14px; max-width: 80ch; }
+.commits .warn code, .commits .warn b { color: var(--orange); }
+details.finding > summary { list-style: none; cursor: pointer; }
+details.finding > summary::-webkit-details-marker { display: none; }
+details.finding > summary::before { content: "▸"; color: var(--fg-dim); font-family: var(--mono); width: 1ch; }
+details.finding[open] > summary::before { content: "▾"; }
+details.finding > .body { display: flex; flex-direction: column; gap: 12px; margin-top: 12px; min-width: 0; }
+.finding.is-picked { border-left-color: var(--green); }
+.finding.is-picked h2 { color: var(--green); }
+.fixbox { margin-left: auto; font: 500 12px var(--mono); color: var(--green); display: inline-flex; align-items: center; gap: 4px; cursor: pointer; padding: 2px 4px; }
+.fixbox input { accent-color: var(--green); width: 15px; height: 15px; margin: 0; cursor: pointer; }
+.dock { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; max-width: calc(100vw - 32px); }
+.dock-row { display: flex; gap: 8px; }
+.dock-btn { padding: 9px 14px; font-size: 13px; box-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.dock-btn.primary { background: var(--green); color: var(--code-bg); border-color: var(--green); }
+.toast { background: var(--bg2); color: var(--fg); border: 1px solid var(--line); font: 500 12px var(--mono); padding: 8px 12px; }
+.panel { width: min(640px, calc(100vw - 32px)); background: var(--bg1); border: 1px solid var(--line); box-shadow: 0 6px 24px rgba(0,0,0,.45); padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+.panel-head { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; font-size: 13px; }
+.panel-head span { color: var(--fg-dim); flex: 1; min-width: 120px; }
+.panel textarea { width: 100%; background: var(--code-bg); color: var(--fg); border: 1px solid var(--line); font: 400 12px/1.5 var(--mono); padding: 8px; resize: vertical; max-height: 50vh; }
+.fixopts { border: 1px solid var(--line); background: var(--bg1); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; max-width: 72ch; }
+.fo-head { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--fg-dim); }
+.opt { display: flex; gap: 6px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.opt input { accent-color: var(--green); margin: 4px 2px 0 0; flex: none; }
+.fixopts textarea { width: 100%; background: var(--code-bg); color: var(--fg); border: 1px solid var(--line); font: 400 13px/1.5 var(--sans); padding: 6px 8px; resize: vertical; }
+.fixopts textarea:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.empty { color: var(--fg-dim); font-family: var(--mono); }
+footer { color: var(--fg-dim); font-size: 13px; border-top: 1px solid var(--line); padding-top: 14px; max-width: 80ch; }
+@media (max-width: 520px) { .ln .n { width: 40px; } .count { margin-left: 0; } }
+</style>
+
+<main>
+  <header>
+    <h1>{{HEADING}}</h1>
+    <p class="meta">{{SUMMARY_HTML}}</p>
+  </header>
+
+  <section class="commits" aria-label="Reviewed commits">
+    <h3>Reviewed commits</h3>
+    <p class="meta">Diff is <code>merge-base..HEAD</code> per repo; each repo's root branch is the base of its range. Commits listed oldest last, as <code>git log</code> prints them.</p>
+    <div class="repos" id="commits"></div>
+    {{WARNING_HTML}}
+  </section>
+
+  <div class="bar" role="toolbar" aria-label="Filters">
+    <div class="grp" id="sevs"><span class="lbl">Severity</span></div>
+    <div class="grp" id="repos"><span class="lbl">Repo</span></div>
+    <span class="count" id="count"></span>
+  </div>
+
+  <section id="list" style="display:flex;flex-direction:column;gap:40px"></section>
+
+  <div class="dock">
+    <div id="toast" class="toast" role="status" hidden></div>
+    <div id="panel" class="panel" hidden>
+      <div class="panel-head"><b>Prompt for the agent</b><span>Lists every finding ticked Fix this.</span><button type="button" class="chip" id="resetBtn">Clear selections</button><button type="button" class="chip" id="closeBtn">Close</button></div>
+      <label for="promptText" class="sr">Fix prompt</label>
+      <textarea id="promptText" readonly rows="12"></textarea>
+    </div>
+    <div class="dock-row">
+      <button type="button" class="chip dock-btn" id="viewBtn">View prompt</button>
+      <button type="button" class="chip dock-btn primary" id="copyBtn">Copy fix prompt</button>
+    </div>
+  </div>
+
+  <footer>{{FOOTER_HTML}}</footer>
+</main>
+
+<script>
+const REVIEW = /*REVIEW_JSON*/null/*END_REVIEW_JSON*/;
+const META = REVIEW.meta, F = REVIEW.findings, COMMITS = REVIEW.commits;
+const host = document.getElementById("commits");
+COMMITS.forEach((c, i) => {
+  const d = document.createElement("details");
+  const s = document.createElement("summary");
+  s.innerHTML = "<span></span>";
+  s.textContent = c.repo;
+  const meta = document.createElement("span"); meta.textContent = c.base + ".." + c.head + " · " + c.list.length + " commit" + (c.list.length > 1 ? "s" : "");
+  s.appendChild(meta); d.appendChild(s);
+  const ul = document.createElement("ul");
+  c.list.forEach(([h, m]) => { const li = document.createElement("li"); const b = document.createElement("b"); b.textContent = h; li.append(b, m); ul.appendChild(li); });
+  d.appendChild(ul); host.appendChild(d);
+});
+
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+const state = { sev: "all", repo: "all" };
+
+function snippet(f) {
+  const box = el("div", "snip");
+  box.appendChild(el("div", "path", ""));
+  box.firstChild.textContent = f.file + (f.start ? ":" + f.start : "");
+  if (f.code) {
+    const wrap = el("div", "code"), pre = document.createElement("pre");
+    f.code.forEach((line, i) => {
+      const row = el("div", "ln" + (f.hl.includes(i) ? " hl" : ""));
+      const n = el("span", "n"); n.textContent = f.start + i;
+      const t = el("span", "t"); t.textContent = line || " ";
+      row.append(n, t); pre.appendChild(row);
+    });
+    wrap.appendChild(pre); box.appendChild(wrap);
+  } else {
+    const n = el("div", "note"); n.textContent = "Spread across several places, so there is no single snippet."; box.appendChild(n);
+  }
+  return box;
+}
+
+const detail = { opts: {}, notes: {} };
+const detailKey = "local-review-detail-" + META.id;
+try { Object.assign(detail, JSON.parse(localStorage.getItem(detailKey) || "{}")); } catch (e) {}
+const saveDetail = () => { try { localStorage.setItem(detailKey, JSON.stringify(detail)); } catch (e) {} };
+const KEY = "local-review-selected-" + META.id;
+const fixed = new Set(); // titles ticked for the fix prompt
+const userOpen = {}; // title -> open state the viewer chose, so filtering doesn't reset it
+try { JSON.parse(localStorage.getItem(KEY) || "[]").forEach(t => fixed.add(t)); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...fixed])); } catch (e) {} };
+const plain = h => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
+
+function buildPrompt() {
+  const todo = F.filter(f => fixed.has(f.title));
+  if (!todo.length) return "";
+  const lines = [];
+  lines.push("Fix the following code review findings" + (META.branch ? " on branch " + META.branch : "") + ". Locate code by file and symbol rather than line number or hash, since the branch may have moved since the review.");
+  lines.push("Reviewed ranges: " + COMMITS.map(c => c.repo + " " + c.base + ".." + c.head).join(", ") + ".");
+  lines.push("Fix only the " + todo.length + " listed; the other review findings were not selected and stay as they are. Where a finding says it is informational or acceptable as is, confirm with me before changing anything. Follow the repo's CLAUDE.md instructions.");
+  lines.push("");
+  todo.forEach((f, i) => {
+    lines.push((i + 1) + ". [" + f.sev.toUpperCase() + "] " + f.repo + " - " + f.title);
+    lines.push("   Location: " + f.file + (f.start ? ":" + f.start : ""));
+    lines.push("   Problem: " + plain(f.why));
+    if (f.origin) lines.push("   Origin: " + plain(f.origin));
+    lines.push("   Fix: " + plain(f.fix));
+    const opts = f.options || [];
+    const chosen = (detail.opts[f.title] || []).filter(i => opts[i]).map(i => opts[i]);
+    if (chosen.length) lines.push("   Chosen approach: " + chosen.join("; "));
+    else if (opts.length) lines.push("   Approach not chosen. Options: " + opts.join(" | ") + ". Tell me which you recommend and why before changing code.");
+    const note = (detail.notes[f.title] || "").trim();
+    if (note) lines.push("   My instructions: " + note.replace(/\n+/g, " "));
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById("toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.hidden = true; }, 2600);
+}
+async function copyPrompt(announce) {
+  const text = buildPrompt(); document.getElementById("promptText").value = text;
+  const n = fixed.size;
+  if (!n) { if (announce) toast("Tick Fix on at least one finding first"); return false; }
+  try { await navigator.clipboard.writeText(text); if (announce) toast("Copied prompt for " + n + " item" + (n === 1 ? "" : "s")); return true; }
+  catch (e) { if (announce) { document.getElementById("panel").hidden = false; document.getElementById("promptText").select(); toast("Copy blocked here. Select the text and copy it."); } return false; }
+}
+function updateDock() {
+  const n = fixed.size;
+  document.getElementById("copyBtn").textContent = "Copy fix prompt (" + n + ")";
+  document.getElementById("promptText").value = buildPrompt();
+}
+
+function fixBlock(f) {
+  const box = el("div", "fixopts");
+  const opts = f.options || [];
+  const head = el("div", "fo-head", opts.length ? "Choose how to fix it" : "Fix instructions");
+  box.appendChild(head);
+  const refresh = () => { saveDetail(); updateDock(); };
+  opts.forEach((label, i) => {
+    const id = "opt-" + F.indexOf(f) + "-" + i;
+    const row = el("label", "opt"); row.htmlFor = id;
+    const cb = document.createElement("input"); cb.type = "checkbox"; cb.id = id;
+    cb.checked = (detail.opts[f.title] || []).includes(i);
+    cb.addEventListener("change", () => {
+      const cur = new Set(detail.opts[f.title] || []);
+      if (cb.checked) cur.add(i); else cur.delete(i);
+      detail.opts[f.title] = [...cur]; refresh();
+      if (fixed.has(f.title)) copyPrompt(false);
+    });
+    row.append(cb, document.createTextNode(" " + label)); box.appendChild(row);
+  });
+  const tid = "note-" + F.indexOf(f);
+  const lab = el("label", "sr"); lab.htmlFor = tid; lab.textContent = "Extra instructions for " + f.title;
+  const ta = document.createElement("textarea"); ta.id = tid; ta.rows = 2; ta.value = detail.notes[f.title] || "";
+  ta.placeholder = opts.length ? "Optional: another approach, or details for the chosen one" : "Optional: anything the agent should know";
+  ta.addEventListener("input", () => { detail.notes[f.title] = ta.value; refresh(); });
+  ta.addEventListener("change", () => { if (fixed.has(f.title)) copyPrompt(false); });
+  box.append(lab, ta);
+  return box;
+}
+
+function render() {
+  const list = document.getElementById("list"); list.textContent = "";
+  let shown = 0;
+  F.forEach(f => {
+    if ((state.sev !== "all" && f.sev !== state.sev) || (state.repo !== "all" && f.repo !== state.repo)) return;
+    shown++;
+    const isFixed = fixed.has(f.title);
+    const a = el("details", "finding" + (isFixed ? " is-picked" : "")); a.dataset.sev = f.sev;
+    a.open = f.title in userOpen ? userOpen[f.title] : !isFixed;
+    a.addEventListener("toggle", () => { userOpen[f.title] = a.open; });
+
+    const sum = el("summary", "head");
+    sum.append(el("span", "badge", f.sev), el("span", "repo", f.repo));
+    if (f.cross) sum.append(el("span", "cross", "↔ " + f.cross));
+    const lab = el("label", "fixbox");
+    const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = isFixed;
+    cb.id = "fixed-" + F.indexOf(f);
+    lab.htmlFor = cb.id; lab.append(cb, document.createTextNode(" Fix this"));
+    lab.addEventListener("click", e => e.stopPropagation());
+    cb.addEventListener("change", () => {
+      if (cb.checked) fixed.add(f.title); else fixed.delete(f.title);
+      userOpen[f.title] = !cb.checked; save(); render(); updateDock(); copyPrompt(true);
+    });
+    sum.appendChild(lab);
+    const h = el("h2"); h.textContent = f.title; sum.appendChild(h);
+
+    const body = el("div", "body");
+    body.append(snippet(f), el("p", "why", "<b>Why it matters.</b> " + f.why), ...(f.origin ? [el("p", "why", "<b>Where it came from.</b> " + f.origin)] : []), el("p", "fix", "<b>Suggested fix.</b> " + f.fix));
+    body.appendChild(fixBlock(f));
+    a.append(sum, body);
+    list.appendChild(a);
+  });
+  if (!shown) list.appendChild(el("p", "empty", "No findings match these filters."));
+  document.getElementById("count").textContent = shown + " shown · " + fixed.size + " of " + F.length + " selected to fix";
+}
+
+function chips(id, key, values) {
+  const host = document.getElementById(id);
+  ["all", ...values].forEach(v => {
+    const b = el("button", "chip"); b.type = "button"; b.textContent = v;
+    b.setAttribute("aria-pressed", v === "all");
+    b.onclick = () => { state[key] = v; host.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); render(); };
+    host.appendChild(b);
+  });
+}
+chips("sevs", "sev", ["high", "medium", "low"]);
+chips("repos", "repo", [...new Set(F.map(f => f.repo))]);
+render();
+updateDock();
+document.getElementById("copyBtn").onclick = () => copyPrompt(true);
+document.getElementById("viewBtn").onclick = () => { const p = document.getElementById("panel"); p.hidden = !p.hidden; };
+document.getElementById("closeBtn").onclick = () => { document.getElementById("panel").hidden = true; };
+document.getElementById("resetBtn").onclick = () => { fixed.clear(); detail.opts = {}; detail.notes = {}; save(); saveDetail(); Object.keys(userOpen).forEach(k => delete userOpen[k]); render(); updateDock(); toast("Cleared all selections"); };
+</script>
