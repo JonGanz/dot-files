@@ -207,8 +207,13 @@ run_module() {
         else
             install || exit 1
         fi
-        # configure() always runs, in update mode too, so config changes are applied
-        configure || exit 1
+        # configure() always runs, in update mode too, so config changes are applied.
+        # A module may omit it; if it declares CONFIG_DEST, config/<name>/ is linked there.
+        if declare -f configure >/dev/null; then
+            configure || exit 1
+        elif [ -n "${CONFIG_DEST:-}" ]; then
+            symlink_config_dir "$(basename "$1")" "$CONFIG_DEST" || exit 1
+        fi
     )
     local status=$?
 

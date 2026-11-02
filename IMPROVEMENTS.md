@@ -76,6 +76,8 @@ Lines can only be appended, never updated or removed.
 
 ## 4. Add a config-directory symlink helper or a default `configure()`
 
+**Done (2026-11-02):** `symlink_config_dir <name> <dest>` (recursive) in `lib/util.sh`; used by lazygit and fleet. `configure()` is optional; `CONFIG_DEST` gives the default behaviour.
+
 **Problem:** `core/lazygit`, `core/tmux`, `core/neovim`, `apps/wezterm`, and
 others each loop over `config/<name>/` and symlink files one by one with their
 own existence checks and warnings.

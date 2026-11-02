@@ -30,6 +30,27 @@ symlink_file() {
     ln -s "$src" "$dest"
 }
 
+# Symlink every file under config/<name>/ into <dest_dir>, preserving
+# sub-directories (config/foo/hooks/x -> <dest_dir>/hooks/x). Files that are
+# not managed by the repo are left alone, so this is safe for directories the
+# user also writes to (unlike symlink_dir, which replaces the whole directory).
+# Usage: symlink_config_dir <name> <dest_dir>
+symlink_config_dir() {
+    local name="$1" dest_dir="$2"
+    local src_dir="$DIR/config/$name"
+
+    if [ ! -d "$src_dir" ]; then
+        log_warn "No configuration found in $src_dir"
+        return 0
+    fi
+
+    local file rel
+    while IFS= read -r -d '' file; do
+        rel="${file#"$src_dir"/}"
+        symlink_file "$file" "$dest_dir/$rel" || return 1
+    done < <(find "$src_dir" -type f -print0 | sort -z)
+}
+
 # Symlink a directory, creating parent directories if needed
 # Usage: symlink_dir <src> <dest>
 symlink_dir() {

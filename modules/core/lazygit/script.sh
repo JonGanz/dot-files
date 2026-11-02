@@ -19,23 +19,7 @@ install_ubuntu() {
 
 configure() {
     log_info "Configuring lazygit..."
-    
-    # Standard lazygit config location
-    local config_dir="$HOME/.config/lazygit"
-    mkdir -p "$config_dir"
-    
-    # We expect config files in config/lazygit/ inside our repo
-    local repo_config="$DIR/config/lazygit"
-    
-    if [ -d "$repo_config" ]; then
-        for file in "$repo_config"/*; do
-            if [ -f "$file" ]; then
-                symlink_file "$file" "$config_dir/$(basename "$file")"
-            fi
-        done
-    else
-        log_warn "No lazygit configuration found in $repo_config"
-    fi
+    symlink_config_dir lazygit "$HOME/.config/lazygit"
 }
 
 update() {

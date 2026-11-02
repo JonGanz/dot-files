@@ -122,7 +122,9 @@ install() {
     pkg_install my-app
 }
 
-# Required: Configuration logic (runs after install() and after update())
+# Optional: Configuration logic (runs after install() and after update()).
+# Omit it and set CONFIG_DEST="$HOME/.config/my-app" to have every file in
+# config/my-app/ symlinked there instead.
 configure() {
     log_info "Configuring my-app..."
     
