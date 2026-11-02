@@ -1,11 +1,8 @@
 #!/bin/bash
 
-install() {
-    if is_wsl; then
-        log_warn "Skipping Steam (GUI) in WSL environment."
-        return
-    fi
+SKIP_ON_WSL=true
 
+install() {
     if is_arch; then
         # Ensure multilib is enabled
         if ! grep -q "^\[multilib\]" /etc/pacman.conf; then
@@ -29,7 +26,5 @@ install() {
 
 
 update() {
-    if ! is_wsl; then
-        pkg_update steam
-    fi
+    pkg_update steam
 }

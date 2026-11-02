@@ -140,6 +140,8 @@ dry-run too and print:
 
 ## 8. Standardize the WSL / GUI guard
 
+**Done (2026-11-02):** `SKIP_ON_WSL=true` / `ONLY_ON_WSL=true` module flags, checked by `run_module` and dry-run, reported as `skipped (WSL)`. `mysql-workbench` and `ssh` keep `is_wsl` branches because they do partial work on WSL.
+
 **Problem:** eight modules (`apps/gimp`, `apps/steam`, `apps/wezterm`,
 `apps/mysql-workbench`, `core/docker`, `core/fonts`, `core/ssh`,
 `core/onedrive-archive`) each write their own

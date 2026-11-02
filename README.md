@@ -111,14 +111,11 @@ Modules live in `modules/` and must contain a `script.sh`.
 ```bash
 #!/bin/bash
 
+# Skip the whole module in WSL (GUI apps); ONLY_ON_WSL=true is the inverse
+SKIP_ON_WSL=true
+
 # Required: Installation logic
 install() {
-    # Skip GUI apps in WSL
-    if is_wsl; then
-        log_warn "Skipping GUI app in WSL."
-        return
-    fi
-    
     pkg_install my-app
 }
 

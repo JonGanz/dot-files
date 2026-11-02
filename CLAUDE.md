@@ -53,7 +53,7 @@ update()     # Optional — if absent, install is called on --update
 
 `run_module` logs each phase (`-> core/git: configure`) itself, so modules should not print their own "Configuring X..." lines. Package lists shared by `install` and `update` belong in a module-level array so the two cannot drift. `symlink_dir` moves a real directory at the destination to `<dest>.bak` instead of deleting it.
 
-Modules are sourced (not executed), so functions share the lib namespace. Use the `is_wsl`, `is_arch`, `is_ubuntu` helpers from `lib/env.sh` to branch platform-specific logic. Always guard GUI apps with `is_wsl` early-return.
+Modules are sourced (not executed), so functions share the lib namespace. Use the `is_wsl`, `is_arch`, `is_ubuntu` helpers from `lib/env.sh` to branch platform-specific logic. A module that must not run at all on WSL (GUI apps, fonts, docker) declares `SKIP_ON_WSL=true` at top level; one that only makes sense on WSL declares `ONLY_ON_WSL=true`. `run_module` checks these once and reports the module as `skipped (WSL)` in the summary, so no `is_wsl` early-returns are needed in the functions. Partial behaviour on WSL (e.g. installing a CLI client instead of the GUI) is still an `is_wsl` branch inside the module.
 
 ### Shared Libraries
 

@@ -4,6 +4,7 @@
 # A systemd user timer runs config/onedrive-archive/sync.sh; on first setup, directories
 # missing locally are restored from the existing archive.
 
+ONLY_ON_WSL=true
 CONFIG_REQUIRES=(onedrive_work_dir)
 
 ARCHIVE_DIRS=(
@@ -15,18 +16,11 @@ SYNC_BIN="$HOME/.local/bin/onedrive-archive-sync"
 UNIT_DIR="$HOME/.config/systemd/user"
 
 install() {
-    if ! is_wsl; then
-        log_info "Not running in WSL, skipping onedrive-archive"
-        return 0
-    fi
-
     has_cmd rsync || pkg_install rsync
     has_cmd flock || log_warn "flock not found (util-linux); the sync script needs it"
 }
 
 configure() {
-    is_wsl || return 0
-
     local archive_root="${onedrive_work_dir%/}/WSL-Archive"
 
     if [ ! -d "$onedrive_work_dir" ]; then

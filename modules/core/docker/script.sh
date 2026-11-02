@@ -2,15 +2,12 @@
 
 # Docker installation and rootless configuration
 
+SKIP_ON_WSL=true  # WSL uses the Windows Docker Desktop integration
+
 DOCKER_PKGS_ARCH=(docker docker-buildx docker-compose docker-rootless-extras-bin)
 DOCKER_PKGS_UBUNTU=(docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras)
 
 install() {
-    if is_wsl; then
-        log_info "WSL detected — skipping Docker install (use Windows Docker Desktop integration)."
-        return 0
-    fi
-
     if is_arch; then
         log_info "Installing Docker via pacman..."
         pkg_install "${DOCKER_PKGS_ARCH[@]}"
@@ -40,11 +37,6 @@ install() {
 }
 
 configure() {
-    if is_wsl; then
-        log_info "WSL detected — skipping Docker configuration (use Windows Docker Desktop integration)."
-        return 0
-    fi
-
     log_info "Configuring Docker (Rootless)..."
 
     # Install rootless dependencies
@@ -82,11 +74,6 @@ configure() {
 }
 
 update() {
-    if is_wsl; then
-        log_info "WSL detected — skipping Docker update (managed by Windows Docker Desktop)."
-        return 0
-    fi
-
     if is_arch; then
         pkg_update "${DOCKER_PKGS_ARCH[@]}"
     elif is_ubuntu; then

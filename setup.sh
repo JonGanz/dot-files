@@ -23,6 +23,8 @@ FAIL_FAST=false
 # Per-module results, filled in by run_module and printed by print_summary
 RESULT_MODULES=()
 RESULT_STATUS=()
+# Exit status a module subshell uses to report "skipped on this platform"
+SKIP_EXIT=200
 
 # Usage information
 usage() {
@@ -138,6 +140,27 @@ main() {
     print_summary
 }
 
+# Print why the sourced module should be skipped on this platform, if at all.
+# Reads the module-level SKIP_ON_WSL / ONLY_ON_WSL flags; returns 1 when it runs.
+module_skip_reason() {
+    if [ "${SKIP_ON_WSL:-false}" = true ] && is_wsl; then
+        echo "WSL"
+    elif [ "${ONLY_ON_WSL:-false}" = true ] && ! is_wsl; then
+        echo "WSL only"
+    else
+        return 1
+    fi
+}
+
+# Same, for a module path from outside its subshell (used for the summary)
+module_skip_reason_for() {
+    (
+        source "$DIR/lib/env.sh"
+        source "$1" 2>/dev/null
+        module_skip_reason
+    )
+}
+
 # Source the module (no side effects: modules only define functions and
 # constants at top level) and report what run_module would call.
 dry_run_module() {
@@ -150,6 +173,12 @@ dry_run_module() {
         load_config
         refresh_envs
         source "$2"
+
+        local reason
+        if reason=$(module_skip_reason); then
+            log_info "[DRY-RUN] Would skip: $reason"
+            exit 0
+        fi
 
         local phases=()
         if [ "$UPDATE" = true ]; then
@@ -196,7 +225,7 @@ print_summary() {
     log_step "Summary"
     for i in "${!RESULT_MODULES[@]}"; do
         case "${RESULT_STATUS[$i]}" in
-            ok)      printf "  %-*s  ${GREEN}ok${NC}\n" "$width" "${RESULT_MODULES[$i]}" ;;
+            ok)       printf "  %-*s  ${GREEN}ok${NC}\n" "$width" "${RESULT_MODULES[$i]}" ;;
             skipped*) printf "  %-*s  ${YELLOW}%s${NC}\n" "$width" "${RESULT_MODULES[$i]}" "${RESULT_STATUS[$i]}" ;;
             *)       printf "  %-*s  ${RED}%s${NC}\n" "$width" "${RESULT_MODULES[$i]}" "${RESULT_STATUS[$i]}"; failed=$((failed + 1)) ;;
         esac
@@ -236,6 +265,11 @@ run_module() {
         refresh_envs
         source "$module_path"
 
+        # Platform guard: SKIP_ON_WSL=true / ONLY_ON_WSL=true at module level
+        if module_skip_reason >/dev/null; then
+            exit "$SKIP_EXIT"
+        fi
+
         # Prompt for anything the module needs that the intent-scoped prompting skipped
         if [ "${#CONFIG_REQUIRES[@]}" -gt 0 ]; then
             ensure_module_config || exit 1
@@ -265,7 +299,10 @@ run_module() {
     )
     local status=$?
 
-    if [ "$status" -eq 0 ]; then
+    if [ "$status" -eq "$SKIP_EXIT" ]; then
+        record_result "$1" "skipped ($(module_skip_reason_for "$module_path"))"
+        return 0
+    elif [ "$status" -eq 0 ]; then
         record_result "$1" "ok"
     else
         log_error "Module $1 failed (exit $status)."

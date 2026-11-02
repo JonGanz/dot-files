@@ -3,13 +3,9 @@
 # System-wide Font Installation (JetBrains Mono Nerd Font)
 
 JETBRAINS_FONT_VERSION="3.4.0"
+SKIP_ON_WSL=true  # the Windows side owns fonts
 
 install() {
-    if is_wsl; then
-        log_warn "Skipping Font installation in WSL environment."
-        return
-    fi
-
     if is_arch; then
         pkg_install ttf-jetbrains-mono-nerd
     elif is_ubuntu; then

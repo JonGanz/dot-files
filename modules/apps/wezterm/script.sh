@@ -1,11 +1,8 @@
 #!/bin/bash
 
-install() {
-    if is_wsl; then
-        log_warn "Skipping Wezterm (GUI) in WSL environment."
-        return
-    fi
+SKIP_ON_WSL=true
 
+install() {
     if is_arch; then
         pkg_install wezterm
     elif is_ubuntu; then
