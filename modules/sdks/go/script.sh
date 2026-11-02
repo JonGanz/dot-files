@@ -38,10 +38,6 @@ install() {
     sudo rm -rf "$GO_INSTALL_DIR"
     sudo tar -C /usr/local -xzf "/tmp/$tarball"
     rm "/tmp/$tarball"
-
-    # Add to PATH if not already there
-    # This might need to be part of configure() or handled via profile scripts
-    configure
 }
 
 configure() {

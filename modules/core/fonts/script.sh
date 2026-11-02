@@ -63,5 +63,4 @@ configure() {
 update() {
     # Fonts don't change often, but re-running install will check if dir exists
     install
-    configure
 }

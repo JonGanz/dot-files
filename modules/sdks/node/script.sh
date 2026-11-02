@@ -46,6 +46,7 @@ configure() {
 }
 
 update() {
-    # nvm itself doesn't have a simple 'update' command, but we can update Node
-    configure
+    # nvm itself doesn't have a simple 'update' command; configure() (which
+    # installs the current LTS) runs automatically after update.
+    :
 }

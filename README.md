@@ -37,7 +37,8 @@ A modular, idempotent, and multi-platform Bash-based setup system for Linux envi
 | Option | Description |
 | :--- | :--- |
 | `--intent <name>` | Set the intent (e.g., `personal`, `work`). Default: `common` |
-| `--update` | Run update routines for all active modules. |
+| `--update` | Run update routines for all active modules. `configure()` still runs afterwards. |
+| `--fail-fast` | Stop at the first module that fails. By default the run continues and reports failures in the end-of-run summary. |
 | `--only <module>` | Run only a specific module (e.g., `core/neovim`). |
 | `--reconfigure` | Force a prompt for all configuration values. |
 | `--dry-run` | Show what would happen without executing any commands. |
@@ -121,7 +122,7 @@ install() {
     pkg_install my-app
 }
 
-# Optional: Configuration logic
+# Required: Configuration logic (runs after install() and after update())
 configure() {
     log_info "Configuring my-app..."
     
@@ -132,11 +133,13 @@ configure() {
     render_template "$DIR/config/my-app/profile.tmpl" "$HOME/.config/my-app/profile"
 }
 
-# Optional: Update logic
+# Optional: Update logic (configure() is called automatically afterwards)
 update() {
     pkg_update my-app
 }
 ```
+
+Each function's exit status is checked: a non-zero return marks the module as `FAILED` in the end-of-run summary and makes `setup.sh` exit non-zero.
 
 Add your module path (e.g., `apps/my-app`) to `intents/common.txt` (or another intent file) to enable it.
 

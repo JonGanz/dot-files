@@ -62,7 +62,6 @@ update() {
             pyenv update
         else
             install
-            configure
         fi
     fi
 }

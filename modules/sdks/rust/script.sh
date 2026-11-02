@@ -49,6 +49,5 @@ update() {
         rustup update
     else
         install
-        configure
     fi
 }

@@ -46,7 +46,8 @@ configure() {
 }
 
 update() {
-    configure
+    # Nothing to update; configure() runs automatically after update.
+    :
 }
 
 enable_linger() {

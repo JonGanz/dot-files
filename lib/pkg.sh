@@ -22,8 +22,10 @@ pkg_update() {
         fi
     else
         if is_arch; then
+            # Never -Sy here: a full -Syu already ran at the start of an --update
+            # run, so a plain -S --needed is safe and avoids a partial upgrade.
             log_info "Updating packages via pacman: $*"
-            sudo pacman -S --noconfirm "$@"
+            sudo pacman -S --needed --noconfirm "$@"
         elif is_ubuntu; then
             log_info "Updating packages via apt: $*"
             # We assume pkg_repo_update has been called once at the start of the run for efficiency

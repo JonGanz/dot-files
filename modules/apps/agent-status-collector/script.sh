@@ -38,5 +38,4 @@ configure() {
 update() {
     clone_or_pull "$REPO_URL" "$REPO_DIR"
     build
-    configure
 }

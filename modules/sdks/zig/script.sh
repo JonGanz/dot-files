@@ -37,8 +37,6 @@ install() {
     sudo mkdir -p "$ZIG_INSTALL_DIR"
     sudo tar -C "$ZIG_INSTALL_DIR" --strip-components=1 -xf "/tmp/$tarball"
     rm "/tmp/$tarball"
-
-    configure
 }
 
 configure() {
