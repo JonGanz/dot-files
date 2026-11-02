@@ -9,7 +9,8 @@ install() {
     elif is_ubuntu; then
         if [ ! -d "$HOME/.nvm" ]; then
             log_info "Installing nvm via shell script..."
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+            # PROFILE=/dev/null stops the installer appending to ~/.bashrc; ~/.bashrc.d/node.sh handles that
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | PROFILE=/dev/null bash
         else
             log_success "nvm is already installed at $HOME/.nvm"
         fi
@@ -31,15 +32,7 @@ configure() {
         nvm alias default 'lts/*'
         log_success "Node.js $(node --version) is now active and set as default."
 
-        # Ensure nvm is initialized in .bashrc for future sessions
-        if ! grep -q "NVM_DIR" "$HOME/.bashrc"; then
-            log_info "Adding nvm initialization to .bashrc..."
-            {
-                echo 'export NVM_DIR="$HOME/.nvm"'
-                echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm'
-                echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion'
-            } >> "$HOME/.bashrc"
-        fi
+        bashrc_d_link "$DIR/modules/sdks/node/env.sh" node
     else
         log_error "nvm command not found after installation. You may need to restart your shell."
     fi

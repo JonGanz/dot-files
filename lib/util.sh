@@ -98,6 +98,88 @@ render_template() {
     mv "$tmp_file" "$dest"
 }
 
+# ---- ~/.bashrc.d convention ------------------------------------------------
+# Modules never append to ~/.bashrc directly. core/bash installs a single
+# loader block that sources every ~/.bashrc.d/*.sh; each module that needs
+# shell setup drops (symlinks) a file there with bashrc_d_link.
+
+BASHRC_D="$HOME/.bashrc.d"
+
+# Ensure a named, replaceable block exists in ~/.bashrc.
+# Usage: ensure_bashrc_block <name> <content>
+# The block is written between "# >>> setup:<name> >>>" and "# <<< setup:<name> <<<"
+# markers; an existing block with the same name is replaced, so content can
+# be updated or changed later without leaving stale lines behind.
+ensure_bashrc_block() {
+    local name="$1" content="$2"
+    local bashrc="$HOME/.bashrc"
+    local start="# >>> setup:$name >>>" end="# <<< setup:$name <<<"
+    local block
+    block=$(printf '%s\n%s\n%s' "$start" "$content" "$end")
+
+    touch "$bashrc"
+    if grep -qxF "$start" "$bashrc"; then
+        local current
+        current=$(sed -n "/^$(printf '%s' "$start" | sed 's/[][\/.*^$]/\\&/g')\$/,/^$(printf '%s' "$end" | sed 's/[][\/.*^$]/\\&/g')\$/p" "$bashrc")
+        if [ "$current" = "$block" ]; then
+            return 0
+        fi
+        log_info "Updating setup:$name block in $bashrc"
+        local tmp
+        tmp=$(mktemp)
+        awk -v start="$start" -v end="$end" '
+            $0 == start { skip = 1; next }
+            $0 == end   { skip = 0; next }
+            !skip
+        ' "$bashrc" > "$tmp"
+        # $(cat) drops trailing newlines so blank lines don't pile up on each rewrite
+        printf '%s\n' "$(cat "$tmp")" > "$bashrc"
+        rm -f "$tmp"
+    else
+        log_info "Adding setup:$name block to $bashrc"
+    fi
+    printf '\n%s\n' "$block" >> "$bashrc"
+}
+
+# Install the ~/.bashrc.d loader block (idempotent; called by core/bash and
+# by bashrc_d_link so --only runs work without core/bash).
+ensure_bashrc_loader() {
+    mkdir -p "$BASHRC_D"
+    ensure_bashrc_block bashrc.d \
+'for f in "$HOME"/.bashrc.d/*.sh; do [ -r "$f" ] && . "$f"; done'
+}
+
+# Symlink a shell snippet into ~/.bashrc.d/<name>.sh
+# Usage: bashrc_d_link <src> <name>
+bashrc_d_link() {
+    local src="$1" name="$2"
+    ensure_bashrc_loader
+    symlink_file "$src" "$BASHRC_D/$name.sh"
+}
+
+# Remove exact lines from ~/.bashrc (used to clean up lines that modules
+# appended before the ~/.bashrc.d convention). A backup is written once to
+# ~/.bashrc.bak-setup before the first modification.
+# Usage: remove_bashrc_lines <line>...
+remove_bashrc_lines() {
+    local bashrc="$HOME/.bashrc"
+    [ -f "$bashrc" ] || return 0
+
+    local patterns
+    patterns=$(mktemp)
+    printf '%s\n' "$@" > "$patterns"
+
+    if grep -qxF -f "$patterns" "$bashrc"; then
+        [ -f "$bashrc.bak-setup" ] || cp "$bashrc" "$bashrc.bak-setup"
+        log_info "Removing legacy setup lines from $bashrc (backup at $bashrc.bak-setup)"
+        local tmp
+        tmp=$(mktemp)
+        grep -vxF -f "$patterns" "$bashrc" > "$tmp"
+        mv "$tmp" "$bashrc"
+    fi
+    rm -f "$patterns"
+}
+
 # Clone a repo if it doesn't exist yet, otherwise fast-forward pull it
 # Usage: clone_or_pull <repo_url> <dest_dir>
 clone_or_pull() {

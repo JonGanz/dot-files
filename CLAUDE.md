@@ -60,7 +60,7 @@ Modules are sourced (not executed), so functions share the lib namespace. Use th
 | `lib/env.sh` | `is_arch()`, `is_ubuntu()`, `is_wsl()`, `detect_env()`, `get_arch(uname|go|native)` |
 | `lib/log.sh` | `log_info/warn/error/success/step` — colored output |
 | `lib/pkg.sh` | `pkg_install`, `pkg_update`, `flatpak_install`, `has_cmd`, `has_pkg`, `download_file`, `install_github_release` |
-| `lib/util.sh` | `symlink_file`, `render_template`, `refresh_envs` |
+| `lib/util.sh` | `symlink_file`, `render_template`, `refresh_envs`, `bashrc_d_link`, `ensure_bashrc_block` |
 | `lib/config.sh` | `load_config`, `save_config`, `ensure_config`, `reconfigure` |
 
 ### Installing Release Binaries
@@ -77,9 +77,13 @@ Config templates use `{{ variable_name }}` placeholders. `render_template src de
 
 `refresh_envs` sources `modules/sdks/*/env.sh` to make SDK tools (cargo, nvm, go) available within the current subshell — call this before using a tool installed by a prior module.
 
+### Shell Setup (`~/.bashrc.d/`)
+
+Modules never append to `~/.bashrc`. `core/bash` installs one loader block (between `# >>> setup:bashrc.d >>>` markers) that sources every `~/.bashrc.d/*.sh`, and removes the lines older versions of the modules appended directly. A module that needs shell setup keeps a snippet in the repo and links it with `bashrc_d_link <src> <name>`, which drops `~/.bashrc.d/<name>.sh`. SDK modules link their `env.sh`; others keep a `config/{name}/bashrc.sh`. Re-running updates the link, and removing the file removes the setup.
+
 ### SDK Environment Files
 
-Each SDK module that modifies PATH has a companion `modules/sdks/{name}/env.sh` that sets up the environment for that SDK. These are sourced by `refresh_envs` so later modules can use tools from earlier SDK installs within the same run.
+Each SDK module that modifies PATH has a companion `modules/sdks/{name}/env.sh` that sets up the environment for that SDK. These are sourced by `refresh_envs` so later modules can use tools from earlier SDK installs within the same run, and linked into `~/.bashrc.d/` for interactive shells.
 
 ### Adding a Module
 

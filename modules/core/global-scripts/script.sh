@@ -18,10 +18,7 @@ configure() {
         fi
     done
 
-    if ! grep -q '$HOME/bin' "$HOME/.bashrc"; then
-        log_info "Adding ~/bin to PATH in .bashrc..."
-        echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
-    fi
+    bashrc_d_link "$DIR/config/global-scripts/bashrc.sh" global-scripts
 
     log_success "Global scripts installed."
 }

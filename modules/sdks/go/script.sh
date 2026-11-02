@@ -56,14 +56,7 @@ configure() {
         fi
     fi
 
-    # Add Go binary paths to .bashrc for future sessions
-    if ! grep -q "go/bin" "$HOME/.bashrc"; then
-        log_info "Adding Go paths to .bashrc..."
-        {
-            echo 'export PATH="$PATH:/usr/local/go/bin"'
-            echo 'export PATH="$PATH:${GOPATH:-$HOME/go}/bin"'
-        } >> "$HOME/.bashrc"
-    fi
+    bashrc_d_link "$DIR/modules/sdks/go/env.sh" go
 }
 
 update() {

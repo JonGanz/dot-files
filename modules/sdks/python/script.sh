@@ -41,14 +41,7 @@ configure() {
         log_success "Python $(python --version) is ready."
     fi
 
-    if ! grep -q "PYENV_ROOT" "$HOME/.bashrc"; then
-        log_info "Adding pyenv to .bashrc..."
-        {
-            echo 'export PYENV_ROOT="$HOME/.pyenv"'
-            echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"'
-            echo 'eval "$(pyenv init -)"'
-        } >> "$HOME/.bashrc"
-    fi
+    bashrc_d_link "$DIR/modules/sdks/python/env.sh" python
 }
 
 update() {

@@ -131,6 +131,9 @@ configure() {
     
     # Render a template with config variables
     render_template "$DIR/config/my-app/profile.tmpl" "$HOME/.config/my-app/profile"
+
+    # Shell setup goes in ~/.bashrc.d/, never appended to ~/.bashrc directly
+    bashrc_d_link "$DIR/config/my-app/bashrc.sh" my-app
 }
 
 # Optional: Update logic (configure() is called automatically afterwards)

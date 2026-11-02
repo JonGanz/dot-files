@@ -67,14 +67,8 @@ configure() {
             # Enable and start user service
             systemctl --user enable --now docker.service
             
-            # Ensure environment variables are in .bashrc
-            if ! grep -q "DOCKER_HOST" "$HOME/.bashrc"; then
-                log_info "Adding Docker environment variables to .bashrc..."
-                {
-                    echo 'export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock'
-                } >> "$HOME/.bashrc"
-            fi
-            
+            bashrc_d_link "$DIR/config/docker/bashrc.sh" docker
+
             # Export for current session
             export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
             log_success "Rootless Docker configured."

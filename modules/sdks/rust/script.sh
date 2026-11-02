@@ -29,11 +29,7 @@ configure() {
         rustup default stable
         log_success "Rust $(rustc --version) is ready."
 
-        # Ensure PATH is updated in .bashrc for future sessions
-        if ! grep -q "cargo/bin" "$HOME/.bashrc"; then
-            log_info "Adding cargo/bin to .bashrc..."
-            echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$HOME/.bashrc"
-        fi
+        bashrc_d_link "$DIR/modules/sdks/rust/env.sh" rust
     else
         log_error "rustup command not found after installation."
     fi

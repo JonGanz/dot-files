@@ -54,6 +54,8 @@ consistent.
 
 ## 3. Add `ensure_bashrc_line` (or a `~/.bashrc.d/` convention)
 
+**Done (2026-11-02):** `~/.bashrc.d/` convention. `core/bash` installs the loader via `ensure_bashrc_block` and strips the legacy appended lines (backup in `~/.bashrc.bak-setup`); modules use `bashrc_d_link`. nvm installer runs with `PROFILE=/dev/null`.
+
 **Problem:** `sdks/go`, `sdks/node`, `sdks/rust`, `sdks/python`,
 `core/oh-my-posh`, `core/global-scripts`, and `core/docker` each do
 `grep -q "marker" ~/.bashrc || echo '...' >> ~/.bashrc` with ad-hoc markers.

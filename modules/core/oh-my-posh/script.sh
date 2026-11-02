@@ -101,11 +101,7 @@ configure() {
         log_warn "Theme file not found at $repo_theme"
     fi
 
-    # Add initialization to .bashrc
-    if ! grep -q "oh-my-posh init bash" "$HOME/.bashrc"; then
-        log_info "Adding oh-my-posh initialization to .bashrc..."
-        echo 'eval "$(oh-my-posh init bash --config ~/.config/ohmyposh/theme.omp.json)"' >> "$HOME/.bashrc"
-    fi
+    bashrc_d_link "$DIR/config/ohmyposh/bashrc.sh" oh-my-posh
 }
 
 update() {
