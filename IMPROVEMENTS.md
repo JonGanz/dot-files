@@ -154,6 +154,8 @@ checked once by `run_module`, which skips the whole module with a consistent
 
 ## 9. Minor hygiene
 
+**Done (2026-11-02):** `bin/`, `config/` and `scripts/` documented; `intents/optional.txt` lists syncthing, zellij, zig; tabs fixed in item 7; `scripts/lint.sh` added (shellcheck optional, `bash -n` always).
+
 - `bin/` (`cut-release`, `merge-release`, `pr`, `yeet`) and the `config/`
   layout are not described in `CLAUDE.md` or `README.md`.
 - `sdks/zig` and `apps/syncthing` exist but are not listed in any intent. Add a

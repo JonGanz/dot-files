@@ -27,7 +27,7 @@ A modular, idempotent Bash setup system for Linux (Arch, Ubuntu/Kubuntu, WSL2). 
 ./setup.sh --intent personal --fail-fast
 ```
 
-There is no test suite. Validation is done by running with `--dry-run` first or targeting a single module. Dry-run sources each module and reports which of `install` / `update` / `configure` would be called and which `CONFIG_REQUIRES` keys are unset, so modules must not do work at top level, only define functions and constants.
+There is no test suite. `scripts/lint.sh` runs `bash -n` and, when installed, `shellcheck` over every script; run it after editing. Validation beyond that is running with `--dry-run` first or targeting a single module. Dry-run sources each module and reports which of `install` / `update` / `configure` would be called and which `CONFIG_REQUIRES` keys are unset, so modules must not do work at top level, only define functions and constants.
 
 Every run ends with a per-module summary (`ok` / `FAILED`) and exits non-zero if any module failed. A module fails when its subshell exits non-zero, i.e. when `install`, `configure` or `update` returns non-zero, so make sure a function's last command is not a benign `[ ... ] && ...` that returns 1.
 
@@ -37,7 +37,7 @@ Every run ends with a per-module summary (`ok` / `FAILED`) and exits non-zero if
 
 `setup.sh` sources all `lib/` files, parses args, then calls `run_module()` for each entry in the active intent file(s). Each module runs in a subshell with all libs re-sourced, so state cannot leak between modules.
 
-Intent files (`intents/common.txt`, `intents/personal.txt`, `intents/work.txt`) are plain text lists of module paths. `common` always runs; the selected intent's file is appended. Duplicates are deduplicated while preserving order.
+Intent files (`intents/common.txt`, `intents/personal.txt`, `intents/work.txt`) are plain text lists of module paths. `common` always runs; the selected intent's file is appended. Duplicates are deduplicated while preserving order. `intents/optional.txt` lists maintained modules that belong to no profile; a module must appear in some intent file or it looks like dead code.
 
 ### Module Contract
 
@@ -86,6 +86,12 @@ Modules never append to `~/.bashrc`. `core/bash` installs one loader block (betw
 ### SDK Environment Files
 
 Each SDK module that modifies PATH has a companion `modules/sdks/{name}/env.sh` that sets up the environment for that SDK. These are sourced by `refresh_envs` so later modules can use tools from earlier SDK installs within the same run, and linked into `~/.bashrc.d/` for interactive shells.
+
+### Repo Layout Beyond Modules
+
+- `config/{name}/` holds the dotfiles, templates and `bashrc.sh` snippet for module `name`.
+- `bin/` holds git workflow scripts (`cut-release`, `merge-release`, `pr`, `yeet`) that `core/global-scripts` links into `~/bin`.
+- `scripts/lint.sh` is the lint entry point.
 
 ### Adding a Module
 

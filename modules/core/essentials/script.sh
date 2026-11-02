@@ -13,6 +13,7 @@ ESSENTIAL_PKGS=(
     less
     ripgrep
     sed
+    shellcheck
     tree
     unzip
 )

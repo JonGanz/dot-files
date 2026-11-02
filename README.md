@@ -94,13 +94,24 @@ Before the module runs, any of those keys still unset are prompted for regardles
 │   ├── pkg.sh               # Package manager abstraction
 │   ├── config.sh            # Configuration management
 │   └── util.sh              # General utilities (symlinking, etc.)
-├── intents/                 # Profile definitions (common, personal, work)
+├── intents/                 # Profile definitions (common, personal, work, optional)
 ├── modules/                 # Modular installation scripts
 │   ├── core/                # Essential tools (Git, Neovim)
 │   ├── apps/                # GUI and CLI applications
 │   └── sdks/                # Language runtimes (Node, Go, Rust)
-└── config/                  # Configuration templates and dotfiles
+├── config/                  # Dotfiles and templates, one directory per module
+│   ├── <module>/            # Symlinked/rendered by that module's configure()
+│   └── <module>/bashrc.sh   # Shell snippet linked into ~/.bashrc.d/ (if any)
+├── bin/                     # Git workflow scripts, linked into ~/bin by core/global-scripts
+│   ├── cut-release          # Cut a release/<ver> branch from develop (or hotfix/<ver> from main)
+│   ├── merge-release        # Merge a release/hotfix branch back into main and develop
+│   ├── pr                   # Open the browser on a new pull request for the current branch
+│   └── yeet                 # Delete a branch locally and on origin
+└── scripts/
+    └── lint.sh              # bash -n + shellcheck over every script (the "test suite")
 ```
+
+`intents/optional.txt` lists modules kept maintained but not part of any machine profile (run with `--only`).
 
 ---
 

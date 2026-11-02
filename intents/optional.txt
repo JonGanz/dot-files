@@ -1,0 +1,6 @@
+# Modules that are not part of any machine profile but are kept maintained.
+# Run one with:  ./setup.sh --only <module>
+# (or run them all on top of common with:  ./setup.sh --intent optional)
+apps/syncthing
+apps/zellij
+sdks/zig
