@@ -5,8 +5,6 @@ install() {
 }
 
 configure() {
-    log_info "Configuring git..."
-    
     local template="$DIR/config/git/gitconfig.personal"
     local dest="$HOME/.gitconfig"
     

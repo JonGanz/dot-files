@@ -7,8 +7,6 @@ install() {
 }
 
 configure() {
-    log_info "Installing global scripts to ~/bin..."
-
     local scripts_dir="$DIR/bin"
 
     for script in "$scripts_dir"/*; do

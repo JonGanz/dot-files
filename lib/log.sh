@@ -29,3 +29,8 @@ log_error() {
 log_step() {
     echo -e "${CYAN}==>${NC} ${PURPLE}$1${NC}"
 }
+
+# Module phase line, printed by run_module: "  -> core/git: configure"
+log_phase() {
+    echo -e "  ${CYAN}->${NC} ${PURPLE}$1${NC}: $2"
+}

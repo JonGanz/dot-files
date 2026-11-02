@@ -18,8 +18,6 @@ install_ubuntu() {
 }
 
 configure() {
-    log_info "Configuring zellij..."
-
     mkdir -p "$HOME/.config"
 
     symlink_file "$DIR/config/zellij" "$HOME/.config/zellij"

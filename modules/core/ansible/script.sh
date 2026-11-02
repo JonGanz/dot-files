@@ -12,9 +12,6 @@ install() {
     fi
 }
 
-configure() {
-    :
-}
 
 update() {
     if is_arch; then

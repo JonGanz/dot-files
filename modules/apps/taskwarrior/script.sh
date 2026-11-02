@@ -12,7 +12,6 @@ install() {
 }
 
 configure() {
-    log_info "Configuring Taskwarrior..."
     # Task only reads the XDG path if ~/.taskrc doesn't exist, so remove the
     # default one it creates on first run.
     if [ -e "$HOME/.taskrc" ] && [ ! -L "$HOME/.taskrc" ]; then

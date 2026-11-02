@@ -50,7 +50,6 @@ install_ubuntu() {
 }
 
 configure() {
-    log_info "Configuring neovim..."
     # Ensure the config directory exists
     mkdir -p "$HOME/.config"
     

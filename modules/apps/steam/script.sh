@@ -27,11 +27,6 @@ install() {
     pkg_install steam
 }
 
-configure() {
-    if ! is_wsl; then
-        log_info "Configuring Steam..."
-    fi
-}
 
 update() {
     if ! is_wsl; then

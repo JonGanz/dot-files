@@ -87,8 +87,6 @@ render_fleet_theme() {
 }
 
 configure() {
-    log_info "Configuring oh-my-posh..."
-
     local config_dir="$HOME/.config/ohmyposh"
     mkdir -p "$config_dir"
 

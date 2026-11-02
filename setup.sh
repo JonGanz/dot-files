@@ -243,19 +243,23 @@ run_module() {
 
         if [ "$UPDATE" = true ]; then
             if declare -f update >/dev/null; then
+                log_phase "$1" update
                 update || exit 1
             else
-                log_info "Module $1 has no update(); running install instead."
+                log_phase "$1" "install (no update() defined)"
                 install || exit 1
             fi
         else
+            log_phase "$1" install
             install || exit 1
         fi
         # configure() always runs, in update mode too, so config changes are applied.
         # A module may omit it; if it declares CONFIG_DEST, config/<name>/ is linked there.
         if declare -f configure >/dev/null; then
+            log_phase "$1" configure
             configure || exit 1
         elif [ -n "${CONFIG_DEST:-}" ]; then
+            log_phase "$1" "configure (link config/$(basename "$1") to $CONFIG_DEST)"
             symlink_config_dir "$(basename "$1")" "$CONFIG_DEST" || exit 1
         fi
     )

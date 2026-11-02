@@ -20,23 +20,27 @@ install() {
     fi
 
     local arch
-    case $(uname -m) in
-        x86_64) arch="x86_64" ;;
-        aarch64) arch="aarch64" ;;
-        *) log_error "Unsupported architecture: $(uname -m)"; return 1 ;;
-    esac
+    arch=$(get_arch native) || return 1
 
     local tarball="zig-${arch}-linux-${ZIG_VERSION}.tar.xz"
     local url="https://ziglang.org/download/${ZIG_VERSION}/${tarball}"
+    local tmp_dir
+    tmp_dir=$(mktemp -d)
 
-    log_info "Downloading Zig from $url..."
-    curl -LSs "$url" -o "/tmp/$tarball"
+    # Download and verify before touching the existing install
+    if ! download_file "$url" "$tmp_dir/$tarball" || ! tar -tf "$tmp_dir/$tarball" >/dev/null; then
+        log_error "Zig download failed; existing install left untouched."
+        rm -rf "$tmp_dir"
+        return 1
+    fi
 
     log_info "Extracting Zig to $ZIG_INSTALL_DIR..."
     sudo rm -rf "$ZIG_INSTALL_DIR"
     sudo mkdir -p "$ZIG_INSTALL_DIR"
-    sudo tar -C "$ZIG_INSTALL_DIR" --strip-components=1 -xf "/tmp/$tarball"
-    rm "/tmp/$tarball"
+    sudo tar -C "$ZIG_INSTALL_DIR" --strip-components=1 -xf "$tmp_dir/$tarball"
+    local status=$?
+    rm -rf "$tmp_dir"
+    return "$status"
 }
 
 configure() {

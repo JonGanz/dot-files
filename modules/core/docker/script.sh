@@ -2,6 +2,9 @@
 
 # Docker installation and rootless configuration
 
+DOCKER_PKGS_ARCH=(docker docker-buildx docker-compose docker-rootless-extras-bin)
+DOCKER_PKGS_UBUNTU=(docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras)
+
 install() {
     if is_wsl; then
         log_info "WSL detected — skipping Docker install (use Windows Docker Desktop integration)."
@@ -10,7 +13,7 @@ install() {
 
     if is_arch; then
         log_info "Installing Docker via pacman..."
-        pkg_install docker docker-buildx docker-compose docker-rootless-extras-bin
+        pkg_install "${DOCKER_PKGS_ARCH[@]}"
     elif is_ubuntu; then
         log_info "Installing Docker via official repository..."
 
@@ -32,7 +35,7 @@ install() {
             pkg_repo_update
         fi
 
-        pkg_install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
+        pkg_install "${DOCKER_PKGS_UBUNTU[@]}"
     fi
 }
 
@@ -85,8 +88,8 @@ update() {
     fi
 
     if is_arch; then
-        pkg_update docker docker-buildx docker-compose
+        pkg_update "${DOCKER_PKGS_ARCH[@]}"
     elif is_ubuntu; then
-        pkg_update docker-ce docker-ce-cli
+        pkg_update "${DOCKER_PKGS_UBUNTU[@]}"
     fi
 }

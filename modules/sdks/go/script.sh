@@ -22,22 +22,26 @@ install() {
     fi
 
     local arch
-    case $(uname -m) in
-        x86_64) arch="amd64" ;;
-        aarch64) arch="arm64" ;;
-        *) log_error "Unsupported architecture: $(uname -m)"; return 1 ;;
-    esac
+    arch=$(get_arch go) || return 1
 
     local tarball="go$GO_VERSION.linux-$arch.tar.gz"
     local url="https://go.dev/dl/$tarball"
+    local tmp_dir
+    tmp_dir=$(mktemp -d)
 
-    log_info "Downloading Go from $url..."
-    curl -L "$url" -o "/tmp/$tarball"
+    # Download and verify before touching the existing install
+    if ! download_file "$url" "$tmp_dir/$tarball" || ! tar -tzf "$tmp_dir/$tarball" >/dev/null; then
+        log_error "Go download failed; existing install left untouched."
+        rm -rf "$tmp_dir"
+        return 1
+    fi
 
     log_info "Extracting Go to $GO_INSTALL_DIR..."
     sudo rm -rf "$GO_INSTALL_DIR"
-    sudo tar -C /usr/local -xzf "/tmp/$tarball"
-    rm "/tmp/$tarball"
+    sudo tar -C /usr/local -xzf "$tmp_dir/$tarball"
+    local status=$?
+    rm -rf "$tmp_dir"
+    return "$status"
 }
 
 configure() {

@@ -51,6 +51,8 @@ update()     # Optional — if absent, install is called on --update
 
 `configure()` always runs after `install()` or `update()`, including on `--update`, so config changes are applied on every run. Do not call `configure` from `install` or `update`. A module with no `configure()` may instead declare `CONFIG_DEST="$HOME/.config/<name>"` and every file under `config/<name>/` is linked there by `symlink_config_dir`, which modules with a custom `configure()` can also call directly. On Arch, `--update` runs one full `pacman -Syu` up front and per-package `pkg_update` is a safe `pacman -S --needed`.
 
+`run_module` logs each phase (`-> core/git: configure`) itself, so modules should not print their own "Configuring X..." lines. Package lists shared by `install` and `update` belong in a module-level array so the two cannot drift. `symlink_dir` moves a real directory at the destination to `<dest>.bak` instead of deleting it.
+
 Modules are sourced (not executed), so functions share the lib namespace. Use the `is_wsl`, `is_arch`, `is_ubuntu` helpers from `lib/env.sh` to branch platform-specific logic. Always guard GUI apps with `is_wsl` early-return.
 
 ### Shared Libraries
@@ -58,7 +60,7 @@ Modules are sourced (not executed), so functions share the lib namespace. Use th
 | File | Purpose |
 |---|---|
 | `lib/env.sh` | `is_arch()`, `is_ubuntu()`, `is_wsl()`, `detect_env()`, `get_arch(uname|go|native)` |
-| `lib/log.sh` | `log_info/warn/error/success/step` — colored output |
+| `lib/log.sh` | `log_info/warn/error/success/step/phase` — colored output |
 | `lib/pkg.sh` | `pkg_install`, `pkg_update`, `flatpak_install`, `has_cmd`, `has_pkg`, `download_file`, `install_github_release` |
 | `lib/util.sh` | `symlink_file`, `symlink_config_dir`, `render_template`, `refresh_envs`, `bashrc_d_link`, `ensure_bashrc_block` |
 | `lib/config.sh` | `load_config`, `save_config`, `ensure_config`, `reconfigure` |

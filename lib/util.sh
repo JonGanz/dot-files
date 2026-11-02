@@ -2,11 +2,6 @@
 
 # Utility functions
 
-# Check if a command exists
-has_cmd() {
-    command -v "$1" >/dev/null 2>&1
-}
-
 # Symlink a file, creating parent directories if needed
 # Usage: symlink_file <src> <dest>
 symlink_file() {
@@ -65,9 +60,14 @@ symlink_dir() {
     # Create parent directory if it doesn't exist
     mkdir -p "$(dirname "$dest")"
 
-    # Remove existing file, symlink, or directory
-    if [ -L "$dest" ] || [ -e "$dest" ]; then
-        rm -rf "$dest"
+    if [ -L "$dest" ]; then
+        rm "$dest"
+    elif [ -e "$dest" ]; then
+        # A real file/directory lives here: keep it rather than destroying it
+        local backup="$dest.bak"
+        [ -e "$backup" ] && backup="$dest.bak.$(date +%Y%m%d%H%M%S)"
+        log_warn "$dest exists and is not a symlink; moving it to $backup"
+        mv "$dest" "$backup" || return 1
     fi
 
     log_info "Linking $src to $dest"
@@ -90,12 +90,7 @@ render_template() {
     # Create destination directory if it doesn't exist
     mkdir -p "$(dirname "$dest")"
     
-    # Start with the source content
-    local content
-    content=$(cat "$src")
-    
-    # Find all {{ key }} patterns and replace them
-    # We use a temporary file to avoid issues with large content or special characters
+    # Replace {{ key }} patterns in a temporary copy, then move it into place
     local tmp_file
     tmp_file=$(mktemp)
     cp "$src" "$tmp_file"

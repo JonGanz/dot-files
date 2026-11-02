@@ -113,6 +113,8 @@ dry-run too and print:
 
 ## 7. Fix small inconsistencies and bugs
 
+**Done (2026-11-02):** all bullets below, plus the docker package-list hoist from 10d and the download-before-delete ordering for go/zig from 10e.
+
 - `has_cmd` is defined in both `lib/pkg.sh` and `lib/util.sh`. Keep one.
 - `modules/core/essentials/script.sh`: the package list in `install()` and
   `update()` has drifted (`bats`, `dos2unix`, `fzf`, `imagemagick` are missing

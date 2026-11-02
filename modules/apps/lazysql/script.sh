@@ -15,9 +15,6 @@ install_ubuntu() {
         "https://github.com/jorgerojas26/lazysql/releases/download/v{version}/lazysql_Linux_{arch}.tar.gz"
 }
 
-configure() {
-    : # no config files to symlink
-}
 
 update() {
     if is_arch; then

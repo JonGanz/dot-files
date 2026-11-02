@@ -16,9 +16,6 @@ install_ubuntu() {
         "glow_${GLOW_VERSION}_Linux_$(get_arch)/glow"
 }
 
-configure() {
-    : # no config files to symlink
-}
 
 update() {
     if is_arch; then

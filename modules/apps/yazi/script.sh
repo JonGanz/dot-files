@@ -28,10 +28,6 @@ install() {
     fi
 }
 
-configure() {
-    log_info "Configuring yazi..."
-    # Placeholder for potential yazi configuration
-}
 
 update() {
     if is_arch; then

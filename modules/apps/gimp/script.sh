@@ -9,11 +9,6 @@ install() {
     pkg_install gimp
 }
 
-configure() {
-    if ! is_wsl; then
-        log_info "Configuring GIMP..."
-    fi
-}
 
 update() {
     if ! is_wsl; then

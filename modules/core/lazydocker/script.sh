@@ -15,9 +15,6 @@ install_ubuntu() {
         "https://github.com/jesseduffield/lazydocker/releases/download/v{version}/lazydocker_{version}_Linux_{arch}.tar.gz"
 }
 
-configure() {
-    : # no config files to symlink
-}
 
 update() {
     if is_arch; then

@@ -18,7 +18,6 @@ install_ubuntu() {
 }
 
 configure() {
-    log_info "Configuring lazygit..."
     symlink_config_dir lazygit "$HOME/.config/lazygit"
 }
 
