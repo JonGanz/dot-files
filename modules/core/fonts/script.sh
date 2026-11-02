@@ -20,9 +20,10 @@ install() {
 install_ubuntu() {
     local font_name="JetBrainsMono"
     local font_dir="/usr/local/share/fonts/$font_name"
+    local marker="$font_dir/.version"
 
-    if [ -d "$font_dir" ]; then
-        log_success "$font_name Nerd Font is already installed."
+    if [ -f "$marker" ] && [ "$(cat "$marker")" = "$JETBRAINS_FONT_VERSION" ]; then
+        log_success "$font_name Nerd Font v$JETBRAINS_FONT_VERSION is already installed."
         return 0
     fi
 
@@ -36,18 +37,21 @@ install_ubuntu() {
     local zip_file="$tmp_dir/$font_name.zip"
     local url="https://github.com/ryanoasis/nerd-fonts/releases/download/v${JETBRAINS_FONT_VERSION}/${font_name}.zip"
 
-    log_info "Downloading fonts from $url..."
-    if curl -LSs "$url" -o "$zip_file"; then
+    local status=0
+    if download_file "$url" "$zip_file"; then
+        sudo rm -rf "$font_dir"
         sudo mkdir -p "$font_dir"
-        sudo unzip -o "$zip_file" -d "$font_dir" > /dev/null
+        sudo unzip -oq "$zip_file" -d "$font_dir"
         # Remove unwanted files
         sudo rm -f "$font_dir"/*.txt "$font_dir"/*.md
+        echo "$JETBRAINS_FONT_VERSION" | sudo tee "$marker" > /dev/null
         log_success "$font_name Nerd Font files extracted to $font_dir"
     else
-        log_error "Failed to download $font_name Nerd Font."
+        status=1
     fi
 
     rm -rf "$tmp_dir"
+    return "$status"
 }
 
 configure() {

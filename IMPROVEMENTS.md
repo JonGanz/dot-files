@@ -31,6 +31,8 @@ scrolls past and is forgotten.
 
 ## 2. Add `install_github_release` to `lib/pkg.sh`
 
+**Done (2026-11-02):** `install_github_release` and `download_file` in `lib/pkg.sh`, `get_arch` in `lib/env.sh` (item 5). Six modules collapsed; `core/fonts` uses `download_file` and a `.version` marker (10d).
+
 **Problem:** `core/lazygit`, `apps/lazysql`, `apps/glow`, `core/lazydocker`,
 `apps/zellij`, `core/oh-my-posh`, and `core/fonts` each re-implement the same
 ~40 lines: check installed version, map `uname -m` to an arch string,
@@ -83,6 +85,8 @@ own existence checks and warnings.
   `CONFIG_DEST="$HOME/.config/lazygit"` and defines no `configure` function.
 
 ## 5. Add a `get_arch` helper
+
+**Done (2026-11-02):** see item 2.
 
 **Problem:** the `case $(uname -m) in x86_64) ... aarch64) ...` block is
 duplicated in every release-download module, with different output naming

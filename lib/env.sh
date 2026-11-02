@@ -25,6 +25,23 @@ is_wsl() {
     return 1
 }
 
+# Print the machine architecture in a given naming style.
+# Usage: get_arch [style]
+#   uname  -> x86_64 / arm64   (default; most Go-built release tarballs)
+#   go     -> amd64  / arm64   (GOARCH naming)
+#   native -> x86_64 / aarch64 (uname -m / Rust target triples)
+get_arch() {
+    local style="${1:-uname}" machine
+    machine=$(uname -m)
+    case "$machine:$style" in
+        x86_64:go)                  echo "amd64" ;;
+        x86_64:*)                   echo "x86_64" ;;
+        aarch64:go|aarch64:uname)   echo "arm64" ;;
+        aarch64:native)             echo "aarch64" ;;
+        *) log_error "Unsupported architecture: $machine"; return 1 ;;
+    esac
+}
+
 get_os_info() {
     if is_arch; then
         echo "Arch Linux"

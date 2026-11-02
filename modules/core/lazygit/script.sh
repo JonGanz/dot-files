@@ -13,40 +13,8 @@ install() {
 }
 
 install_ubuntu() {
-    if has_cmd lazygit; then
-        local current_version
-        # Extract version specifically from 'version=', excluding 'git version', and taking only the first match
-        current_version=$(lazygit --version | grep -oP '(?<!git )version=\K[0-9][0-9.]*' | head -n 1)
-        if [[ "$current_version" == "$LAZYGIT_VERSION" ]]; then
-            log_success "lazygit v$LAZYGIT_VERSION is already installed."
-            return 0
-        fi
-        log_info "Updating lazygit from $current_version to $LAZYGIT_VERSION..."
-    else
-        log_info "Installing lazygit v$LAZYGIT_VERSION..."
-    fi
-
-    local arch
-    case $(uname -m) in
-        x86_64) arch="x86_64" ;;
-        aarch64) arch="arm64" ;;
-        *) log_error "Unsupported architecture: $(uname -m)"; return 1 ;;
-    esac
-
-    local url="https://github.com/jesseduffield/lazygit/releases/download/v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_${arch}.tar.gz"
-    local tmp_dir
-    tmp_dir=$(mktemp -d)
-    
-    log_info "Downloading lazygit from $url..."
-    if curl -LSs "$url" -o "$tmp_dir/lazygit.tar.gz"; then
-        tar -xzf "$tmp_dir/lazygit.tar.gz" -C "$tmp_dir"
-        sudo install "$tmp_dir/lazygit" /usr/local/bin/lazygit
-        log_success "lazygit v$LAZYGIT_VERSION installed to /usr/local/bin/lazygit"
-    else
-        log_error "Failed to download lazygit."
-    fi
-    
-    rm -rf "$tmp_dir"
+    install_github_release lazygit "$LAZYGIT_VERSION" \
+        "https://github.com/jesseduffield/lazygit/releases/download/v{version}/lazygit_{version}_Linux_{arch}.tar.gz"
 }
 
 configure() {

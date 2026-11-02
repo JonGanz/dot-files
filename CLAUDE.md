@@ -57,11 +57,15 @@ Modules are sourced (not executed), so functions share the lib namespace. Use th
 
 | File | Purpose |
 |---|---|
-| `lib/env.sh` | `is_arch()`, `is_ubuntu()`, `is_wsl()`, `detect_env()` |
+| `lib/env.sh` | `is_arch()`, `is_ubuntu()`, `is_wsl()`, `detect_env()`, `get_arch(uname|go|native)` |
 | `lib/log.sh` | `log_info/warn/error/success/step` — colored output |
-| `lib/pkg.sh` | `pkg_install`, `pkg_update`, `flatpak_install`, `has_cmd`, `has_pkg` |
+| `lib/pkg.sh` | `pkg_install`, `pkg_update`, `flatpak_install`, `has_cmd`, `has_pkg`, `download_file`, `install_github_release` |
 | `lib/util.sh` | `symlink_file`, `render_template`, `refresh_envs` |
 | `lib/config.sh` | `load_config`, `save_config`, `ensure_config`, `reconfigure` |
+
+### Installing Release Binaries
+
+On Ubuntu, tools that are not in apt are installed from GitHub releases with `install_github_release <name> <version> <url_template> [path_in_archive] [version_cmd]`. The URL template may use `{version}`, `{arch}` (x86_64/arm64), `{arch_go}` (amd64/arm64) and `{arch_native}` (x86_64/aarch64). It handles `.tar.gz`, `.zip` and bare binaries, skips when the installed version already matches, and returns non-zero on any failure. Set `RELEASE_BIN_DIR` to install somewhere other than `/usr/local/bin`.
 
 ### Configuration System
 

@@ -13,34 +13,8 @@ install() {
 }
 
 install_ubuntu() {
-    if has_cmd oh-my-posh; then
-        local current_version
-        current_version=$(oh-my-posh --version)
-        if [[ "$current_version" == "$POSH_VERSION" ]]; then
-            log_success "oh-my-posh v$POSH_VERSION is already installed."
-            return 0
-        fi
-        log_info "Updating oh-my-posh from $current_version to $POSH_VERSION..."
-    else
-        log_info "Installing oh-my-posh v$POSH_VERSION..."
-    fi
-
-    local arch
-    case $(uname -m) in
-        x86_64) arch="amd64" ;;
-        aarch64) arch="arm64" ;;
-        *) log_error "Unsupported architecture: $(uname -m)"; return 1 ;;
-    esac
-
-    local url="https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v${POSH_VERSION}/posh-linux-${arch}"
-    
-    log_info "Downloading oh-my-posh from $url..."
-    if sudo curl -LSs "$url" -o /usr/local/bin/oh-my-posh; then
-        sudo chmod +x /usr/local/bin/oh-my-posh
-        log_success "oh-my-posh v$POSH_VERSION installed to /usr/local/bin/oh-my-posh"
-    else
-        log_error "Failed to download oh-my-posh."
-    fi
+    install_github_release oh-my-posh "$POSH_VERSION" \
+        "https://github.com/JanDeDobbeleer/oh-my-posh/releases/download/v{version}/posh-linux-{arch_go}"
 }
 
 # fleet_repos_file prints the path to fleet's repos.yaml, honoring the same
