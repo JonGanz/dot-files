@@ -138,6 +138,50 @@ main() {
     print_summary
 }
 
+# Source the module (no side effects: modules only define functions and
+# constants at top level) and report what run_module would call.
+dry_run_module() {
+    (
+        source "$DIR/lib/log.sh"
+        source "$DIR/lib/env.sh"
+        source "$DIR/lib/pkg.sh"
+        source "$DIR/lib/util.sh"
+        source "$DIR/lib/config.sh"
+        load_config
+        refresh_envs
+        source "$2"
+
+        local phases=()
+        if [ "$UPDATE" = true ]; then
+            if declare -f update >/dev/null; then
+                phases+=("update")
+            else
+                phases+=("install (no update() defined)")
+            fi
+        else
+            phases+=("install")
+        fi
+        if declare -f configure >/dev/null; then
+            phases+=("configure")
+        elif [ -n "${CONFIG_DEST:-}" ]; then
+            phases+=("configure (default: link config/$(basename "$1") to $CONFIG_DEST)")
+        fi
+        log_info "[DRY-RUN] Would call: $(IFS=,; echo "${phases[*]}" | sed 's/,/, /g')"
+
+        local key missing=()
+        for key in "${CONFIG_REQUIRES[@]}"; do
+            if [ -n "${!key:-}" ]; then
+                log_info "[DRY-RUN] Config $key is set"
+            else
+                missing+=("$key")
+            fi
+        done
+        if [ "${#missing[@]}" -gt 0 ]; then
+            log_warn "[DRY-RUN] Config not set, would prompt (or fail without a TTY): ${missing[*]}"
+        fi
+    )
+}
+
 record_result() {
     RESULT_MODULES+=("$1")
     RESULT_STATUS+=("$2")
@@ -175,7 +219,7 @@ run_module() {
 
     log_step "Running module: $1"
     if [ "$DRY_RUN" = true ]; then
-        log_info "[DRY-RUN] Would execute $1 module"
+        dry_run_module "$1" "$module_path"
         record_result "$1" "skipped (dry-run)"
         return 0
     fi

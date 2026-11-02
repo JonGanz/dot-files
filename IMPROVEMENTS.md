@@ -101,6 +101,8 @@ duplicated in every release-download module, with different output naming
 
 ## 6. Make `--dry-run` useful
 
+**Done (2026-11-02):** `dry_run_module` sources the module and prints the phases that would be called and the state of `CONFIG_REQUIRES`. The WSL skip line is added by item 8.
+
 **Problem:** dry-run prints only "Would execute X" per module.
 
 **Proposal:** since modules are already sourced in a subshell, source them in

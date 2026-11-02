@@ -27,7 +27,7 @@ A modular, idempotent Bash setup system for Linux (Arch, Ubuntu/Kubuntu, WSL2). 
 ./setup.sh --intent personal --fail-fast
 ```
 
-There is no test suite. Validation is done by running with `--dry-run` first or targeting a single module.
+There is no test suite. Validation is done by running with `--dry-run` first or targeting a single module. Dry-run sources each module and reports which of `install` / `update` / `configure` would be called and which `CONFIG_REQUIRES` keys are unset, so modules must not do work at top level, only define functions and constants.
 
 Every run ends with a per-module summary (`ok` / `FAILED`) and exits non-zero if any module failed. A module fails when its subshell exits non-zero, i.e. when `install`, `configure` or `update` returns non-zero, so make sure a function's last command is not a benign `[ ... ] && ...` that returns 1.
 
