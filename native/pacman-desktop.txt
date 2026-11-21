@@ -1,0 +1,13 @@
+# Arch packages for machines that are not WSL (skipped with --cli-only).
+flatpak
+gimp
+wezterm
+ttf-jetbrains-mono-nerd
+
+# Docker, rootless (set up afterwards with dockerd-rootless-setuptool.sh install).
+docker
+docker-buildx
+docker-compose
+fuse-overlayfs
+slirp4netns
+# AUR (needs an AUR helper, not installed by bootstrap): docker-rootless-extras-bin

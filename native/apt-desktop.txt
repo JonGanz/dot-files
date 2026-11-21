@@ -1,0 +1,20 @@
+# Ubuntu packages for machines that are not WSL (skipped with --cli-only).
+# Covers GUI apps and things WSL gets from Windows instead (docker, fonts).
+flatpak
+gimp
+
+# Docker, rootless. Needs Docker's own apt repo (docker-ce). Rootless mode is
+# not set up automatically: run dockerd-rootless-setuptool.sh install afterwards.
+docker-ce
+docker-ce-cli
+containerd.io
+docker-ce-rootless-extras
+docker-buildx-plugin
+docker-compose-plugin
+fuse-overlayfs
+slirp4netns
+uidmap
+dbus-user-session
+
+# TODO: wezterm needs the apt.fury.io/wez repo added first; add 'wezterm' once automated.
+# TODO: JetBrainsMono Nerd Font has no apt package (needs a download from nerd-fonts).

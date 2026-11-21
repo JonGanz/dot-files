@@ -1,4 +1,11 @@
 # System packages for Ubuntu/Debian, installed on every machine.
-# One per line; comments allowed. The private overlay can add its own native/apt.txt.
+# One per line; '#' starts a comment. The overlay can add its own native/apt.txt.
+# Profile-specific extras go in apt.personal.txt / apt.work.txt.
 git
 curl
+openssh-client
+build-essential
+linux-tools-common
+linux-tools-generic
+ncal
+nfs-common

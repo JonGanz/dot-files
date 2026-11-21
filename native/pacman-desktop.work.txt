@@ -1,0 +1,2 @@
+# Work-only Arch GUI packages.
+mysql-workbench

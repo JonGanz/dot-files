@@ -1,0 +1,3 @@
+# Personal-only flatpaks.
+com.valvesoftware.Steam
+# TODO: Snapmaker Orca is a vendor .flatpak bundle, not on Flathub.

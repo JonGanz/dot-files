@@ -1,2 +1,0 @@
-# GUI-only apt packages (skipped with --cli-only / on WSL).
-flatpak

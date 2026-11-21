@@ -1,2 +1,5 @@
-# Flatpak app IDs (GUI machines only).
-org.wezfurlong.wezterm
+# Flatpak app IDs for machines that are not WSL. Profile extras: flatpak.personal.txt / flatpak.work.txt.
+# WezTerm is native (pacman) rather than flatpak: the sandbox hides your host shell.
+com.jgraph.drawio.desktop
+org.gimp.GIMP
+# TODO: Handy (speech-to-text) has no Flathub app; ships as a vendor .deb/AppImage.

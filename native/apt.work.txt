@@ -1,0 +1,2 @@
+# Work-only Ubuntu packages (WSL included).
+mysql-client

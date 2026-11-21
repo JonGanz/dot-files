@@ -9,3 +9,26 @@ children    claude/skills            ~/.claude/skills
 children    claude/commands          ~/.claude/commands
 children    claude/output-styles     ~/.claude/output-styles
 link        dotfiles/.bashrc.d       ~/.bashrc.d
+
+# Shell
+link        dotfiles/.bash_aliases    ~/.bash_aliases
+link        dotfiles/bin              ~/bin
+link        dotfiles/.config/nix      ~/.config/nix
+link        dotfiles/.config/ohmyposh ~/.config/ohmyposh
+
+# Git and SSH (identity lives in untracked ~/.config/git/identity; see .gitconfig)
+link        dotfiles/.gitconfig       ~/.gitconfig
+link        dotfiles/.ssh/config      ~/.ssh/config
+
+# Editors, terminal, tasks
+link        dotfiles/.config/nvim     ~/.config/nvim
+link        dotfiles/.config/tmux     ~/.config/tmux
+link        dotfiles/.config/wezterm  ~/.config/wezterm
+link        dotfiles/.config/lazygit  ~/.config/lazygit
+link        dotfiles/.config/task/taskrc ~/.config/task/taskrc
+link        dotfiles/.config/task/hooks  ~/.config/task/hooks
+
+# Claude
+link        claude/settings.json      ~/.claude/settings.json
+link        claude/CLAUDE.md          ~/.claude/CLAUDE.md
+link        claude/statusline.sh      ~/.claude/statusline.sh

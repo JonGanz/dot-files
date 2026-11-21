@@ -62,7 +62,7 @@ git clone <repo-url> ~/setup && cd ~/setup
 ./setup bootstrap --profile personal
 ```
 
-Same as Ubuntu, using `native/pacman*.txt`. Package lists: `apt.txt`/`pacman.txt` always, `*-gui.txt` and `flatpak.txt` on GUI machines. The overlay can add its own `native/` lists.
+Same as Ubuntu, using `native/pacman*.txt`. Package lists in `native/`: `apt.txt`/`pacman.txt` always; `*-desktop.txt` and `flatpak.txt` on non-WSL machines (GUI apps, docker, fonts). Add `.work` / `.personal` before `.txt` for profile-only entries. The overlay can add its own lists.
 
 ## NixOS
 
@@ -112,3 +112,12 @@ git clone <private-overlay-url> ~/.config/setup-private   # work only
 - A new skill or config created in place (e.g. by Claude) is unmanaged until adopted. `status` lists them, and the shell prompt shows a marker when any exist. Each item can go to a different repo: `adopt ~/.claude/skills/foo --to base`, `adopt ~/.claude/skills/bar --to overlay`.
 - If a real file blocks a link, `link` skips it and says so. Resolve with `adopt` (keep it) or `link --backup` (move it aside).
 - Work-only instructions for Claude go in `~/work/CLAUDE.md`, which Claude loads for every repo beneath it.
+
+## Per-machine files (never committed)
+
+Created by hand once per machine; the committed configs include them if present:
+
+- `~/.config/git/identity`: `[user]` name and email. Work identity goes in `~/.config/git/identity-work`, loaded for repos under `~/work/` (see `dotfiles/.gitconfig`).
+- `~/.config/setup/local.env`: profile and overlay path (written by `bootstrap`).
+
+`dotfiles/kde/` holds unlinked reference copies of KDE configs; KDE rewrites them, so copy by hand.

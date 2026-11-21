@@ -1,3 +1,8 @@
 # System packages for Arch, installed on every machine.
+# One per line; '#' starts a comment. Profile extras: pacman.personal.txt / pacman.work.txt.
 git
 curl
+openssh
+base-devel
+perf
+nfs-utils

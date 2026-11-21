@@ -1,0 +1,2 @@
+# Work-only Ubuntu GUI packages (not WSL, which uses mysql-client from apt.work.txt).
+mysql-workbench

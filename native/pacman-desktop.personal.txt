@@ -1,0 +1,2 @@
+# Personal-only Arch GUI packages. Needs the multilib repo enabled in /etc/pacman.conf.
+steam

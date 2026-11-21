@@ -60,38 +60,41 @@ install_nix() {
   fi
 }
 
-# collect_lists SUFFIX: print package names from native/<distro-prefix>SUFFIX
-# in every repo (so the overlay can add its own).
+# collect_lists NAME: print package names from native/NAME.txt and
+# native/NAME.<profile>.txt in every repo (so the overlay can add its own).
 collect_lists() {
-  local prefix="$1" root
+  local name="$1" root
   while IFS= read -r root; do
-    read_list "$root/native/$prefix"
+    read_list "$root/native/$name.txt"
+    read_list "$root/native/$name.$PROFILE.txt"
   done < <(repo_roots)
 }
 
-# install_native: system packages (and GUI apps unless --cli-only).
+# install_native: system packages, plus desktop packages and flatpaks unless
+# --cli-only. The "-desktop" lists hold GUI apps and anything WSL gets from
+# Windows instead (docker, fonts).
 install_native() {
   echo "[3/7] native packages ($DISTRO)"
   local -a pkgs=() apps=()
   case "$DISTRO" in
     ubuntu)
-      mapfile -t pkgs < <(collect_lists apt.txt)
-      ((CLI_ONLY)) || mapfile -t -O "${#pkgs[@]}" pkgs < <(collect_lists apt-gui.txt)
+      mapfile -t pkgs < <(collect_lists apt)
+      ((CLI_ONLY)) || mapfile -t -O "${#pkgs[@]}" pkgs < <(collect_lists apt-desktop)
       ((${#pkgs[@]})) && {
         run sudo apt-get update
         run sudo apt-get install -y "${pkgs[@]}"
       }
       ;;
     arch)
-      mapfile -t pkgs < <(collect_lists pacman.txt)
-      ((CLI_ONLY)) || mapfile -t -O "${#pkgs[@]}" pkgs < <(collect_lists pacman-gui.txt)
+      mapfile -t pkgs < <(collect_lists pacman)
+      ((CLI_ONLY)) || mapfile -t -O "${#pkgs[@]}" pkgs < <(collect_lists pacman-desktop)
       ((${#pkgs[@]})) && run sudo pacman -S --needed --noconfirm "${pkgs[@]}"
       ;;
   esac
 
-  # Flatpaks are GUI-only.
+  # Flatpaks are desktop-only.
   if ((!CLI_ONLY)); then
-    mapfile -t apps < <(collect_lists flatpak.txt)
+    mapfile -t apps < <(collect_lists flatpak)
     if ((${#apps[@]})); then
       run flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
       run flatpak install -y --noninteractive flathub "${apps[@]}"
@@ -171,9 +174,27 @@ HOOK
   done < <(repo_roots)
 }
 
-# link_dotfiles: hand over to link.sh (forwarding --dry-run).
+# ensure_bashrc_loader: make ~/.bashrc source every ~/.bashrc.d/*.sh. The block
+# between the markers is rewritten on each run, so edits to it are replaced.
+ensure_bashrc_loader() {
+  local rc="$HOME/.bashrc" begin="# >>> setup:bashrc.d >>>" end="# <<< setup:bashrc.d <<<"
+  local block
+  block="$begin"$'\n''for f in "$HOME"/.bashrc.d/*.sh; do [ -r "$f" ] && . "$f"; done'$'\n'"$end"
+  if ((DRY_RUN)); then
+    info "would ensure the bashrc.d loader block in $rc"
+    return 0
+  fi
+  touch "$rc"
+  # Drop any previous block, then append the current one.
+  sed -i "\|$begin|,\|$end|d" "$rc"
+  printf '%s\n' "$block" >>"$rc"
+}
+
+# link_dotfiles: install the bashrc loader, then hand over to link.sh
+# (forwarding --dry-run).
 link_dotfiles() {
   echo "[7/7] symlinks"
+  ensure_bashrc_loader
   if ((DRY_RUN)); then
     "$REPO_ROOT/scripts/link.sh" --dry-run
   else
