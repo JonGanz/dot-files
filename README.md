@@ -6,11 +6,13 @@ Reproducible Linux machine setup: Nix for CLI packages, native package managers 
 
 ```
 setup            entry point (dispatches to scripts/)
-flake.nix        Nix package sets: base, personal, work (+ NixOS modules)
+flake.nix        entry for Nix: installable package bundles and NixOS hosts
+packages.nix     every package list (base, personal, work, optional, NixOS desktop apps)
+nixos/           NixOS module shared by all hosts (flakes, KDE, docker, fonts, packages)
 dotfiles/        plain files, symlinked into $HOME
 claude/          generic skills, commands, output-styles, settings -> ~/.claude
 native/          apt / pacman / flatpak package lists (GUI apps, system packages)
-machines/        NixOS host configs
+machines/        one directory per NixOS host; copy `_template/` to add one
 scripts/         bootstrap, link, status, adopt, cruft
 ```
 
@@ -66,13 +68,25 @@ Same as Ubuntu, using `native/pacman*.txt`. Package lists in `native/`: `apt.txt
 
 ## NixOS
 
+On a stock install (the graphical installer already set up KDE), add the machine once. Flakes aren't enabled yet, hence the extra flag:
+
 ```sh
+nix-shell -p git
 git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
-sudo nixos-rebuild switch --flake .#<host>
+cp -r machines/_template machines/<name>
+cp /etc/nixos/configuration.nix /etc/nixos/hardware-configuration.nix machines/<name>/
+$EDITOR machines/<name>/default.nix       # set setup.profile (personal or work)
+nix --extra-experimental-features 'nix-command flakes' flake lock   # creates flake.lock
+git add -A && git commit -m "Add host <name>"
+sudo nixos-rebuild test --flake .#<name>   # try it; reboot undoes it
+sudo nixos-rebuild switch --flake .#<name>
 ./setup link
 ```
 
-Packages come from the NixOS config in `machines/<host>`, so no bootstrap. `link` still handles dotfiles, so they stay live-editable.
+- `flake.lock` pins the exact nixpkgs version. Commit it. Update with `nix flake update`, then commit again.
+- Flakes only see files git tracks: `git add` new files before building.
+- A flake rebuild replaces the whole system config, so everything the installer set up (KDE, users, locale) must come from the copied `configuration.nix`. That is why it is copied in.
+- If a rebuild breaks, pick the previous generation in the boot menu.
 
 ## WSL2 (Ubuntu)
 
@@ -119,5 +133,3 @@ Created by hand once per machine; the committed configs include them if present:
 
 - `~/.config/git/identity`: `[user]` name and email. Work identity goes in `~/.config/git/identity-work`, loaded for repos under `~/work/` (see `dotfiles/gitconfig`).
 - `~/.config/setup/local.env`: profile and overlay path (written by `bootstrap`).
-
-`dotfiles/kde/` holds unlinked reference copies of KDE configs; KDE rewrites them, so copy by hand.

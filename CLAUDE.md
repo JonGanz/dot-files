@@ -18,13 +18,15 @@ Repo for reproducible Linux machine setup (Kubuntu, Arch, NixOS, WSL2 Ubuntu). P
 
 ## Layout
 
-- `flake.nix`: package sets per profile/host
+- `flake.nix`: entry point; bundles from `packages.nix`, and a NixOS host for every `machines/<dir>` (dirs starting `_` ignored)
+- `packages.nix`: single source of truth for all package lists (also used by `nixos/`)
+- `nixos/`: NixOS module shared by hosts (`setup.profile`, `setup.desktop` options)
 - `dotfiles/`: bash, git (with `includeIf` for `~/work/`), nvim, wezterm, tmux, taskwarrior, `bin/` scripts
 - `claude/`: skills, commands, output-styles, settings
 - `native/`: apt / pacman / flatpak lists
 - `scripts/`: bootstrap, link, status, adopt, cruft report
 - `links.map`: what gets linked where (modes `link` and `children`); read by `link`, `status`, `adopt`
-- `machines/`: NixOS host configs (profile and overlay path live in untracked `~/.config/setup/local.env`)
+- `machines/`: one dir per NixOS host (the installer's configuration.nix + hardware-configuration.nix + `setup.*` settings; start from `_template/`) (profile and overlay path live in untracked `~/.config/setup/local.env`)
 
 ## Conventions
 
