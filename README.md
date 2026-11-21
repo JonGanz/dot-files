@@ -48,7 +48,7 @@ The overlay is a separate private repo with the same layout (`dotfiles/`, `claud
 
 ```sh
 sudo apt update && sudo apt install -y git curl
-git clone <repo-url> ~/setup && cd ~/setup
+git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
 ./setup bootstrap --profile personal
 ```
 
@@ -58,7 +58,7 @@ Bootstrap is idempotent. It installs Nix, apt packages and flatpaks from `native
 
 ```sh
 sudo pacman -S --needed git curl
-git clone <repo-url> ~/setup && cd ~/setup
+git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
 ./setup bootstrap --profile personal
 ```
 
@@ -67,7 +67,7 @@ Same as Ubuntu, using `native/pacman*.txt`. Package lists in `native/`: `apt.txt
 ## NixOS
 
 ```sh
-git clone <repo-url> ~/setup && cd ~/setup
+git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
 sudo nixos-rebuild switch --flake .#<host>
 ./setup link
 ```
@@ -91,8 +91,8 @@ Inside WSL:
 
 ```sh
 sudo apt update && sudo apt install -y git curl
-git clone <repo-url> ~/setup && cd ~/setup
-git clone <private-overlay-url> ~/.config/setup-private   # work only
+git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
+git clone <private-overlay-url> ~/.config/setup-private   # work only; needs your credentials (run bootstrap first for an SSH key)
 ./setup bootstrap --profile work --cli-only
 ```
 
