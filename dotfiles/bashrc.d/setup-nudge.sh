@@ -7,7 +7,7 @@
 # prompt stays fast.
 
 # This file is a symlink into the repo; follow it to find the repo root
-# (three levels up: dotfiles/.bashrc.d/setup-nudge.sh -> repo).
+# (three levels up: dotfiles/bashrc.d/setup-nudge.sh -> repo).
 __setup_repo="$(dirname "$(dirname "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")")")"
 
 # __setup_nudge: print the marker, or nothing when everything is managed.

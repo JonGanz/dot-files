@@ -120,7 +120,7 @@ points_into_repo() {
 # map_entries ROOT: parse ROOT/links.map and print "mode<TAB>src<TAB>target"
 # for each rule, with "~" in the target already expanded.
 # Format (whitespace separated, '#' starts a comment, no spaces in paths):
-#   link      dotfiles/.bashrc   ~/.bashrc      link exactly this path
+#   link      dotfiles/bashrc   ~/.bashrc      link exactly this path
 #   children  claude/skills      ~/.claude/skills   link each child of the folder
 map_entries() {
   local map="$1/links.map" mode src dst

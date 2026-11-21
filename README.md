@@ -25,8 +25,8 @@ Each repo has a `links.map` listing what gets linked where. `link` and `adopt` b
 
 ```
 # mode      repo path                 target
-link        dotfiles/.bashrc          ~/.bashrc
-link        dotfiles/.config/nvim     ~/.config/nvim
+link        dotfiles/bashrc          ~/.bashrc
+link        dotfiles/config/nvim     ~/.config/nvim
 children    claude/skills             ~/.claude/skills
 children    claude/commands           ~/.claude/commands
 ```
@@ -37,7 +37,7 @@ children    claude/commands           ~/.claude/commands
 `adopt` picks the repo path like this:
 
 1. The item sits inside a `children` target: it goes into that rule's repo folder (`~/.claude/skills/foo` -> `claude/skills/foo`). No new line needed.
-2. Otherwise it goes to `dotfiles/` plus its path relative to `$HOME` (`~/.config/wezterm` -> `dotfiles/.config/wezterm`), and a `link` line is appended.
+2. Otherwise it goes to `dotfiles/` plus its path relative to `$HOME` with the leading dot dropped, so nothing is hidden in the repo (`~/.config/wezterm` -> `dotfiles/config/wezterm`), and a `link` line is appended.
 3. Items outside `$HOME` need `--as <repo-path>`.
 
 `--as <repo-path>` always skips the guessing, e.g. `adopt ~/.claude/settings.json --to base --as claude/settings.json`. A guessed destination is confirmed first (or pass `--yes`).
@@ -117,7 +117,7 @@ git clone <private-overlay-url> ~/.config/setup-private   # work only
 
 Created by hand once per machine; the committed configs include them if present:
 
-- `~/.config/git/identity`: `[user]` name and email. Work identity goes in `~/.config/git/identity-work`, loaded for repos under `~/work/` (see `dotfiles/.gitconfig`).
+- `~/.config/git/identity`: `[user]` name and email. Work identity goes in `~/.config/git/identity-work`, loaded for repos under `~/work/` (see `dotfiles/gitconfig`).
 - `~/.config/setup/local.env`: profile and overlay path (written by `bootstrap`).
 
 `dotfiles/kde/` holds unlinked reference copies of KDE configs; KDE rewrites them, so copy by hand.

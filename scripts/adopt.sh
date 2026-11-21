@@ -13,7 +13,8 @@
 #   1. <path> is directly inside the target of a `children` rule
 #      -> <that rule's repo folder>/<name>      (no links.map change needed
 #         beyond making sure the chosen repo has the rule)
-#   2. otherwise, under $HOME -> dotfiles/<path relative to $HOME>,
+#   2. otherwise, under $HOME -> dotfiles/<path relative to $HOME, minus its
+#      leading dot> (~/.config/x -> dotfiles/config/x, so ls/yazi don't hide it),
 #      and a `link` line is appended to links.map
 #   3. otherwise -> error, use --as
 set -euo pipefail
@@ -49,7 +50,9 @@ guess_repo_path() {
     return 0
   fi
   [[ $path == "$HOME"/* ]] || die "$path is outside \$HOME; pass --as <repo-path>"
-  printf 'dotfiles/%s\n' "${path#"$HOME"/}"
+  # Strip the leading dot of the first component so the repo copy isn't hidden.
+  local rel="${path#"$HOME"/}"
+  printf 'dotfiles/%s\n' "${rel#.}"
 }
 
 # map_has ROOT MODE SRC TARGET: true if ROOT's links.map already has this rule.
