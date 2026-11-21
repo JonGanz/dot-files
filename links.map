@@ -1,0 +1,11 @@
+# links.map - what `setup link` links where. `setup adopt` appends to this file.
+#
+#   link      <repo path>   <target>   link exactly this path (file or dir)
+#   children  <repo dir>    <target>   link each child of the repo dir into the target dir
+#
+# '#' starts a comment. No spaces in paths. "~" means $HOME.
+
+children    claude/skills            ~/.claude/skills
+children    claude/commands          ~/.claude/commands
+children    claude/output-styles     ~/.claude/output-styles
+link        dotfiles/.bashrc.d       ~/.bashrc.d
