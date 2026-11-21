@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# setup - entry point. Dispatches to scripts/<command>.sh.
+#
+# Usage: ./setup <command> [args]
+#   bootstrap  first-time setup of this machine
+#   link       create/refresh dotfile symlinks
+#   status     show unmanaged files and drift
+#   adopt      move a file into a repo and link it back
+#   update     upgrade packages, then link
+#   cruft      exec auditing and unused-package report
+set -euo pipefail
+
+# Resolve the real location of this file so it works through symlinks too.
+SCRIPTS="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/scripts"
+
+usage() {
+  sed -n '2,/^set -e/p' "${BASH_SOURCE[0]}" | sed -e '$d' -e 's/^# \{0,1\}//'
+}
+
+cmd="${1:-help}"
+shift || true
+
+case "$cmd" in
+  bootstrap | link | status | adopt | update | cruft)
+    exec "$SCRIPTS/$cmd.sh" "$@"
+    ;;
+  help | -h | --help)
+    usage
+    ;;
+  *)
+    usage >&2
+    exit 1
+    ;;
+esac
