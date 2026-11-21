@@ -1,0 +1,2 @@
+# GUI-only pacman packages (skipped with --cli-only).
+flatpak

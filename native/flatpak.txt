@@ -1,0 +1,2 @@
+# Flatpak app IDs (GUI machines only).
+org.wezfurlong.wezterm

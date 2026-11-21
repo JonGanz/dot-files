@@ -1,0 +1,4 @@
+# System packages for Ubuntu/Debian, installed on every machine.
+# One per line; comments allowed. The private overlay can add its own native/apt.txt.
+git
+curl
