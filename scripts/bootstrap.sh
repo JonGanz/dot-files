@@ -8,8 +8,9 @@
 #   --dry-run   print what would run, change nothing
 #
 # Steps (each is idempotent): local.env, Nix, native packages, Nix profile,
-# SSH key, gitleaks pre-commit hook, symlinks. NixOS is refused: use
-# `nixos-rebuild switch --flake .#<host>` there, then `./setup link`.
+# SSH key, gitleaks pre-commit hook, symlinks. On NixOS the packages come from
+# `nixos-rebuild switch --flake .#<host>` (run that first), so the Nix, native
+# package and Nix profile steps are skipped there.
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
 
@@ -223,7 +224,6 @@ main() {
 
   DISTRO="$(detect_distro)"
   case "$DISTRO" in
-    nixos) die "NixOS: run 'sudo nixos-rebuild switch --flake .#<host>' then './setup link'" ;;
     unknown) die "unsupported distro (need Ubuntu/Debian or Arch)" ;;
   esac
   if is_wsl; then
@@ -234,9 +234,13 @@ main() {
   write_local_env
   # Re-read so the overlay path from local.env is in effect for later steps.
   load_local_env
-  install_nix
-  install_native
-  install_nix_profile
+  if [[ $DISTRO == nixos ]]; then
+    info "NixOS: packages come from nixos-rebuild; skipping Nix, native and profile steps"
+  else
+    install_nix
+    install_native
+    install_nix_profile
+  fi
   setup_ssh_key
   install_hooks
   link_dotfiles

@@ -149,11 +149,14 @@ fix_ssh_perms() {
     [[ $target == "$HOME/.ssh/"* ]] || continue
     source="${desired[$target]}"
     # Public keys and config can stay readable; everything else is locked down.
-    if [[ -f $source && $target != *.pub ]]; then
+    # Only touch files whose mode is not already 600.
+    if [[ -f $source && $target != *.pub && $(stat -c %a "$source") != 600 ]]; then
       run chmod 600 "$source"
     fi
   done
-  [[ -d $HOME/.ssh ]] && run chmod 700 "$HOME/.ssh"
+  if [[ -d $HOME/.ssh && $(stat -c %a "$HOME/.ssh") != 700 ]]; then
+    run chmod 700 "$HOME/.ssh"
+  fi
   return 0
 }
 

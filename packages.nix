@@ -27,6 +27,10 @@ rec {
     git
     tmux
     neovim
+    # build tools neovim plugins (treesitter) need to compile parsers
+    gcc
+    gnumake
+    tree-sitter
     lazygit
     lazydocker
     oh-my-posh

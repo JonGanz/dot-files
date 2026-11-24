@@ -80,7 +80,7 @@ nix --extra-experimental-features 'nix-command flakes' flake lock   # creates fl
 git add -A && git -c user.name=me -c user.email=me@localhost commit -m "Add host <name>"
 sudo nixos-rebuild test --flake .#<name>   # try it; reboot undoes it
 sudo nixos-rebuild switch --flake .#<name>
-./setup link
+./setup bootstrap --profile personal   # SSH key, gitleaks hook, bashrc loader, links
 ```
 
 - `flake.lock` pins the exact nixpkgs version. Commit it. Update with `nix flake update`, then commit again.
