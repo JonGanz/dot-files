@@ -191,11 +191,29 @@ ensure_bashrc_loader() {
   printf '%s\n' "$block" >>"$rc"
 }
 
+# ensure_login_profile: login shells (most terminal emulators on NixOS) read
+# ~/.bash_profile, ~/.bash_login or ~/.profile instead of ~/.bashrc. If none of
+# them exists, create ~/.bash_profile that loads ~/.bashrc. An existing one is
+# left alone (Ubuntu's stock ~/.profile already sources ~/.bashrc).
+ensure_login_profile() {
+  local f
+  for f in .bash_profile .bash_login .profile; do
+    [[ -e $HOME/$f ]] && return 0
+  done
+  if ((DRY_RUN)); then
+    info "would create ~/.bash_profile to load ~/.bashrc"
+    return 0
+  fi
+  printf '%s\n' '# Login shells: load ~/.bashrc too. Created by ./setup bootstrap.' \
+    '[ -r "$HOME/.bashrc" ] && . "$HOME/.bashrc"' >"$HOME/.bash_profile"
+}
+
 # link_dotfiles: install the bashrc loader, then hand over to link.sh
 # (forwarding --dry-run).
 link_dotfiles() {
   echo "[7/7] symlinks"
   ensure_bashrc_loader
+  ensure_login_profile
   if ((DRY_RUN)); then
     "$REPO_ROOT/scripts/link.sh" --dry-run
   else
