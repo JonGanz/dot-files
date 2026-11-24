@@ -19,7 +19,15 @@ in
     desktop = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "KDE Plasma, desktop apps and fonts. Turn off for headless hosts.";
+      description = "Desktop apps and fonts. Turn off for headless hosts.";
+    };
+    plasma = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Switch the machine to KDE Plasma + SDDM, turning off GNOME/GDM.
+        Leave false to keep whatever desktop the installer set up.
+      '';
     };
   };
 
@@ -42,13 +50,18 @@ in
       };
     }
 
+    # --- Optional switch to KDE ---------------------------------------------
+    # Only one display manager may be enabled, so the installer's GNOME/GDM
+    # (set in the host's configuration.nix) is overridden with mkForce.
+    (lib.mkIf (cfg.desktop && cfg.plasma) {
+      services.desktopManager.plasma6.enable = true;
+      services.displayManager.sddm.enable = true;
+      services.desktopManager.gnome.enable = lib.mkForce false;
+      services.displayManager.gdm.enable = lib.mkForce false;
+    })
+
     # --- Desktop ------------------------------------------------------------
     (lib.mkIf cfg.desktop {
-      # mkDefault: if the host's configuration.nix already sets these (the
-      # installer does), its values win and nothing changes.
-      services.desktopManager.plasma6.enable = lib.mkDefault true;
-      services.displayManager.sddm.enable = lib.mkDefault true;
-
       environment.systemPackages = packages.desktopForProfile cfg.profile;
 
       fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];

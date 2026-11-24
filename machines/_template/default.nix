@@ -10,11 +10,12 @@
 # from configuration.nix (networking.hostName).
 { ... }:
 {
-  # The installer's config: bootloader, hostname, your user, locale, KDE, and
+  # The installer's config: bootloader, hostname, your user, locale, desktop, and
   # its own import of hardware-configuration.nix.
   imports = [ ./configuration.nix ];
 
   # Settings from nixos/default.nix. See that file for all options.
-  setup.profile = "personal"; # or "work"
-  # setup.desktop = false;    # headless host: no KDE or GUI apps
+  setup.profile = "personal"; # "personal" or "work" (required; pick one)
+  # setup.desktop = false;    # headless host: no GUI apps or fonts
+  # setup.plasma = true;      # swap the installer's desktop (e.g. GNOME) for KDE
 }
