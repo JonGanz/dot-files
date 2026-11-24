@@ -19,15 +19,7 @@ in
     desktop = lib.mkOption {
       type = lib.types.bool;
       default = true;
-      description = "Desktop apps and fonts. Turn off for headless hosts.";
-    };
-    plasma = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = ''
-        Switch the machine to KDE Plasma + SDDM, turning off GNOME/GDM.
-        Leave false to keep whatever desktop the installer set up.
-      '';
+      description = "KDE Plasma (replacing GNOME), desktop apps and fonts. Turn off for headless hosts.";
     };
   };
 
@@ -43,6 +35,13 @@ in
       # The CLI tools for this profile, available to every user.
       environment.systemPackages = packages.forProfile cfg.profile;
 
+      # Delete unreferenced store paths (old generations, replaced GNOME) weekly.
+      nix.gc = {
+        automatic = true;
+        dates = "weekly";
+        options = "--delete-older-than 14d";
+      };
+
       # Rootless docker, as in the old setup. DOCKER_HOST is set for you.
       virtualisation.docker.rootless = {
         enable = true;
@@ -50,10 +49,11 @@ in
       };
     }
 
-    # --- Optional switch to KDE ---------------------------------------------
+    # --- KDE replaces whatever the installer set up -------------------------
     # Only one display manager may be enabled, so the installer's GNOME/GDM
-    # (set in the host's configuration.nix) is overridden with mkForce.
-    (lib.mkIf (cfg.desktop && cfg.plasma) {
+    # (set in the host's configuration.nix) is overridden with mkForce. GNOME
+    # leaves the system on the next rebuild; garbage collection frees its files.
+    (lib.mkIf cfg.desktop {
       services.desktopManager.plasma6.enable = true;
       services.displayManager.sddm.enable = true;
       services.desktopManager.gnome.enable = lib.mkForce false;

@@ -8,7 +8,7 @@ Reproducible Linux machine setup: Nix for CLI packages, native package managers 
 setup            entry point (dispatches to scripts/)
 flake.nix        entry for Nix: installable package bundles and NixOS hosts
 packages.nix     every package list (base, personal, work, optional, NixOS desktop apps)
-nixos/           NixOS module shared by all hosts (flakes, docker, fonts, packages, optional KDE switch)
+nixos/           NixOS module shared by all hosts (flakes, docker, fonts, packages, KDE, weekly GC)
 dotfiles/        plain files, symlinked into $HOME
 claude/          generic skills, commands, output-styles, settings -> ~/.claude
 native/          apt / pacman / flatpak package lists (GUI apps, system packages)
@@ -68,14 +68,14 @@ Same as Ubuntu, using `native/pacman*.txt`. Package lists in `native/`: `apt.txt
 
 ## NixOS
 
-On a stock install (the graphical installer already set up a desktop, which is kept unless you set `setup.plasma = true`), add the machine once. Flakes aren't enabled yet, hence the extra flag:
+On a stock install (the graphical installer already set up a desktop, which is replaced by KDE Plasma), add the machine once. Flakes aren't enabled yet, hence the extra flag:
 
 ```sh
 nix-shell -p git
 git clone -b nix/master https://github.com/JonGanz/dot-files.git ~/setup && cd ~/setup
 cp -r machines/_template machines/<name>
 cp /etc/nixos/configuration.nix /etc/nixos/hardware-configuration.nix machines/<name>/
-$EDITOR machines/<name>/default.nix       # pick setup.profile; optionally setup.plasma = true to swap GNOME for KDE
+$EDITOR machines/<name>/default.nix       # set setup.profile
 nix --extra-experimental-features 'nix-command flakes' flake lock   # creates flake.lock
 git add -A && git -c user.name=me -c user.email=me@localhost commit -m "Add host <name>"
 sudo nixos-rebuild test --flake .#<name>   # try it; reboot undoes it
@@ -86,6 +86,7 @@ sudo nixos-rebuild switch --flake .#<name>
 - `flake.lock` pins the exact nixpkgs version. Commit it. Update with `nix flake update`, then commit again.
 - Flakes only see files git tracks: `git add` new files before building.
 - A flake rebuild replaces the whole system config, so everything the installer set up (desktop, users, locale) must come from the copied `configuration.nix`. That is why it is copied in.
+- GNOME is removed from the system on `switch`; the weekly garbage collection (`nix.gc`) deletes its files after 14 days. Reclaim now with `sudo nix-collect-garbage -d` (also drops old generations, so you lose rollback).
 - If a rebuild breaks, pick the previous generation in the boot menu.
 
 ## WSL2 (Ubuntu)

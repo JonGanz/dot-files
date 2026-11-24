@@ -16,6 +16,5 @@
 
   # Settings from nixos/default.nix. See that file for all options.
   setup.profile = "personal"; # "personal" or "work" (required; pick one)
-  # setup.desktop = false;    # headless host: no GUI apps or fonts
-  # setup.plasma = true;      # swap the installer's desktop (e.g. GNOME) for KDE
+  # setup.desktop = false;    # headless host: keep the installer's desktop, add no KDE/GUI apps
 }
